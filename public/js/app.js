@@ -4975,11 +4975,44 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth */ "./resources/js/auth.js");
+/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _interactions_with_navbar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./interactions-with-navbar */ "./resources/js/interactions-with-navbar.js");
 
 
-window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_1__["default"];
-alpinejs__WEBPACK_IMPORTED_MODULE_1__["default"].start();
+
+
+window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"];
+alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
+(0,_auth__WEBPACK_IMPORTED_MODULE_1__.ScrollIfErrors)();
+(0,_interactions_with_navbar__WEBPACK_IMPORTED_MODULE_3__["default"])();
+
+/***/ }),
+
+/***/ "./resources/js/auth.js":
+/*!******************************!*\
+  !*** ./resources/js/auth.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ScrollIfErrors": () => (/* binding */ ScrollIfErrors)
+/* harmony export */ });
+function ScrollIfErrors() {
+  var errors = document.querySelector('.bg-danger');
+  console.log("errors : ", errors);
+
+  if (errors) {
+    window.scroll({
+      top: window.outerHeight,
+      behavior: "smooth"
+    });
+  }
+}
+
+
 
 /***/ }),
 
@@ -5011,6 +5044,776 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/icons/close-icon.js":
+/*!******************************************!*\
+  !*** ./resources/js/icons/close-icon.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CloseIcon)
+/* harmony export */ });
+function CloseIcon(className) {
+  return "<svg class='".concat(className, "' width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-x\">\n        <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"></line><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"></line>\n    </svg>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/interactions-with-navbar.js":
+/*!**************************************************!*\
+  !*** ./resources/js/interactions-with-navbar.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InteractionsWithNavbar)
+/* harmony export */ });
+/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+
+var domInteractions = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__["default"]();
+function InteractionsWithNavbar() {
+  LogoutButtonInteraction();
+  EditPasswordInteraction();
+}
+
+function LogoutButtonInteraction() {
+  var logoutButton = document.querySelector('.btn.logout-btn');
+
+  if (logoutButton) {
+    var handleLogout = function handleLogout(e) {
+      e.preventDefault();
+      domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute top-0 start-0 end-0 m-auto', "\n                <form action=\"/logout\" method=\"post\">\n                    <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>\n            ");
+      ;
+      domInteractions.setFormAction("/logout");
+      domInteractions.setShowNotification(false);
+      domInteractions.handleActionsInModalConfirmation();
+    };
+
+    logoutButton.addEventListener('click', handleLogout);
+  }
+}
+
+function EditPasswordInteraction() {
+  var editPasswordMenu = document.querySelector('.edit-password');
+
+  if (editPasswordMenu) {
+    var handleEditPassword = function handleEditPassword(e) {
+      e.preventDefault();
+      domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"/logout\" method=\"post\">\n                    <div class='form-group mb-3'>\n                        <input placeholder='Ancien mot de passe' class='form-control mb-3'/>\n                        <input placeholder='Nouveau mot de passe' class='form-control mb-3'/>\n                        <input placeholder='Confirmer le nouveau mot de passe' class='form-control mb-3'/>\n                    </div>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>  \n            ");
+      domInteractions.handleActionsInModalConfirmation();
+    };
+
+    editPasswordMenu.addEventListener('click', handleEditPassword);
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/modules/DOMInteractions.js":
+/*!*************************************************!*\
+  !*** ./resources/js/modules/DOMInteractions.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ DOMInteractions)
+/* harmony export */ });
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _icons_close_icon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../icons/close-icon */ "./resources/js/icons/close-icon.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+var DOMInteractions = /*#__PURE__*/function () {
+  function DOMInteractions() {
+    _classCallCheck(this, DOMInteractions);
+
+    _defineProperty(this, "formAction", '');
+
+    _defineProperty(this, "notificationClassName", '');
+
+    _defineProperty(this, "showNotification", true);
+
+    this.emptyInputsMessage = [];
+    this.timeOutForReload = 1000;
+    this.modalHeightToAdd = 0;
+    this.responseJSON;
+    this.modalFormMethod = "post";
+  }
+
+  _createClass(DOMInteractions, [{
+    key: "animateElementFromClassname",
+    value: function animateElementFromClassname(element, classNameForAnimation) {
+      element.offsetWidth;
+      element.classList.add(classNameForAnimation);
+    }
+  }, {
+    key: "createCircleLoader",
+    value: function createCircleLoader() {
+      this.createCircle();
+    }
+  }, {
+    key: "removeModalFromDOMWithAnimation",
+    value: function removeModalFromDOMWithAnimation() {
+      var _this = this;
+
+      this.modal.classList.remove('active-modal');
+      this.modal.addEventListener('transitionend', function () {
+        if (_this.modalContainer && _this.modalContainer.parentElement !== null) {
+          _this.modalContainer.parentElement.removeChild(_this.modalContainer);
+        }
+      });
+    }
+    /**
+     * @return {HTMLElement} element
+     */
+
+  }, {
+    key: "createElement",
+    value: function createElement(type) {
+      var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var element = document.createElement(type);
+
+      if (className !== null) {
+        element.className = className;
+      }
+
+      return element;
+    }
+  }, {
+    key: "createModal",
+    value: function createModal(className, content) {
+      this.modalContainer = this.createElement('div', 'modal-container position-relative');
+      this.modal = this.createElement('div', "main-modal ".concat(className));
+      this.appendModalToDOM();
+      this.innerModalDefaultContent();
+      this.animateElementFromClassname(this.modal, 'active-modal');
+      this.innerElementContentHTML(this.modal, content);
+      this.modalContainer.addEventListener('click', this.closeModalThenRemoveHisEventListener.bind(this));
+      this.avoidCloseModalOnClickIn();
+      return this.modal;
+    }
+  }, {
+    key: "innerModalDefaultContent",
+    value: function innerModalDefaultContent() {
+      this.modal.innerHTML = "\n            <div class='w-100 close-btn-container'>\n                ".concat((0,_icons_close_icon__WEBPACK_IMPORTED_MODULE_1__["default"])("close-btn float-end mb-2"), "\n            </div>\n            <div class='content'></div>\n        ");
+    }
+    /**
+     * 
+     * @param {HTMLElement} element 
+     * @param {string} contentHTML 
+     */
+
+  }, {
+    key: "innerElementContentHTML",
+    value: function innerElementContentHTML(element, contentHTML) {
+      if (_typeof(contentHTML) === "object") {
+        element.appendChild(contentHTML);
+      } else {
+        if (element === this.modal) {
+          var contentElement = element.querySelector('.content');
+
+          if (contentElement) {
+            contentElement.innerHTML = contentHTML;
+          }
+
+          return;
+        }
+
+        element.innerHTML = contentHTML;
+      }
+    }
+  }, {
+    key: "appendModalToDOM",
+    value: function appendModalToDOM() {
+      document.body.appendChild(this.modalContainer);
+      this.modalContainer.appendChild(this.modal);
+    }
+  }, {
+    key: "avoidCloseModalOnClickIn",
+    value: function avoidCloseModalOnClickIn() {
+      this.modal.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+  }, {
+    key: "closeModal",
+    value: function closeModal() {
+      this.removeModalFromDOMWithAnimation();
+    }
+  }, {
+    key: "handleActionsInModalContent",
+    value: function handleActionsInModalContent() {
+      if (this.isModalAForm()) {
+        this.handleActionsInModalForm();
+      } else if (this.isModalConfirmation()) {
+        this.handleActionsInModalConfirmation();
+      } else {
+        this.handleActionsInSimpleModal();
+      }
+    }
+  }, {
+    key: "isModalAForm",
+    value: function isModalAForm() {
+      var modalForm = this.modal.querySelector('form');
+      var noBtn = this.modal.querySelector(".no");
+      return modalForm !== null && noBtn === null;
+    }
+  }, {
+    key: "isModalConfirmation",
+    value: function isModalConfirmation() {
+      return this.modal.classList.contains('sure');
+    }
+  }, {
+    key: "handleActionsInModalForm",
+    value: function handleActionsInModalForm() {
+      this.primaryButton = this.modal.querySelector('.btn.btn-primary');
+      this.primaryButton.addEventListener('click', this.handleModalPirmaryButtonClick.bind(this));
+      this.ClickOnCloseModalButton();
+    }
+  }, {
+    key: "handleActionsInModalConfirmation",
+    value: function handleActionsInModalConfirmation() {
+      var _this2 = this;
+
+      var noBtn = this.modal.querySelector('.no');
+      var validateButton = this.modal.querySelector('.sure');
+      noBtn === null || noBtn === void 0 ? void 0 : noBtn.addEventListener('click', function () {
+        _this2.removeModalFromDOMWithAnimation();
+      });
+
+      if (this.modal.querySelector('form')) {
+        this.handleActionsInModalForm();
+      } else {
+        validateButton.addEventListener('click', function (e) {
+          e.preventDefault();
+        });
+      }
+
+      this.ClickOnCloseModalButton();
+    }
+  }, {
+    key: "ClickOnCloseModalButton",
+    value: function ClickOnCloseModalButton() {
+      this.modalCloseBtn = this.modal.querySelector('.close-btn');
+      this.modalCloseBtn.addEventListener('click', this.closeModalThenRemoveHisEventListener.bind(this));
+    }
+  }, {
+    key: "handleActionsInSimpleModal",
+    value: function handleActionsInSimpleModal() {
+      this.ClickOnCloseModalButton();
+    }
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
+    key: "handleModalPirmaryButtonClick",
+    value: function handleModalPirmaryButtonClick(e) {
+      e.preventDefault();
+      this.createDataToPostObj();
+      this.handleDataPosting();
+    }
+    /**
+     * 
+     * @param {Event} e 
+     */
+
+  }, {
+    key: "closeModalThenRemoveHisEventListener",
+    value: function closeModalThenRemoveHisEventListener(e) {
+      this.closeModal();
+      e.target.removeEventListener('click', this.closeModalThenRemoveHisEventListener);
+    }
+    /**
+     * @var currentClickedButton est déclarée dans une méthode là où l'on a besoin qu'elle
+     * ne soit plus undefined prochainement
+     */
+
+  }, {
+    key: "createDataToPostObj",
+    value: function createDataToPostObj() {
+      var _this3 = this;
+
+      this.modalInputs;
+
+      if (this.modal) {
+        this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'));
+      }
+
+      this.inputs = [].slice.call(document.querySelectorAll('input'));
+
+      if (this.currentClickedButton) {
+        this.hiddenInputsContainingDataNeededForDeletion = [].slice.call(this.currentClickedButton.parentElement.querySelectorAll('input[type="hidden"]'));
+      }
+
+      this.dataToPostObj = {};
+
+      if (this.modalInputs && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.modalInputs)) {
+        this.modalInputs.forEach(function (input) {
+          _this3.setIntoDataToPostValueOf(input);
+        });
+      } else if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.hiddenInputsContainingDataNeededForDeletion)) {
+        this.hiddenInputsContainingDataNeededForDeletion.forEach(function (input) {
+          _this3.setIntoDataToPostValueOf(input);
+        });
+      } else if (this.inputs && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.inputs)) {
+        this.inputs.forEach(function (input) {
+          _this3.setIntoDataToPostValueOf(input);
+        });
+      }
+    }
+  }, {
+    key: "setIntoDataToPostValueOf",
+    value: function setIntoDataToPostValueOf(input) {
+      if (input.type === 'text' || input.type === 'number' || input.type === 'email' || input.type === 'hidden' || input.type === 'password') {
+        this.dataToPostObj[input.name] = input.value;
+      } else if (input.type === 'file') {
+        this.dataToPostObj[input.name] = input.files[0];
+      }
+    }
+  }, {
+    key: "handleDataPosting",
+    value: function handleDataPosting() {
+      var urlForRedirection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (this.isDataPostValid()) {
+        this.postForm(urlForRedirection);
+      } else {
+        this.alertEmptyInputs();
+      }
+    }
+    /**
+     * @return {boolean} retourne s'il y a un input vide
+     */
+
+  }, {
+    key: "isDataPostValid",
+    value: function isDataPostValid() {
+      var isInputEmpty = true;
+
+      for (var name in this.dataToPostObj) {
+        if (this.dataToPostObj[name] === null || this.dataToPostObj[name] === '' || this.dataToPostObj[name] === undefined) {
+          this.emptyInputsMessage[name] = "Ce champ ne peut pas être vide.";
+          isInputEmpty = false;
+        }
+      }
+
+      return isInputEmpty;
+    }
+  }, {
+    key: "postForm",
+    value: function postForm() {
+      var urlForRedirection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (this.showNotification) {
+        this.postContentWithNotification(urlForRedirection);
+      } else {
+        this.submitDirectyly();
+      }
+    }
+  }, {
+    key: "alertEmptyInputs",
+    value: function alertEmptyInputs() {
+      var _this4 = this;
+
+      if (this.modalInputs) {
+        this.modalInputs.forEach(function (input) {
+          if (_this4.isMessageCorrespondsTo(input.name)) {
+            _this4.showErrorMessage(input);
+          }
+        });
+      } else if (this.inputs) {
+        this.inputs.forEach(function (input) {
+          if (_this4.isMessageCorrespondsTo(input.name)) {
+            _this4.showErrorMessage(input);
+          }
+        });
+      }
+    }
+    /**
+     * 
+     * @param {string} inputName 
+     * @returns {boolean} Est-ce qu'il y a un message d'erreur correspondant au nom de l'input ?
+     */
+
+  }, {
+    key: "isMessageCorrespondsTo",
+    value: function isMessageCorrespondsTo(inputName) {
+      return this.emptyInputsMessage[inputName] !== null || this.emptyInputsMessage[inputName] !== undefined;
+    }
+    /**
+     * 
+     * @param {HTMLInputElement} input 
+     */
+
+  }, {
+    key: "showErrorMessage",
+    value: function showErrorMessage(input) {
+      if (input.name === 'image') {
+        this.alertEmptyImage(input);
+      } else {
+        this.showMessageAfter(input);
+      }
+    }
+    /**
+     * 
+     * @param {HTMLInputElement} input 
+     */
+
+  }, {
+    key: "alertEmptyImage",
+    value: function alertEmptyImage(input) {
+      input.focus();
+      this.showMessageAfter(input);
+    }
+  }, {
+    key: "createFailParapgraph",
+    value: function createFailParapgraph(inputName) {
+      var failParagraph = this.createElement('small', 'form-text text-muted fail');
+      failParagraph.innerHTML = this.emptyInputsMessage[inputName];
+      return failParagraph;
+    }
+  }, {
+    key: "showAlertMsgBeforeBtn",
+    value: function showAlertMsgBeforeBtn(inputName) {
+      this.form.removeChild(this.modalAddBtn);
+      var failParagraph = this.createFailParapgraph(inputName);
+      this.form.appendChild(failParagraph);
+      this.form.appendChild(this.modalAddBtn);
+    }
+  }, {
+    key: "showMessageAfter",
+    value: function showMessageAfter(input) {
+      var failParagraph = this.createFailParapgraph(input.name);
+      var elementAfterInput = input.nextElementSibling;
+
+      if (elementAfterInput === null) {
+        input.after(failParagraph);
+
+        if (this.modal) {
+          this.modalHeightToAdd = failParagraph.offsetHeight;
+          this.growModalHeigth();
+        }
+      }
+    }
+  }, {
+    key: "growModalHeigth",
+    value: function growModalHeigth() {
+      this.modal.style.height = this.modal.offsetHeight + this.modalHeightToAdd + 'px';
+    }
+  }, {
+    key: "postContentWithNotification",
+    value: function postContentWithNotification(urlForRedirection) {
+      var _this5 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post(this.formAction, this.dataToPostObj).then(function (response) {
+        if (_this5.modal) {
+          _this5.closeModal();
+        }
+
+        if (_this5.showNotification) {
+          _this5.showNotificationWithDataInMilliseconds({
+            className: _this5.notificationClassName,
+            content: JSON.parse(response).success
+          }, 2000);
+
+          if (urlForRedirection) {
+            document.location.href = urlForRedirection;
+          } else {
+            _this5.reloadPage();
+          }
+        }
+      })["catch"](function (error) {
+        var errorResponseJSON = JSON.parse(error.response);
+
+        if ("message" in errorResponseJSON) {
+          _this5.createErrorAlertAfterElement("#image", errorResponseJSON.message.includes("invalid") ? "Fichier invalide" : errorResponseJSON.message);
+        }
+      });
+    }
+  }, {
+    key: "submitDirectyly",
+    value: function submitDirectyly() {
+      if (this.modalFormMethod.toLocaleLowerCase() === "get") {
+        this.modal.querySelector('form').submit();
+      } else if (this.modalFormMethod.toLocaleLowerCase() === "post") {
+        axios__WEBPACK_IMPORTED_MODULE_2___default().post(this.formAction, this.dataToPostObj).then(function (response) {//
+        })["catch"](function (error) {
+          var errorData = error.response.data;
+
+          if ("message" in errorData && errorData.message === "Unauthenticated.") {
+            document.location.href = "/login";
+          }
+        });
+      }
+    }
+  }, {
+    key: "setFormAction",
+    value: function setFormAction(url) {
+      this.formAction = url;
+    }
+    /**
+     * 
+     * @param {boolean} value 
+     */
+
+  }, {
+    key: "setShowNotification",
+    value: function setShowNotification(showNotification) {
+      this.showNotification = showNotification;
+    }
+  }, {
+    key: "reloadPage",
+    value: function reloadPage() {
+      setTimeout(function () {
+        location.reload();
+      }, this.timeOutForReload);
+    }
+    /**
+     * 
+     * @param {{className: string, content: string}} data 
+     * @param {number} timeInMilliseconds 
+     */
+
+  }, {
+    key: "showNotificationWithDataInMilliseconds",
+    value: function showNotificationWithDataInMilliseconds(data, timeInMilliseconds) {
+      var _this6 = this;
+
+      this.createModal(data.className, data.content);
+      setTimeout(function () {
+        _this6.closeModal();
+      }, timeInMilliseconds);
+    }
+  }, {
+    key: "stopEventPropagationInBody",
+    value: function stopEventPropagationInBody() {
+      document.body.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+    /**
+     * 
+     * @param {Event} e 
+     * @param {{className: string, content: string | {}, appendTo: HTMLElement | null}} data 
+     */
+
+  }, {
+    key: "toggleMenu",
+    value: function toggleMenu(e, data) {
+      this.menu = document.querySelector(".menu." + data.className);
+
+      if (this.menu === null) {
+        this.showMenu(data, e.currentTarget);
+      } else {
+        this.hideMenu();
+      }
+    }
+    /**
+     * 
+     * @param {{className: string, content: string}} data 
+     */
+
+  }, {
+    key: "showMenu",
+    value: function showMenu(data, btnClickedForMenu) {
+      this.btnClickedForMenu = btnClickedForMenu;
+      this.menu = this.createElement('div', "menu ".concat(data.className));
+      document.body.appendChild(this.menu);
+      this.setMenuPositionByBtnClickedAndMenuWidth();
+      this.innerElementContentHTML(this.menu, data.content);
+      this.animateElementFromClassname(this.menu, 'active-menu');
+    }
+  }, {
+    key: "hideMenu",
+    value: function hideMenu() {
+      var _this7 = this;
+
+      if (this.menu) {
+        this.menu.classList.remove('active-menu');
+        this.menu.addEventListener('transitionend', function () {
+          if (_this7.menu.parentElement) {
+            _this7.menu.parentElement.removeChild(_this7.menu);
+          }
+        });
+      }
+    }
+  }, {
+    key: "hideMenuWhenBodyClick",
+    value: function hideMenuWhenBodyClick() {
+      var _this8 = this;
+
+      document.body.addEventListener('click', function (e) {
+        _this8.hideMenu();
+      });
+    }
+  }, {
+    key: "setMenuPositionByBtnClickedAndMenuWidth",
+    value: function setMenuPositionByBtnClickedAndMenuWidth() {
+      var buttonRect = this.btnClickedForMenu.getBoundingClientRect();
+      var overflow;
+      var leftAndWidthSum = buttonRect.left + this.menu.offsetWidth;
+
+      if (window.innerWidth < leftAndWidthSum) {
+        overflow = leftAndWidthSum - window.innerWidth;
+        this.menu.style.left = buttonRect.left - overflow - 10 + "px";
+      } else {
+        this.menu.style.left = buttonRect.left - 10 + "px";
+      }
+
+      this.menu.style.top = buttonRect.top + this.btnClickedForMenu.offsetHeight + 'px';
+    }
+  }, {
+    key: "createTooltipMenu",
+    value: function createTooltipMenu(e, data) {
+      this.toggleMenu(e, data);
+    }
+  }, {
+    key: "removeElementFromDOM",
+    value: function removeElementFromDOM(element) {
+      element === null || element === void 0 ? void 0 : element.parentElement.removeChild(element);
+    }
+  }, {
+    key: "createErrorAlertAfterElement",
+    value: function createErrorAlertAfterElement(elementId, errorMessage) {
+      var smallElement = this.createElement('small', 'text-muted');
+      smallElement.innerHTML = errorMessage;
+      this.modal.querySelector(elementId).after(smallElement);
+      this.modalHeightToAdd = smallElement.offsetHeight;
+      this.growModalHeigth();
+    }
+  }, {
+    key: "handleModalSubmit",
+    value: function handleModalSubmit() {
+      e.preventDefault();
+      this.createDataToPostObj();
+    }
+    /**
+     * 
+     * @param {"text" | "number" | "email" | "password"} type 
+     * @param {{name: string, class?: string, id?: string}} attributes 
+     * @return {HTMLInputElement}
+     */
+
+  }, {
+    key: "createInput",
+    value: function createInput(type, attributes) {
+      /**
+       * @type {HTMLInputElement}
+       */
+      var input = this.createElement('input', attributes["class"]);
+      input.name = attributes.name;
+      input.id = attributes.id;
+      input.type = type;
+      return input;
+    }
+    /**
+     * @param {string} inputId
+     */
+
+  }, {
+    key: "createLabel",
+    value: function createLabel(inputId, title) {
+      /**
+       * @type {HTMLLabelElement}
+       */
+      var label = this.createElement('label');
+      label.setAttribute('for', inputId);
+      label.innerText = title;
+      return label;
+    }
+    /**
+     * 
+     * @param {HTMLElement} element L'élément à ajouter
+     * @param {"after" | "before" | "child"} appendType Le type d'ajout
+     * @param {HTMLElement} reference L'élément de référence qui sera devant ou derrière ou parent de
+     * l'élément à ajouter
+     */
+
+  }, {
+    key: "appendElement",
+    value: function appendElement(element, appendType, reference) {
+      if (element && reference) {
+        switch (appendType) {
+          case "before":
+            reference.before(element);
+            break;
+
+          case "after":
+            reference.after(element);
+            break;
+
+          case "child":
+            reference.appendChild(element);
+            break;
+
+          default:
+            console.error(appendType + " n'existe pas.");
+            break;
+        }
+      } else {
+        throw new Error("L'un des paramètres 'element' et 'reference' est null.");
+      }
+    }
+  }], [{
+    key: "removeCircleLoader",
+    value: function removeCircleLoader() {
+      var circleLoader = document.querySelector('.circle_loader');
+
+      if (circleLoader !== null) {
+        document.body.removeChild(circleLoader);
+      }
+    }
+  }, {
+    key: "resetCategoryNameMarginBottom",
+    value: function resetCategoryNameMarginBottom() {
+      var categoriesNames = document.querySelectorAll('.category_name');
+
+      if (categoriesNames) {
+        categoriesNames.forEach(function (categoryName) {
+          categoryName.style.marginBottom = "30px";
+        });
+      }
+    }
+  }, {
+    key: "resetOwlCarouselMarginBottom",
+    value: function resetOwlCarouselMarginBottom() {
+      var owlCarousel = document.querySelector('.owl-carousel');
+
+      if (owlCarousel) {
+        owlCarousel.style.marginBottom = "40px";
+      }
+    }
+  }]);
+
+  return DOMInteractions;
+}();
+
+
 
 /***/ }),
 
@@ -22226,10 +23029,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
-/***/ "./resources/css/app.css":
-/*!*******************************!*\
-  !*** ./resources/css/app.css ***!
-  \*******************************/
+/***/ "./resources/scss/app.scss":
+/*!*********************************!*\
+  !*** ./resources/scss/app.scss ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -22630,7 +23433,7 @@ module.exports = JSON.parse('{"_args":[["axios@0.21.4","C:\\\\laragon\\\\www\\\\
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/css/app.css")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/scss/app.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -21,7 +21,7 @@ class CreateCvsTable extends Migration
             $table->string('current_work')->nullable();
             $table->mediumText('profil');
             $table->string('image')->nullable()->unique();
-            $table->boolean('is_registered')->default(false);
+            $table->boolean('is_recorded')->default(false);
             $table->timestamps();
         });
     }

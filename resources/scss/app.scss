@@ -1,5 +1,88 @@
-$bg : #141414;
+@import "./bootstrap/bootstrap.scss";
 
-body{
-    background-color: $bg;
+@font-face {
+    font-family: "Montserrat";
+    src: url("../fonts/montserrat/Montserrat-Regular.otf");
+}
+
+html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+* {
+    font-family: "Montserrat";
+}
+
+.btn.btn-secondary:hover {
+    background-color: $gray-300;
+}
+
+li.nav-item a.text-white:hover {
+    color: $gray-300 !important;
+}
+
+.modal-container {
+    width: 100%;
+    height: 100%;
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    .main-modal {
+        width: 350px;
+        height: 160px;
+        z-index: 10;
+        transition: transform .3s;
+        .buttons {
+            margin-right: 20px;
+        }
+    }
+
+    .main-modal.edit-password-modal {
+        height: 265px;
+        transform: translateY(-25px);
+    }
+
+    .main-modal.active-modal {
+        transform: translateY(25px);
+    }
+
+    .main-modal.edit-password-modal input.form-control::placeholder {
+        color: $gray-500;
+    }
+
+    .main-modal.edit-password-modal.active-modal {
+        transform: translateY(0);
+    }
+
+    .close-btn-container {
+        .close-btn {
+            width: 25px;
+            cursor: pointer;
+            padding: 5px;
+            border: 1px solid $primary;
+            border-radius: 2px;
+            color: $primary;
+            transition: background-color .3s ease-in;
+        }
+
+        .close-btn:hover {
+            background: $primary;
+            color: $white;
+        }
+    }
+
+    .close-btn-container::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
 }
