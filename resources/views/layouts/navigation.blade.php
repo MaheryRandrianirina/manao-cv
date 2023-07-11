@@ -20,6 +20,7 @@
                 </li>
                 <li class="nav-item" style="width: 220px">
                     @csrf
+                    <input type="hidden" name="token" value="{{ $token }}">
                     <a class="nav-link text-white edit-password" aria-current="page" href='/'>Modifier le mot de passe</a>
                 </li>
                 <li class="nav-item">

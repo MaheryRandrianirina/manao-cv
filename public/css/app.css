@@ -10329,6 +10329,9 @@ li.nav-item a.text-white:hover {
 .modal-container .main-modal.edit-password-modal.active-modal {
   transform: translateY(0);
 }
+.modal-container .main-modal.alert.alert-success.notification {
+  height: 85px;
+}
 .modal-container .close-btn-container .close-btn {
   width: 25px;
   cursor: pointer;

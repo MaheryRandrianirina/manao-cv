@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
-    public function index() {
-        return view('home');
+    public function index(Request $request) {
+        
+        return view('home', ['token' => csrf_token()]);
     }
 }

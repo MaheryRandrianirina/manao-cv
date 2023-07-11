@@ -1,44 +1,32 @@
-import { isEmpty } from "lodash"
+import { isEmpty, isUndefined } from "lodash"
 import CloseIcon from "../icons/close-icon"
 import axios from "axios"
 
 export default class DOMInteractions {
 
     formAction = ''
-    notificationClassName = ''
     showNotification = true
+    notificationClassName = 'alert alert-success shadow position-absolute m-auto start-0 end-0 top-0 notification'
 
     constructor()
     {
         this.emptyInputsMessage = []
         this.timeOutForReload = 1000
         this.modalHeightToAdd = 0
+        this.modalInputs = []
         this.responseJSON
         this.modalFormMethod = "post"
+        this.initialModalHeight = 0
+        this.modalHeightToAdd = 0
+        this.currentClickedBtn
+        this.currentInputToFocusNumber = 0
+        this.notificationContent = ""
     }
 
     animateElementFromClassname(element, classNameForAnimation)
     {
         element.offsetWidth
         element.classList.add(classNameForAnimation)
-    }
-
-    createCircleLoader()
-    {
-        this.createCircle()
-    }
-
-    removeModalFromDOMWithAnimation()
-    {
-        this.modal.classList.remove('active-modal')
-        this.modal.addEventListener('transitionend', ()=>{
-            if(
-                this.modalContainer
-                && this.modalContainer.parentElement !== null
-            ){
-                this.modalContainer.parentElement.removeChild(this.modalContainer)
-            }  
-        })
     }
     
     /**
@@ -53,19 +41,25 @@ export default class DOMInteractions {
         return element;
     }
 
-    createModal(className, content)
+    createModal(className, content, innerDefaultContent = true)
     {
-        this.modalContainer = this.createElement('div', 'modal-container position-relative')
-        this.modal = this.createElement('div', `main-modal ${className}`)
+        this.modalContainer = this.createElement('div', 'modal-container position-relative');
+        this.modal = this.createElement('div', `main-modal ${className}`);
 
-        this.appendModalToDOM()
-        this.innerModalDefaultContent()
-        this.animateElementFromClassname(this.modal, 'active-modal')
-        this.innerElementContentHTML(this.modal,  content)
-        this.modalContainer.addEventListener('click', this.closeModalThenRemoveHisEventListener.bind(this))
-        this.avoidCloseModalOnClickIn()
+        this.appendModalToDOM();
 
-        return this.modal
+        if(innerDefaultContent){
+            this.innerModalDefaultContent();
+        }
+
+        this.animateElementFromClassname(this.modal, 'active-modal');
+        this.innerElementContentHTML(this.modal,  content);
+        this.fetchModalInputs();
+        this.initialModalHeight = this.modal.offsetHeight;
+        this.modalContainer.addEventListener('click', this.closeModalThenRemoveHisEventListener.bind(this));
+        this.avoidCloseModalOnClickIn();
+
+        return this.modal;
     }
 
     innerModalDefaultContent(){
@@ -80,17 +74,19 @@ export default class DOMInteractions {
     /**
      * 
      * @param {HTMLElement} element 
-     * @param {string} contentHTML 
+     * @param {string | Element} contentHTML 
      */
     innerElementContentHTML(element, contentHTML)
     {
-        if(typeof contentHTML === "object") {
+        if(contentHTML instanceof Element) {
             element.appendChild(contentHTML)
         }else {
             if(element === this.modal){
                 const contentElement = element.querySelector('.content')
                 if(contentElement){
                     contentElement.innerHTML = contentHTML
+                }else {
+                    element.innerText = contentHTML
                 }
 
                 return
@@ -99,6 +95,14 @@ export default class DOMInteractions {
             element.innerHTML = contentHTML
         }
         
+    }
+
+    fetchModalInputs()
+    {
+        this.modalInputs
+        if(this.modal){
+            this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'))
+        }
     }
 
     appendModalToDOM()
@@ -116,7 +120,34 @@ export default class DOMInteractions {
 
     closeModal()
     {
-        this.removeModalFromDOMWithAnimation()
+        this.removeModalFromDOMWithAnimation();
+        this.resetModalInitialHeight();
+        this.resetModalHeightToAdd();
+    }
+
+    removeModalFromDOMWithAnimation()
+    {
+        this.modal.classList.remove('active-modal')
+        this.modal.addEventListener('transitionend', ()=>{
+            if(
+                this.modalContainer
+                && this.modalContainer.parentElement !== null
+            ){
+                this.modalContainer.parentElement.removeChild(this.modalContainer)
+                this.modal = undefined
+                this.modalContainer = undefined
+            }  
+        })
+    }
+
+    resetModalInitialHeight()
+    {
+        this.initialModalHeight = 0;
+    }
+
+    resetModalHeightToAdd()
+    {
+        this.modalHeightToAdd = 0;
     }
 
     handleActionsInModalContent()
@@ -145,6 +176,7 @@ export default class DOMInteractions {
 
     handleActionsInModalForm()
     {
+        this.keyboardTouches();
         this.primaryButton = this.modal.querySelector('.btn.btn-primary')
         this.primaryButton.addEventListener('click', this.handleModalPirmaryButtonClick.bind(this))
         this.ClickOnCloseModalButton()
@@ -181,6 +213,23 @@ export default class DOMInteractions {
     {
         this.ClickOnCloseModalButton()
     }
+
+    keyboardTouches(){
+        this.modal.addEventListener('keyup', this.handleKeyUp.bind(this))
+    }
+
+    /**
+     * 
+     * @param {KeyboardEvent} e 
+     */
+    handleKeyUp(e){
+        e.preventDefault();
+        
+        if(e.key.toLocaleLowerCase() === "enter"){
+            this.currentInputToFocusNumber++;
+            this.modalInputs[this.currentInputToFocusNumber];
+        }
+    }
     
     /**
      * 
@@ -205,30 +254,34 @@ export default class DOMInteractions {
     }
     
     /**
-     * @var currentClickedButton est déclarée dans une méthode là où l'on a besoin qu'elle
+     * @var currentClickedBtn est déclarée dans une méthode là où l'on a besoin qu'elle
      * ne soit plus undefined prochainement
      */
     createDataToPostObj()
     {
-        this.modalInputs
-        if(this.modal){
-            this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'))
+        if(isUndefined(this.modalInputs)){
+            this.inputs = [].slice.call(document.querySelectorAll('input'))
         }
-        
-        this.inputs = [].slice.call(document.querySelectorAll('input'))
 
-        if(this.currentClickedButton){
-            this.hiddenInputsContainingDataNeededForDeletion = [].slice.call(this.currentClickedButton.parentElement.querySelectorAll('input[type="hidden"]'))
+        if(this.currentClickedBtn){
+            this.hiddenInputsWithDataForTheActionFromClickedBtn = [].slice.call(
+                this.currentClickedBtn.parentElement
+                    .querySelectorAll('input[type="hidden"]')
+            )
         }
         
         this.dataToPostObj = {}
         
         if(this.modalInputs && !isEmpty(this.modalInputs)){
+            if(this.hiddenInputsWithDataForTheActionFromClickedBtn){
+                this.modalInputs = [...this.modalInputs, ...this.hiddenInputsWithDataForTheActionFromClickedBtn]
+            }
+
             this.modalInputs.forEach(input => {
                 this.setIntoDataToPostValueOf(input) 
             })
-        }else if(!isEmpty(this.hiddenInputsContainingDataNeededForDeletion)) {
-            this.hiddenInputsContainingDataNeededForDeletion.forEach(input => {
+        }else if(!isEmpty(this.hiddenInputsWithDataForTheActionFromClickedBtn)) {
+            this.hiddenInputsWithDataForTheActionFromClickedBtn.forEach(input => {
                 this.setIntoDataToPostValueOf(input)
             })
         }else if(this.inputs && !isEmpty(this.inputs)){
@@ -345,7 +398,7 @@ export default class DOMInteractions {
 
     createFailParapgraph(inputName)
     {
-        let failParagraph = this.createElement('small', 'form-text text-muted fail')
+        let failParagraph = this.createElement('small', 'form-text text-danger fail')
         failParagraph.innerHTML = this.emptyInputsMessage[inputName]
 
         return failParagraph
@@ -362,47 +415,65 @@ export default class DOMInteractions {
 
     showMessageAfter(input)
     {
-        const failParagraph = this.createFailParapgraph(input.name)
-        const elementAfterInput = input.nextElementSibling
+        const failParagraph = this.createFailParapgraph(input.name);
+        const elementAfterInput = input.nextElementSibling;
 
         if(elementAfterInput === null){
             input.after(failParagraph)
             if(this.modal){
-                this.modalHeightToAdd = failParagraph.offsetHeight
-                this.growModalHeigth()
+                this.modalHeightToAdd += failParagraph.offsetHeight;
+                this.growModalHeigth();
             }
         }
     }
 
     growModalHeigth()
     {
-        this.modal.style.height = this.modal.offsetHeight + this.modalHeightToAdd + 'px'
+        this.modal.style.height = this.initialModalHeight + this.modalHeightToAdd + 20 + 'px'
     }
 
+    /**
+     * @param {string | null} urlForRedirection url de rédirection après la soumission de la requête
+     */
     postContentWithNotification(urlForRedirection)
     {
         axios.post(this.formAction, this.dataToPostObj)
             .then(response => {
+                if("updated" in response.data && response.data.updated === false){
+                    throw new Error(JSON.stringify(response.data))
+                }
+
                 if(this.modal){
                     this.closeModal()
                 }
                 
                 if(this.showNotification) {
-                    this.showNotificationWithDataInMilliseconds({
-                        className: this.notificationClassName, 
-                        content: JSON.parse(response).success
-                    }, 2000)
-                    
-                    if(urlForRedirection){
-                        document.location.href = urlForRedirection
-                    }else {
-                        this.reloadPage()
+                    if(this.modal){
+                        this.modalContainer.parentElement.removeChild(this.modalContainer)
                     }
                     
+                    this.showNotificationWithDataInMilliseconds({
+                        className: this.notificationClassName, 
+                        content: this.notificationContent
+                    }, 2000)
+
+                    if(urlForRedirection){
+                        document.location.href = urlForRedirection
+                    } 
                 }
             }).catch(error => {
-                const errorResponseJSON = JSON.parse(error.response)
-                if("message" in errorResponseJSON){
+                if(typeof error === "object"){
+                    const errorJSON = JSON.parse(error.message)
+                    if("updated" in errorJSON && errorJSON.updated === false){
+                        this.createErrorAlertAfterElement(
+                            "#current_password", 
+                            errorJSON.errors.current_password
+                        )
+                    }
+
+                    return
+                }
+                if("response" in error && "message" in error.response.data){
                     this.createErrorAlertAfterElement(
                         "#image", 
                         errorResponseJSON.message.includes("invalid") ? 
@@ -430,7 +501,8 @@ export default class DOMInteractions {
         
     }
 
-    setFormAction(url){
+    setFormAction(url)
+    {
         this.formAction = url
     }
 
@@ -438,8 +510,25 @@ export default class DOMInteractions {
      * 
      * @param {boolean} value 
      */
-    setShowNotification(showNotification){
+    setShowNotification(showNotification)
+    {
         this.showNotification = showNotification
+    }
+
+    /**
+     * 
+     * @param {string} content 
+     */
+    setNotificationContent(content)
+    {
+        this.notificationContent = content
+    }
+
+    /**
+     * @param {HTMLButtonElement | HTMLLinkElement} currentClickedBtn
+     */
+    setCurrentClickedBtn(currentClickedBtn){
+        this.currentClickedBtn = currentClickedBtn
     }
 
     reloadPage()
@@ -457,11 +546,24 @@ export default class DOMInteractions {
      */
     showNotificationWithDataInMilliseconds(data, timeInMilliseconds)
     {
-        this.createModal(data.className, data.content)
-
+        this.createModal(data.className, data.content, false)
+        
         setTimeout(()=>{
             this.closeModal()
         }, timeInMilliseconds)
+    }
+
+    /**
+     * 
+     * @param {number} number input number on the list 
+     */
+    autofocusToInput(number){
+        if(this.modalInputs){
+            this.currentInputToFocusNumber = number - 1
+            this.modalInputs[this.currentInputToFocusNumber].focus()
+        }else {
+            console.error("this.modalInputs est undefined")
+        }
     }
 
     stopEventPropagationInBody()
@@ -549,7 +651,7 @@ export default class DOMInteractions {
 
     createErrorAlertAfterElement(elementId, errorMessage)
     {
-        let smallElement = this.createElement('small', 'text-muted') 
+        let smallElement = this.createElement('small', 'text-danger') 
         smallElement.innerHTML = errorMessage
         this.modal.querySelector(elementId).after(smallElement)
         this.modalHeightToAdd = smallElement.offsetHeight

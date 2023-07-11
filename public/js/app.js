@@ -5075,9 +5075,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ InteractionsWithNavbar)
 /* harmony export */ });
-/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
 
-var domInteractions = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__["default"]();
+
+var domInteractions = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
 function InteractionsWithNavbar() {
   LogoutButtonInteraction();
   EditPasswordInteraction();
@@ -5106,7 +5109,11 @@ function EditPasswordInteraction() {
   if (editPasswordMenu) {
     var handleEditPassword = function handleEditPassword(e) {
       e.preventDefault();
-      domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"/logout\" method=\"post\">\n                    <div class='form-group mb-3'>\n                        <input placeholder='Ancien mot de passe' class='form-control mb-3'/>\n                        <input placeholder='Nouveau mot de passe' class='form-control mb-3'/>\n                        <input placeholder='Confirmer le nouveau mot de passe' class='form-control mb-3'/>\n                    </div>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>  \n            ");
+      domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"\" method=\"post\">\n                    <div class='mb-3'>\n                        <input type='password' id='current_password' placeholder='Mot de passe actuel' name='current_password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password' placeholder='Nouveau mot de passe' name='password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password_confirmation' placeholder='Confirmer le nouveau mot de passe' name='password_confirmation' class='form-control' required />\n                    </div>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>  \n            ");
+      domInteractions.setFormAction('/password/edit');
+      domInteractions.setCurrentClickedBtn(e.target);
+      domInteractions.autofocusToInput(1);
+      domInteractions.setNotificationContent("Votre mot de passe a été mis à jour avec succès !");
       domInteractions.handleActionsInModalConfirmation();
     };
 
@@ -5134,6 +5141,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -5152,15 +5171,21 @@ var DOMInteractions = /*#__PURE__*/function () {
 
     _defineProperty(this, "formAction", '');
 
-    _defineProperty(this, "notificationClassName", '');
-
     _defineProperty(this, "showNotification", true);
+
+    _defineProperty(this, "notificationClassName", 'alert alert-success shadow position-absolute m-auto start-0 end-0 top-0 notification');
 
     this.emptyInputsMessage = [];
     this.timeOutForReload = 1000;
     this.modalHeightToAdd = 0;
+    this.modalInputs = [];
     this.responseJSON;
     this.modalFormMethod = "post";
+    this.initialModalHeight = 0;
+    this.modalHeightToAdd = 0;
+    this.currentClickedBtn;
+    this.currentInputToFocusNumber = 0;
+    this.notificationContent = "";
   }
 
   _createClass(DOMInteractions, [{
@@ -5168,23 +5193,6 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function animateElementFromClassname(element, classNameForAnimation) {
       element.offsetWidth;
       element.classList.add(classNameForAnimation);
-    }
-  }, {
-    key: "createCircleLoader",
-    value: function createCircleLoader() {
-      this.createCircle();
-    }
-  }, {
-    key: "removeModalFromDOMWithAnimation",
-    value: function removeModalFromDOMWithAnimation() {
-      var _this = this;
-
-      this.modal.classList.remove('active-modal');
-      this.modal.addEventListener('transitionend', function () {
-        if (_this.modalContainer && _this.modalContainer.parentElement !== null) {
-          _this.modalContainer.parentElement.removeChild(_this.modalContainer);
-        }
-      });
     }
     /**
      * @return {HTMLElement} element
@@ -5205,12 +5213,19 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "createModal",
     value: function createModal(className, content) {
+      var innerDefaultContent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       this.modalContainer = this.createElement('div', 'modal-container position-relative');
       this.modal = this.createElement('div', "main-modal ".concat(className));
       this.appendModalToDOM();
-      this.innerModalDefaultContent();
+
+      if (innerDefaultContent) {
+        this.innerModalDefaultContent();
+      }
+
       this.animateElementFromClassname(this.modal, 'active-modal');
       this.innerElementContentHTML(this.modal, content);
+      this.fetchModalInputs();
+      this.initialModalHeight = this.modal.offsetHeight;
       this.modalContainer.addEventListener('click', this.closeModalThenRemoveHisEventListener.bind(this));
       this.avoidCloseModalOnClickIn();
       return this.modal;
@@ -5223,13 +5238,13 @@ var DOMInteractions = /*#__PURE__*/function () {
     /**
      * 
      * @param {HTMLElement} element 
-     * @param {string} contentHTML 
+     * @param {string | Element} contentHTML 
      */
 
   }, {
     key: "innerElementContentHTML",
     value: function innerElementContentHTML(element, contentHTML) {
-      if (_typeof(contentHTML) === "object") {
+      if (contentHTML instanceof Element) {
         element.appendChild(contentHTML);
       } else {
         if (element === this.modal) {
@@ -5237,12 +5252,23 @@ var DOMInteractions = /*#__PURE__*/function () {
 
           if (contentElement) {
             contentElement.innerHTML = contentHTML;
+          } else {
+            element.innerText = contentHTML;
           }
 
           return;
         }
 
         element.innerHTML = contentHTML;
+      }
+    }
+  }, {
+    key: "fetchModalInputs",
+    value: function fetchModalInputs() {
+      this.modalInputs;
+
+      if (this.modal) {
+        this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'));
       }
     }
   }, {
@@ -5262,6 +5288,33 @@ var DOMInteractions = /*#__PURE__*/function () {
     key: "closeModal",
     value: function closeModal() {
       this.removeModalFromDOMWithAnimation();
+      this.resetModalInitialHeight();
+      this.resetModalHeightToAdd();
+    }
+  }, {
+    key: "removeModalFromDOMWithAnimation",
+    value: function removeModalFromDOMWithAnimation() {
+      var _this = this;
+
+      this.modal.classList.remove('active-modal');
+      this.modal.addEventListener('transitionend', function () {
+        if (_this.modalContainer && _this.modalContainer.parentElement !== null) {
+          _this.modalContainer.parentElement.removeChild(_this.modalContainer);
+
+          _this.modal = undefined;
+          _this.modalContainer = undefined;
+        }
+      });
+    }
+  }, {
+    key: "resetModalInitialHeight",
+    value: function resetModalInitialHeight() {
+      this.initialModalHeight = 0;
+    }
+  }, {
+    key: "resetModalHeightToAdd",
+    value: function resetModalHeightToAdd() {
+      this.modalHeightToAdd = 0;
     }
   }, {
     key: "handleActionsInModalContent",
@@ -5289,6 +5342,7 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "handleActionsInModalForm",
     value: function handleActionsInModalForm() {
+      this.keyboardTouches();
       this.primaryButton = this.modal.querySelector('.btn.btn-primary');
       this.primaryButton.addEventListener('click', this.handleModalPirmaryButtonClick.bind(this));
       this.ClickOnCloseModalButton();
@@ -5325,6 +5379,26 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function handleActionsInSimpleModal() {
       this.ClickOnCloseModalButton();
     }
+  }, {
+    key: "keyboardTouches",
+    value: function keyboardTouches() {
+      this.modal.addEventListener('keyup', this.handleKeyUp.bind(this));
+    }
+    /**
+     * 
+     * @param {KeyboardEvent} e 
+     */
+
+  }, {
+    key: "handleKeyUp",
+    value: function handleKeyUp(e) {
+      e.preventDefault();
+
+      if (e.key.toLocaleLowerCase() === "enter") {
+        this.currentInputToFocusNumber++;
+        this.modalInputs[this.currentInputToFocusNumber];
+      }
+    }
     /**
      * 
      * @param {MouseEvent} e 
@@ -5349,7 +5423,7 @@ var DOMInteractions = /*#__PURE__*/function () {
       e.target.removeEventListener('click', this.closeModalThenRemoveHisEventListener);
     }
     /**
-     * @var currentClickedButton est déclarée dans une méthode là où l'on a besoin qu'elle
+     * @var currentClickedBtn est déclarée dans une méthode là où l'on a besoin qu'elle
      * ne soit plus undefined prochainement
      */
 
@@ -5358,26 +5432,26 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function createDataToPostObj() {
       var _this3 = this;
 
-      this.modalInputs;
-
-      if (this.modal) {
-        this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'));
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.modalInputs)) {
+        this.inputs = [].slice.call(document.querySelectorAll('input'));
       }
 
-      this.inputs = [].slice.call(document.querySelectorAll('input'));
-
-      if (this.currentClickedButton) {
-        this.hiddenInputsContainingDataNeededForDeletion = [].slice.call(this.currentClickedButton.parentElement.querySelectorAll('input[type="hidden"]'));
+      if (this.currentClickedBtn) {
+        this.hiddenInputsWithDataForTheActionFromClickedBtn = [].slice.call(this.currentClickedBtn.parentElement.querySelectorAll('input[type="hidden"]'));
       }
 
       this.dataToPostObj = {};
 
       if (this.modalInputs && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.modalInputs)) {
+        if (this.hiddenInputsWithDataForTheActionFromClickedBtn) {
+          this.modalInputs = [].concat(_toConsumableArray(this.modalInputs), _toConsumableArray(this.hiddenInputsWithDataForTheActionFromClickedBtn));
+        }
+
         this.modalInputs.forEach(function (input) {
           _this3.setIntoDataToPostValueOf(input);
         });
-      } else if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.hiddenInputsContainingDataNeededForDeletion)) {
-        this.hiddenInputsContainingDataNeededForDeletion.forEach(function (input) {
+      } else if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.hiddenInputsWithDataForTheActionFromClickedBtn)) {
+        this.hiddenInputsWithDataForTheActionFromClickedBtn.forEach(function (input) {
           _this3.setIntoDataToPostValueOf(input);
         });
       } else if (this.inputs && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.inputs)) {
@@ -5493,7 +5567,7 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "createFailParapgraph",
     value: function createFailParapgraph(inputName) {
-      var failParagraph = this.createElement('small', 'form-text text-muted fail');
+      var failParagraph = this.createElement('small', 'form-text text-danger fail');
       failParagraph.innerHTML = this.emptyInputsMessage[inputName];
       return failParagraph;
     }
@@ -5515,7 +5589,7 @@ var DOMInteractions = /*#__PURE__*/function () {
         input.after(failParagraph);
 
         if (this.modal) {
-          this.modalHeightToAdd = failParagraph.offsetHeight;
+          this.modalHeightToAdd += failParagraph.offsetHeight;
           this.growModalHeigth();
         }
       }
@@ -5523,34 +5597,52 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "growModalHeigth",
     value: function growModalHeigth() {
-      this.modal.style.height = this.modal.offsetHeight + this.modalHeightToAdd + 'px';
+      this.modal.style.height = this.initialModalHeight + this.modalHeightToAdd + 20 + 'px';
     }
+    /**
+     * @param {string | null} urlForRedirection url de rédirection après la soumission de la requête
+     */
+
   }, {
     key: "postContentWithNotification",
     value: function postContentWithNotification(urlForRedirection) {
       var _this5 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_2___default().post(this.formAction, this.dataToPostObj).then(function (response) {
+        if ("updated" in response.data && response.data.updated === false) {
+          throw new Error(JSON.stringify(response.data));
+        }
+
         if (_this5.modal) {
           _this5.closeModal();
         }
 
         if (_this5.showNotification) {
+          if (_this5.modal) {
+            _this5.modalContainer.parentElement.removeChild(_this5.modalContainer);
+          }
+
           _this5.showNotificationWithDataInMilliseconds({
             className: _this5.notificationClassName,
-            content: JSON.parse(response).success
+            content: _this5.notificationContent
           }, 2000);
 
           if (urlForRedirection) {
             document.location.href = urlForRedirection;
-          } else {
-            _this5.reloadPage();
           }
         }
       })["catch"](function (error) {
-        var errorResponseJSON = JSON.parse(error.response);
+        if (_typeof(error) === "object") {
+          var errorJSON = JSON.parse(error.message);
 
-        if ("message" in errorResponseJSON) {
+          if ("updated" in errorJSON && errorJSON.updated === false) {
+            _this5.createErrorAlertAfterElement("#current_password", errorJSON.errors.current_password);
+          }
+
+          return;
+        }
+
+        if ("response" in error && "message" in error.response.data) {
           _this5.createErrorAlertAfterElement("#image", errorResponseJSON.message.includes("invalid") ? "Fichier invalide" : errorResponseJSON.message);
         }
       });
@@ -5586,6 +5678,25 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function setShowNotification(showNotification) {
       this.showNotification = showNotification;
     }
+    /**
+     * 
+     * @param {string} content 
+     */
+
+  }, {
+    key: "setNotificationContent",
+    value: function setNotificationContent(content) {
+      this.notificationContent = content;
+    }
+    /**
+     * @param {HTMLButtonElement | HTMLLinkElement} currentClickedBtn
+     */
+
+  }, {
+    key: "setCurrentClickedBtn",
+    value: function setCurrentClickedBtn(currentClickedBtn) {
+      this.currentClickedBtn = currentClickedBtn;
+    }
   }, {
     key: "reloadPage",
     value: function reloadPage() {
@@ -5604,10 +5715,25 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function showNotificationWithDataInMilliseconds(data, timeInMilliseconds) {
       var _this6 = this;
 
-      this.createModal(data.className, data.content);
+      this.createModal(data.className, data.content, false);
       setTimeout(function () {
         _this6.closeModal();
       }, timeInMilliseconds);
+    }
+    /**
+     * 
+     * @param {number} number input number on the list 
+     */
+
+  }, {
+    key: "autofocusToInput",
+    value: function autofocusToInput(number) {
+      if (this.modalInputs) {
+        this.currentInputToFocusNumber = number - 1;
+        this.modalInputs[this.currentInputToFocusNumber].focus();
+      } else {
+        console.error("this.modalInputs est undefined");
+      }
     }
   }, {
     key: "stopEventPropagationInBody",
@@ -5700,7 +5826,7 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "createErrorAlertAfterElement",
     value: function createErrorAlertAfterElement(elementId, errorMessage) {
-      var smallElement = this.createElement('small', 'text-muted');
+      var smallElement = this.createElement('small', 'text-danger');
       smallElement.innerHTML = errorMessage;
       this.modal.querySelector(elementId).after(smallElement);
       this.modalHeightToAdd = smallElement.offsetHeight;
