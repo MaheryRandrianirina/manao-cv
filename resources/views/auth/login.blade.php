@@ -31,7 +31,7 @@
                     <label for="remember_me" class="form-check-label">{{ __('Se souvenir de moi') }}</label> 
                 </div> 
                 <div class="mb-3">   
-                    <x-label for="username" class="text-muted" :value="__('Pas de compte ?')" />  
+                    <x-label id='no-account' class="text-gray" :value="__('Pas de compte ?')" />  
                     <a href="/register" class="fs-6">S'inscrire</a>
                 </div>   
                 <x-button class="btn btn-primary">

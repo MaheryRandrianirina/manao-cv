@@ -653,6 +653,7 @@ export default class DOMInteractions {
     {
         let smallElement = this.createElement('small', 'text-danger') 
         smallElement.innerHTML = errorMessage
+        
         this.modal.querySelector(elementId).after(smallElement)
         this.modalHeightToAdd = smallElement.offsetHeight
         this.growModalHeigth()

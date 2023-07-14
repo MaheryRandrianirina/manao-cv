@@ -90,3 +90,207 @@ li.nav-item a.text-white:hover {
         clear: both;
     }
 }
+
+.cv-models-container {
+    margin: 0 auto;
+    top: 120px;
+    width: 560px;
+    height: calc(495px * 2);
+}
+.cv-models {
+    transform-origin: top left;
+    transform: scale(0.4);
+    .row-one, .row-two {
+        width: 1400px;
+        display: flex;
+    }
+
+    .cv {
+        width: 700px;
+        transition: filter .3s ease-in;
+        h1, h3 {
+            font-weight: bolder;
+        }
+        .icon {
+            width: 20px;
+            fill: $white;
+        }
+        cursor: pointer;
+        &:hover {
+            filter: contrast(2);
+        }
+    }
+
+    .cv.cv-1 {
+        .skills {
+            .stage {
+                width: 150px;
+                height: 10px;
+                border-radius: 10px;
+                position: relative;
+            }
+            .skill .stage::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 10px;
+                border-radius: 10px;
+                background: $indigo;
+            }
+
+            .skill.skill-one .stage::after {
+                width: 130px;
+            }
+            .skill.skill-two .stage::after {
+                width: 90px;
+            }
+            .skill.skill-three .stage::after {
+                width: 70px;
+            }
+            .skill.skill-four .stage::after {
+                width: 100px;
+            }
+        }
+    }
+
+    .cv.cv-2 {
+        .icon {
+            fill: $black;
+        }
+
+        .icon.heart-icon {
+            width: 25px;
+            margin-right: 10px;
+        }
+
+        .languages-list, .skills-list {
+            .stage {
+                display: inline-block;
+                height: 10px;
+                border-radius: 10px;
+            }
+        }
+    }
+
+    .cv.cv-3 {
+        .left {
+            position: relative;
+        }
+        .left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-top: 110px solid $primary;
+            border-left: 165px solid $primary;
+            border-right: 165px solid transparent;
+            border-bottom: 110px solid transparent;
+            z-index: 5;
+        }
+
+        .left .profile-photo {
+            position: relative;
+            z-index: 10;
+        }
+
+        .right {
+            position: relative;
+        }
+
+        .right::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-top: 220px solid $blue-200;
+            border-left: 665px solid transparent;
+            z-index: 3;
+        }
+        .icon {
+            fill: $black;
+        }
+
+        h3 {
+            border-bottom: 1px solid $black;
+        }
+
+        h4 {
+            font-weight: bolder;
+            text-transform: capitalize;
+        }
+
+        .about {
+            position: relative;
+            z-index: 5;
+            h2, h3 {
+                font-weight: bolder;
+            }
+            h3 {
+                border: none;
+            }
+            &::after {
+                content: '';
+                display: table;
+                clear: both;
+            }
+        }
+
+        .languages-list, .skills-list {
+            .stage {
+                display: inline-block;
+                height: 10px;
+                border-radius: 10px;
+            }
+        }
+    }
+
+    .cv.cv-4 {
+        background: $green-2;
+        h3 {
+            color: $gray;
+        }
+
+        .icon {
+            fill: $black;
+        }
+        .left {
+            width: calc(40% + 2px);
+        }
+
+        .cv-top .name {
+            color: $green-2;
+        }
+
+        .cv-bottom {
+            top: -2px;
+            height: calc(100% - 150px);
+        }
+
+        .stage {
+            width: 150px;
+            height: 10px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .skill .stage::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 10px;
+            border-radius: 10px;
+            background: $black;
+        }
+
+        .skill.skill-one .stage::after {
+            width: 130px;
+        }
+        .skill.skill-two .stage::after {
+            width: 90px;
+        }
+        .skill.skill-three .stage::after {
+            width: 70px;
+        }
+    }
+}

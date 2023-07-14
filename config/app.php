@@ -13,7 +13,13 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Modélisation CV'),
+
+    'login' => "Connexion",
+
+    'register' => "Inscription",
+
+    "home" => "Modèles de CV",
 
     /*
     |--------------------------------------------------------------------------

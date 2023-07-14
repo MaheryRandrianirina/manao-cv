@@ -2,6 +2,8 @@
 
 @section("content")
 
-<h3>BIENVENUE DANS LE HOME</h3>
+<main class="w-100 h-100 position-relative">
+    @include('components.cv-models')
+</main>
 
 @endsection

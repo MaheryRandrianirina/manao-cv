@@ -32,7 +32,7 @@
                                     required />         
                 </div>
                 <div class="mb-3">   
-                    <x-label class="text-muted" :value="__('Déjà un compte ?')" />  
+                    <x-label id="have-account" class="text-gray" :value="__('Déjà un compte ?')" />  
                     <a href="/login" class="fs-6">Se connecter</a>
                 </div>   
                 <x-button class="btn btn-primary">
