@@ -5204,7 +5204,7 @@ var DOMInteractions = /*#__PURE__*/function () {
     key: "createModal",
     value: function createModal(className, content) {
       var innerDefaultContent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-      this.modalContainer = this.createElement('div', 'modal-container position-relative');
+      this.modalContainer = this.createElement('div', 'modal-container position-fixed top-0 bottom-0 start-0 end-0');
       this.modal = this.createElement('div', "main-modal ".concat(className));
       this.appendModalToDOM();
 
@@ -6041,7 +6041,7 @@ function LogoutButtonInteraction() {
   if (logoutButton) {
     var handleLogout = function handleLogout(e) {
       e.preventDefault();
-      domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute top-0 start-0 end-0 m-auto', "\n                <form action=\"/logout\" method=\"post\">\n                    <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>\n            ");
+      domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', "\n                <form action=\"/logout\" method=\"post\">\n                    <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>\n            ");
       ;
       domInteractions.setFormAction("/logout");
       domInteractions.setShowNotification(false);

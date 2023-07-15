@@ -17,7 +17,7 @@ function LogoutButtonInteraction(){
         function handleLogout(e){
             e.preventDefault();
 
-            domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute top-0 start-0 end-0 m-auto', `
+            domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', `
                 <form action="/logout" method="post">
                     <p class='text-center'>Vous êtes sûr de vouloir vous déconnecter ?</p>
                     <div class='buttons position-absolute end-0'>

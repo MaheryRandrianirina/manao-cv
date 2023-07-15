@@ -10498,6 +10498,7 @@ li.nav-item a.text-white:hover {
 .modal-container {
   width: 100%;
   height: 100%;
+  background: rgba(34, 34, 34, 0.3882352941);
 }
 .modal-container::after {
   content: "";
@@ -10516,6 +10517,11 @@ li.nav-item a.text-white:hover {
 .modal-container .main-modal.edit-password-modal {
   height: 265px;
   transform: translateY(-25px);
+}
+.modal-container .main-modal.logout-modal {
+  top: 45px;
+  height: 165px;
+  z-index: 20;
 }
 .modal-container .main-modal.active-modal {
   transform: translateY(25px);

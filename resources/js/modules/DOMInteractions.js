@@ -43,7 +43,7 @@ export default class DOMInteractions {
 
     createModal(className, content, innerDefaultContent = true)
     {
-        this.modalContainer = this.createElement('div', 'modal-container position-relative');
+        this.modalContainer = this.createElement('div', 'modal-container position-fixed top-0 bottom-0 start-0 end-0');
         this.modal = this.createElement('div', `main-modal ${className}`);
 
         this.appendModalToDOM();

@@ -27,9 +27,14 @@ li.nav-item a.text-white:hover {
     color: $gray-300 !important;
 }
 
+.navbar.navbar-expand-md {
+    
+}
+
 .modal-container {
     width: 100%;
     height: 100%;
+    background: #22222263;
     &::after {
         content: '';
         display: table;
@@ -49,6 +54,12 @@ li.nav-item a.text-white:hover {
     .main-modal.edit-password-modal {
         height: 265px;
         transform: translateY(-25px);
+    }
+
+    .main-modal.logout-modal {
+        top: 45px;
+        height: 165px;
+        z-index: 20;
     }
 
     .main-modal.active-modal {
