@@ -6041,11 +6041,14 @@ function LogoutButtonInteraction() {
   if (logoutButton) {
     var handleLogout = function handleLogout(e) {
       e.preventDefault();
-      domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', "\n                <form action=\"/logout\" method=\"post\">\n                    <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>\n            ");
-      ;
-      domInteractions.setFormAction("/logout");
-      domInteractions.setShowNotification(false);
-      domInteractions.handleActionsInModalConfirmation();
+
+      if (document.querySelector('.logout-modal') === null) {
+        domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', "\n                    <form action=\"/logout\" method=\"post\">\n                        <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                        <div class='buttons position-absolute end-0'>\n                            <a class='btn btn-secondary no'>Annuler</a>\n                            <button class='btn btn-primary sure' type='submit'>Valider</button>\n                        </div>\n                    </form>\n                ");
+        ;
+        domInteractions.setFormAction("/logout");
+        domInteractions.setShowNotification(false);
+        domInteractions.handleActionsInModalConfirmation();
+      }
     };
 
     logoutButton.addEventListener('click', handleLogout);
@@ -6058,12 +6061,15 @@ function EditPasswordInteraction() {
   if (editPasswordMenu) {
     var handleEditPassword = function handleEditPassword(e) {
       e.preventDefault();
-      domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"\" method=\"post\">\n                    <div class='mb-3'>\n                        <input type='password' id='current_password' placeholder='Mot de passe actuel' name='current_password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password' placeholder='Nouveau mot de passe' name='password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password_confirmation' placeholder='Confirmer le nouveau mot de passe' name='password_confirmation' class='form-control' required />\n                    </div>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>  \n            ");
-      domInteractions.setFormAction('/password/edit');
-      domInteractions.setCurrentClickedBtn(e.target);
-      domInteractions.autofocusToInput(1);
-      domInteractions.setNotificationContent("Votre mot de passe a été mis à jour avec succès !");
-      domInteractions.handleActionsInModalConfirmation();
+
+      if (document.querySelector('.edit-password-modal') === null) {
+        domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"\" method=\"post\">\n                        <div class='mb-3'>\n                            <input type='password' id='current_password' placeholder='Mot de passe actuel' name='current_password' class='form-control' required />\n                        </div>\n                        <div class='mb-3'>\n                            <input type='password' id='password' placeholder='Nouveau mot de passe' name='password' class='form-control' required />\n                        </div>\n                        <div class='mb-3'>\n                            <input type='password' id='password_confirmation' placeholder='Confirmer le nouveau mot de passe' name='password_confirmation' class='form-control' required />\n                        </div>\n                        <div class='buttons position-absolute end-0'>\n                            <a class='btn btn-secondary no'>Annuler</a>\n                            <button class='btn btn-primary sure' type='submit'>Valider</button>\n                        </div>\n                    </form>  \n                ");
+        domInteractions.setFormAction('/password/edit');
+        domInteractions.setCurrentClickedBtn(e.target);
+        domInteractions.autofocusToInput(1);
+        domInteractions.setNotificationContent("Votre mot de passe a été mis à jour avec succès !");
+        domInteractions.handleActionsInModalConfirmation();
+      }
     };
 
     editPasswordMenu.addEventListener('click', handleEditPassword);
