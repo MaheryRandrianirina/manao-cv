@@ -10570,6 +10570,7 @@ li.nav-item a.text-white:hover {
   display: flex;
 }
 .cv-models .cv {
+  position: relative;
   width: 700px;
   transition: filter 0.3s ease-in;
   cursor: pointer;
@@ -10580,9 +10581,6 @@ li.nav-item a.text-white:hover {
 .cv-models .cv .icon {
   width: 20px;
   fill: #fff;
-}
-.cv-models .cv:hover {
-  filter: contrast(2);
 }
 .cv-models .cv.cv-1 .skills .stage {
   width: 150px;
@@ -10725,4 +10723,18 @@ li.nav-item a.text-white:hover {
 }
 .cv-models .cv.cv-4 .skill.skill-three .stage::after {
   width: 70px;
+}
+
+.model-hover-style {
+  background-color: rgba(173, 181, 189, 0);
+  transition: background-color 0.3s ease-in;
+  cursor: pointer;
+}
+.model-hover-style p {
+  font-weight: bold;
+  margin: 234.5px 0 0 137.5px;
+  transform: translateY(-50%) translateX(-20%);
+}
+.model-hover-style.active {
+  background-color: rgba(173, 181, 189, 0.2745098039);
 }

@@ -106,6 +106,7 @@ li.nav-item a.text-white:hover {
     }
 
     .cv {
+        position: relative;
         width: 700px;
         transition: filter .3s ease-in;
         h1, h3 {
@@ -116,9 +117,6 @@ li.nav-item a.text-white:hover {
             fill: $white;
         }
         cursor: pointer;
-        &:hover {
-            filter: contrast(2);
-        }
     }
 
     .cv.cv-1 {
@@ -292,5 +290,20 @@ li.nav-item a.text-white:hover {
         .skill.skill-three .stage::after {
             width: 70px;
         }
+    }
+}
+
+.model-hover-style {
+    background-color: #adb5bd00;
+    transition: background-color .3s ease-in;
+    p {
+        font-weight: bold;
+        margin: calc(469px/2) 0 0 calc(275px/2);
+        transform: translateY(-50%) translateX(-20%);  
+    }
+    cursor: pointer;
+
+    &.active {
+        background-color: #adb5bd46;
     }
 }

@@ -4977,7 +4977,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bootstrap__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth */ "./resources/js/auth.js");
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
-/* harmony import */ var _interactions_with_navbar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./interactions-with-navbar */ "./resources/js/interactions-with-navbar.js");
+/* harmony import */ var _interactions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./interactions */ "./resources/js/interactions.js");
 
 
 
@@ -4985,7 +4985,7 @@ __webpack_require__.r(__webpack_exports__);
 window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"];
 alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
 (0,_auth__WEBPACK_IMPORTED_MODULE_1__.ScrollIfErrors)();
-(0,_interactions_with_navbar__WEBPACK_IMPORTED_MODULE_3__["default"])();
+new _interactions__WEBPACK_IMPORTED_MODULE_3__["default"]();
 
 /***/ }),
 
@@ -5064,62 +5064,52 @@ function CloseIcon(className) {
 
 /***/ }),
 
-/***/ "./resources/js/interactions-with-navbar.js":
-/*!**************************************************!*\
-  !*** ./resources/js/interactions-with-navbar.js ***!
-  \**************************************************/
+/***/ "./resources/js/interactions.js":
+/*!**************************************!*\
+  !*** ./resources/js/interactions.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ InteractionsWithNavbar)
+/* harmony export */   "default": () => (/* binding */ Interactions)
 /* harmony export */ });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+/* harmony import */ var _utils_interactions_with_cv_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/interactions-with-cv-models */ "./resources/js/utils/interactions-with-cv-models.js");
+/* harmony import */ var _utils_interactions_with_navbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/interactions-with-navbar */ "./resources/js/utils/interactions-with-navbar.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 
-var domInteractions = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
-function InteractionsWithNavbar() {
-  LogoutButtonInteraction();
-  EditPasswordInteraction();
-}
 
-function LogoutButtonInteraction() {
-  var logoutButton = document.querySelector('.btn.logout-btn');
 
-  if (logoutButton) {
-    var handleLogout = function handleLogout(e) {
-      e.preventDefault();
-      domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute top-0 start-0 end-0 m-auto', "\n                <form action=\"/logout\" method=\"post\">\n                    <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>\n            ");
-      ;
-      domInteractions.setFormAction("/logout");
-      domInteractions.setShowNotification(false);
-      domInteractions.handleActionsInModalConfirmation();
-    };
+var Interactions = /*#__PURE__*/function () {
+  function Interactions() {
+    _classCallCheck(this, Interactions);
 
-    logoutButton.addEventListener('click', handleLogout);
+    this.withNavbar();
+    this.withCVModels();
   }
-}
 
-function EditPasswordInteraction() {
-  var editPasswordMenu = document.querySelector('.edit-password');
+  _createClass(Interactions, [{
+    key: "withNavbar",
+    value: function withNavbar() {
+      (0,_utils_interactions_with_navbar__WEBPACK_IMPORTED_MODULE_1__["default"])();
+    }
+  }, {
+    key: "withCVModels",
+    value: function withCVModels() {
+      (0,_utils_interactions_with_cv_models__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    }
+  }]);
 
-  if (editPasswordMenu) {
-    var handleEditPassword = function handleEditPassword(e) {
-      e.preventDefault();
-      domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"\" method=\"post\">\n                    <div class='mb-3'>\n                        <input type='password' id='current_password' placeholder='Mot de passe actuel' name='current_password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password' placeholder='Nouveau mot de passe' name='password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password_confirmation' placeholder='Confirmer le nouveau mot de passe' name='password_confirmation' class='form-control' required />\n                    </div>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>  \n            ");
-      domInteractions.setFormAction('/password/edit');
-      domInteractions.setCurrentClickedBtn(e.target);
-      domInteractions.autofocusToInput(1);
-      domInteractions.setNotificationContent("Votre mot de passe a été mis à jour avec succès !");
-      domInteractions.handleActionsInModalConfirmation();
-    };
+  return Interactions;
+}();
 
-    editPasswordMenu.addEventListener('click', handleEditPassword);
-  }
-}
+
 
 /***/ }),
 
@@ -5940,6 +5930,145 @@ var DOMInteractions = /*#__PURE__*/function () {
 }();
 
 
+
+/***/ }),
+
+/***/ "./resources/js/utils/interactions-with-cv-models.js":
+/*!***********************************************************!*\
+  !*** ./resources/js/utils/interactions-with-cv-models.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InteractionsWithCVModels)
+/* harmony export */ });
+/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+
+function InteractionsWithCVModels() {
+  var CVModels = document.querySelectorAll('.cv');
+
+  if (CVModels) {
+    var handleModelHover = function handleModelHover(e) {
+      e.stopPropagation();
+      console.log('hover : ', e.target);
+      /**
+       * @type {HTMLDivElement}
+       */
+
+      var model = e.currentTarget;
+      var modelRect = model.getBoundingClientRect();
+      var dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__["default"]();
+      var modelHoverStyle = document.querySelector('.model-hover-style');
+
+      if (modelHoverStyle === null) {
+        var _modelHoverStyle = dom.createElement('div', 'position-absolute model-hover-style');
+
+        var modelHoverStyleParagraph = dom.createElement('p');
+        modelHoverStyleParagraph.innerText = "Remplir";
+
+        _modelHoverStyle.appendChild(modelHoverStyleParagraph);
+
+        if (model.classList.contains('cv-1') || model.classList.contains('cv-3')) {
+          _modelHoverStyle.style.left = 0;
+        } else if (model.classList.contains('cv-2') || model.classList.contains('cv-4')) {
+          _modelHoverStyle.style.right = 0;
+        }
+
+        if (model.parentElement.classList.contains('row-one')) {
+          _modelHoverStyle.style.top = 0;
+        } else if (model.parentElement.classList.contains('row-two')) {
+          _modelHoverStyle.style.top = 469 + 9 + "px";
+        }
+
+        _modelHoverStyle.style.width = modelRect.width + "px";
+        _modelHoverStyle.style.height = modelRect.height + "px";
+        var cmModelsContainer = document.querySelector('.cv-models-container');
+        cmModelsContainer.appendChild(_modelHoverStyle);
+        _modelHoverStyle.offsetWidth;
+
+        _modelHoverStyle.classList.add('active');
+
+        _modelHoverStyle.addEventListener('mouseleave', handleModelMouseLeave);
+      }
+    };
+
+    var handleModelMouseLeave = function handleModelMouseLeave(e) {
+      e.stopPropagation();
+      var modelHoverStyle = document.querySelector('.model-hover-style');
+
+      if (modelHoverStyle) {
+        modelHoverStyle.parentElement.removeChild(modelHoverStyle);
+      }
+
+      e.target.addEventListener('mouseenter', handleModelHover);
+    };
+
+    CVModels.forEach(function (model) {
+      model.addEventListener("mouseenter", handleModelHover); //model.addEventListener('mouseleave', handleModelMouseLeave);
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/utils/interactions-with-navbar.js":
+/*!********************************************************!*\
+  !*** ./resources/js/utils/interactions-with-navbar.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InteractionsWithNavbar)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+
+
+var domInteractions = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
+function InteractionsWithNavbar() {
+  LogoutButtonInteraction();
+  EditPasswordInteraction();
+}
+
+function LogoutButtonInteraction() {
+  var logoutButton = document.querySelector('.btn.logout-btn');
+
+  if (logoutButton) {
+    var handleLogout = function handleLogout(e) {
+      e.preventDefault();
+      domInteractions.createModal('logout-modal shadow bg-white p-3 position-absolute top-0 start-0 end-0 m-auto', "\n                <form action=\"/logout\" method=\"post\">\n                    <p class='text-center'>Vous \xEAtes s\xFBr de vouloir vous d\xE9connecter ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>\n            ");
+      ;
+      domInteractions.setFormAction("/logout");
+      domInteractions.setShowNotification(false);
+      domInteractions.handleActionsInModalConfirmation();
+    };
+
+    logoutButton.addEventListener('click', handleLogout);
+  }
+}
+
+function EditPasswordInteraction() {
+  var editPasswordMenu = document.querySelector('.edit-password');
+
+  if (editPasswordMenu) {
+    var handleEditPassword = function handleEditPassword(e) {
+      e.preventDefault();
+      domInteractions.createModal('edit-password-modal shadow bg-white p-3 position-absolute top-0 bottom-0 start-0 end-0 m-auto', "<form action=\"\" method=\"post\">\n                    <div class='mb-3'>\n                        <input type='password' id='current_password' placeholder='Mot de passe actuel' name='current_password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password' placeholder='Nouveau mot de passe' name='password' class='form-control' required />\n                    </div>\n                    <div class='mb-3'>\n                        <input type='password' id='password_confirmation' placeholder='Confirmer le nouveau mot de passe' name='password_confirmation' class='form-control' required />\n                    </div>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-primary sure' type='submit'>Valider</button>\n                    </div>\n                </form>  \n            ");
+      domInteractions.setFormAction('/password/edit');
+      domInteractions.setCurrentClickedBtn(e.target);
+      domInteractions.autofocusToInput(1);
+      domInteractions.setNotificationContent("Votre mot de passe a été mis à jour avec succès !");
+      domInteractions.handleActionsInModalConfirmation();
+    };
+
+    editPasswordMenu.addEventListener('click', handleEditPassword);
+  }
+}
 
 /***/ }),
 

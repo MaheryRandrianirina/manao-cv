@@ -1,5 +1,5 @@
 import axios from "axios";
-import DOMInteractions from "./modules/DOMInteractions";
+import DOMInteractions from "../modules/DOMInteractions";
 
 const domInteractions = new DOMInteractions();
 
