@@ -27,10 +27,6 @@ li.nav-item a.text-white:hover {
     color: $gray-300 !important;
 }
 
-.navbar.navbar-expand-md {
-    
-}
-
 .modal-container {
     width: 100%;
     height: 100%;
@@ -111,10 +107,14 @@ li.nav-item a.text-white:hover {
 .cv-models {
     transform-origin: top left;
     transform: scale(0.4);
+    
     .row-one, .row-two {
         width: 1400px;
         display: flex;
     }
+}
+
+    
 
     .cv {
         position: relative;
@@ -132,13 +132,13 @@ li.nav-item a.text-white:hover {
 
     .cv.cv-1 {
         .skills {
-            .stage {
+            .level {
                 width: 150px;
                 height: 10px;
                 border-radius: 10px;
                 position: relative;
             }
-            .skill .stage::after {
+            .skill .level::after {
                 content: '';
                 position: absolute;
                 top: 0;
@@ -148,16 +148,16 @@ li.nav-item a.text-white:hover {
                 background: $indigo;
             }
 
-            .skill.skill-one .stage::after {
+            .skill.skill-one .level::after {
                 width: 130px;
             }
-            .skill.skill-two .stage::after {
+            .skill.skill-two .level::after {
                 width: 90px;
             }
-            .skill.skill-three .stage::after {
+            .skill.skill-three .level::after {
                 width: 70px;
             }
-            .skill.skill-four .stage::after {
+            .skill.skill-four .level::after {
                 width: 100px;
             }
         }
@@ -174,7 +174,7 @@ li.nav-item a.text-white:hover {
         }
 
         .languages-list, .skills-list {
-            .stage {
+            .level {
                 display: inline-block;
                 height: 10px;
                 border-radius: 10px;
@@ -246,7 +246,7 @@ li.nav-item a.text-white:hover {
         }
 
         .languages-list, .skills-list {
-            .stage {
+            .level {
                 display: inline-block;
                 height: 10px;
                 border-radius: 10px;
@@ -276,13 +276,13 @@ li.nav-item a.text-white:hover {
             height: calc(100% - 150px);
         }
 
-        .stage {
+        .level {
             width: 150px;
             height: 10px;
             border-radius: 10px;
             position: relative;
         }
-        .skill .stage::after {
+        .skill .level::after {
             content: '';
             position: absolute;
             top: 0;
@@ -292,17 +292,17 @@ li.nav-item a.text-white:hover {
             background: $black;
         }
 
-        .skill.skill-one .stage::after {
+        .skill.skill-one .level::after {
             width: 130px;
         }
-        .skill.skill-two .stage::after {
+        .skill.skill-two .level::after {
             width: 90px;
         }
-        .skill.skill-three .stage::after {
+        .skill.skill-three .level::after {
             width: 70px;
         }
     }
-}
+
 
 .model-hover-style {
     background-color: #adb5bd00;
@@ -316,5 +316,40 @@ li.nav-item a.text-white:hover {
 
     &.active {
         background-color: #adb5bd46;
+    }
+}
+
+.cv-form {
+    .cv {
+        margin-top: 250px;
+
+        input::placeholder, textarea::placeholder {
+            color: $gray;
+        }
+
+        .languages-list {
+            .btn.btn-secondary.add-into-list {
+                margin-left: 25px;
+            }
+        }
+    }
+
+    .cv.cv-1 {
+        .skills {
+            .level.bar-level::after {
+                width: 0;
+            }
+            .level.bar-level .level-cursor {
+                height: 15px;
+                width: 15px;
+                border-radius: 50%;
+                top: -2.5px;
+                transition: transform .3s ease-in, box-shadow .3s;
+                &:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 0 4px $primary !important;
+                }
+            }
+        }
     }
 }

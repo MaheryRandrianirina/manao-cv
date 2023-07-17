@@ -1,5 +1,5 @@
 
-<div class="cv cv-4 col ms-4 p-2">
+<div class="cv cv-4 col ms-4 p-2" aria-link="/cv/4">
     <div class="cv-top bg-white w-100 text-center position-relative pt-4" style="height: 150px">
         <h1 class="name mt-2">PRENOM NOM</h1>
         <p class="work text-uppercase fw-lighter">Poste occupé</p>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="skill skill-three">
                         <p class="name mb-0">Compétence</p>
-                        <p class="stage bg-gray"></p>
+                        <p class="level bg-gray"></p>
                     </div>
                 </div>
             </div>

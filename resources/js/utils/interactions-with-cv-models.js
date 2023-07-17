@@ -1,19 +1,16 @@
 import DOMInteractions from "../modules/DOMInteractions";
+import { hasClass } from "./simplifiers";
 
 export default function InteractionsWithCVModels(){
-    const CVModels = document.querySelectorAll('.cv');
+    const CVModels = document.querySelectorAll('.cv-models .cv');
 
     if(CVModels){
         CVModels.forEach(model => {
             model.addEventListener("mouseenter", handleModelHover);
-            
-            //model.addEventListener('mouseleave', handleModelMouseLeave);
-            
         })
 
         function handleModelHover(e){
             e.stopPropagation()
-            console.log('hover : ', e.target)
 
             /**
              * @type {HTMLDivElement}
@@ -48,19 +45,33 @@ export default function InteractionsWithCVModels(){
                 cmModelsContainer.appendChild(modelHoverStyle);
                 modelHoverStyle.offsetWidth;
                 modelHoverStyle.classList.add('active')
+
                 modelHoverStyle.addEventListener('mouseleave', handleModelMouseLeave)
+                modelHoverStyle.addEventListener('click', (e)=>{
+                    e.preventDefault();
+
+                    handleModelClick(model)
+                })
             }
         }
 
         function handleModelMouseLeave(e){
-            e.stopPropagation()
+            e.stopPropagation();
             
-            const modelHoverStyle = document.querySelector('.model-hover-style')
+            const modelHoverStyle = document.querySelector('.model-hover-style');
             if(modelHoverStyle){
-                modelHoverStyle.parentElement.removeChild(modelHoverStyle)
+                modelHoverStyle.parentElement.removeChild(modelHoverStyle);
             }
             
-            e.target.addEventListener('mouseenter', handleModelHover)
+            e.target.addEventListener('mouseenter', handleModelHover);
+        }
+
+        /**
+         * 
+         * @param {HTMLDivElement} model 
+         */
+        function handleModelClick(model){
+            document.location.href = model.getAttribute('aria-link');
         }
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\CvController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,15 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware("auth")->group(function(){
     Route::get('/', [AppController::class, "index"])->name('home');
+
     Route::post('/password/edit', [UserController::class, "update"])->name('password.edit');
-});
 
-Route::get('/users', function () {
-    return view('users');
+    Route::get("/cv/{id}", [CvController::class, "index"]);
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';

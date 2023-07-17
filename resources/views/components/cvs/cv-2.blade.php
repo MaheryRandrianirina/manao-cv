@@ -1,5 +1,5 @@
 
-<div class="cv cv-2 d-flex col ms-4">
+<div class="cv cv-2 d-flex col ms-4" aria-link="/cv/2">
     <div class="left bg-white text-white border-end">
         <div class="about bg-success p-4 mb-3 text-center">
             <svg class="user bg-secondary d-block mt-0 mb-0 ms-auto me-auto" style="width: 150px; height:150px; border-radius: 50%" viewBox="0 0 448 512">
@@ -52,16 +52,16 @@
             <h3 class='mb-3'>LANGUES</h3>
             <div class="languages-list">
                 <div class="language-one">
-                    <p class="language-with-stage mb-0 ms-0 d-inline-block" style="width: 50%">Français</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width: 47%"></p>
+                    <p class="language-with-level mb-0 ms-0 d-inline-block" style="width: 50%">Français</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width: 47%"></p>
                 </div>
                 <div class="language-two">
-                    <p class="language-with-stage mb-0 ms-0 d-inline-block" style="width: 50%">Anglais</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width:40%"></p>
+                    <p class="language-with-level mb-0 ms-0 d-inline-block" style="width: 50%">Anglais</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width:40%"></p>
                 </div>
                 <div class="language-three">
-                    <p class="language-with-stage mb-0 ms-0 d-inline-block" style="width: 50%">Allemand</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width:30%"></p>
+                    <p class="language-with-level mb-0 ms-0 d-inline-block" style="width: 50%">Allemand</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width:30%"></p>
                 </div>
             </div>
         </div>
@@ -69,20 +69,20 @@
             <h3 class='mb-3'>COMPETENCES</h3>
             <div class="skills-list">
                 <div class="skill-one">
-                    <p class="skill-with-stage d-inline-block" style="width: 55%">Pack Office</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width: 42%"></p>
+                    <p class="skill-with-level d-inline-block" style="width: 55%">Pack Office</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width: 42%"></p>
                 </div>
                 <div class="skill-two">
-                    <p class="skill-with-stage d-inline-block" style="width: 55%">Photoshop</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width: 42%"></p>
+                    <p class="skill-with-level d-inline-block" style="width: 55%">Photoshop</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width: 42%"></p>
                 </div>
                 <div class="skill-three">
-                    <p class="skill-with-stage d-inline-block" style="width: 55%">Compétence</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width: 30%"></p>
+                    <p class="skill-with-level d-inline-block" style="width: 55%">Compétence</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width: 30%"></p>
                 </div>
                 <div class="skill-four">
-                    <p class="skill-with-stage d-inline-block" style="width: 55%">Compétence</p>
-                    <p class="stage bg-gray d-inline-block mb-0" style="width: 25%"></p>
+                    <p class="skill-with-level d-inline-block" style="width: 55%">Compétence</p>
+                    <p class="level bg-gray d-inline-block mb-0" style="width: 25%"></p>
                 </div>
             </div>
         </div>

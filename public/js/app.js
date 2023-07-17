@@ -4978,6 +4978,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./auth */ "./resources/js/auth.js");
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
 /* harmony import */ var _interactions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./interactions */ "./resources/js/interactions.js");
+/* harmony import */ var _cv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./cv */ "./resources/js/cv.js");
+
 
 
 
@@ -4986,6 +4988,7 @@ window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"];
 alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
 (0,_auth__WEBPACK_IMPORTED_MODULE_1__.ScrollIfErrors)();
 new _interactions__WEBPACK_IMPORTED_MODULE_3__["default"]();
+new _cv__WEBPACK_IMPORTED_MODULE_4__["default"]();
 
 /***/ }),
 
@@ -5044,6 +5047,182 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/cv.js":
+/*!****************************!*\
+  !*** ./resources/js/cv.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CVModels)
+/* harmony export */ });
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+/* harmony import */ var _icons_camera_icon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./icons/camera-icon */ "./resources/js/icons/camera-icon.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+
+
+
+
+var CVModels = /*#__PURE__*/function () {
+  function CVModels() {
+    _classCallCheck(this, CVModels);
+
+    this.dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    var cvForm = document.querySelector('.cv-form .cv');
+
+    if (cvForm) {
+      this.transformIntoForm();
+      this.filling();
+    }
+  }
+
+  _createClass(CVModels, [{
+    key: "transformIntoForm",
+    value: function transformIntoForm() {
+      var cv = document.querySelector('.cv');
+      var form = this.dom.createElement('form');
+      form.href = cv.getAttribute('aria-link');
+      form.action = "POST";
+      form.className = cv.className;
+      form.innerHTML = cv.innerHTML;
+      cv.replaceWith(form);
+    }
+    /**
+     * Remplissage du modèle de CV par les infos personnelles de la personne.
+     * Survient après l' ouverture d' un modèle en particulier
+     */
+
+  }, {
+    key: "filling",
+    value: function filling() {
+      var _this = this;
+
+      /**
+       * @type {HTMLElement[]}
+       */
+      var elementsToBeInputs = Array.from(document.querySelectorAll("#input"));
+      elementsToBeInputs.forEach(function (element) {
+        var inputName = element.getAttribute('aria-name');
+        var inputType = element.getAttribute('aria-type');
+        var parentElement = element.parentElement;
+        /**
+         * @type {HTMLInputElement}
+         */
+
+        var input = _this.dom.createElement('input', element.className + " form-control mb-2");
+
+        input.name = inputName ? inputName : "";
+        input.type = inputType ? inputType : "text";
+
+        if (inputName.includes("level")) {
+          input.placeholder = "Niveau";
+        } else if (inputName.includes("graduation")) {
+          input.placeholder = "Diplôme";
+        } else if (inputName.includes('year_debut')) {
+          input.placeholder = "Date de début";
+        } else if (inputName.includes('year_end')) {
+          input.placeholder = "Année de fin";
+        } else if (inputName.includes('language')) {
+          input.placeholder = "Langue";
+        } else if (inputName.includes('year_month_debut')) {
+          input.placeholder = "Mois et année de début";
+        } else if (inputName.includes('year_month_end')) {
+          input.placeholder = "Mois et année de fin";
+        } else if (inputName.includes('skill')) {
+          input.placeholder = "Compétence";
+        } else {
+          input.placeholder = element.innerText;
+        }
+
+        var inputNumber = parentElement.getAttribute('aria-input-number');
+
+        if (inputNumber) {
+          parentElement.classList.add('d-flex', 'justify-content-between');
+        }
+
+        if (element.classList.contains('profile-photo')) {
+          element.before(_this.dom.createElement('label', 'mb-1').innerText = "Choisir une photo : ");
+        }
+
+        element.replaceWith(input);
+      });
+      var elementsToBeTextarea = document.querySelectorAll('#textarea');
+      elementsToBeTextarea.forEach(function (element) {
+        var textareaName = element.getAttribute('aria-name');
+        /**
+         * @type {HTMLTextAreaElement}
+         */
+
+        var textarea = _this.dom.createElement('textarea', element.className + " form-control");
+
+        textarea.name = textareaName ? textareaName : "";
+        textarea.placeholder = "Ecrire quelque chose";
+        element.replaceWith(textarea);
+      });
+      var separators = document.querySelectorAll('#separator');
+      separators.forEach(function (separator) {
+        separator.parentElement.removeChild(separator);
+      });
+      var lists = document.querySelectorAll('.list.customizable-list');
+      lists.forEach(function (list) {
+        var listChildren = Array.from(list.children);
+        var childrenLength = listChildren.length;
+
+        for (var i = 0; i < childrenLength; i++) {
+          if (listChildren[i + 1]) {
+            list.removeChild(listChildren[i + 1]);
+          }
+        }
+
+        if (list.classList.contains('skills-list-right')) {
+          list.innerHTML = "";
+        } else {
+          var add = _this.dom.createElement('button', 'btn btn-secondary add-into-list');
+
+          add.innerText = "En ajouter une autre";
+          listChildren[0].after(add);
+        }
+      });
+      var barLevels = document.querySelectorAll('.level.bar-level');
+      barLevels.forEach(function (barLevel) {
+        barLevel.appendChild(_this.dom.createElement('span', 'level-cursor position-absolute start-0 shadow bg-primary'));
+      });
+    }
+  }]);
+
+  return CVModels;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/js/icons/camera-icon.js":
+/*!*******************************************!*\
+  !*** ./resources/js/icons/camera-icon.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CameraIcon)
+/* harmony export */ });
+function CameraIcon(className) {
+  return "<svg  viewBox=\"0 0 512 512\" class=\"camera-icon ".concat(className, "\">\n    <path d=\"M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z\"/>\n    </svg>");
+}
 
 /***/ }),
 
@@ -5945,14 +6124,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ InteractionsWithCVModels)
 /* harmony export */ });
 /* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+/* harmony import */ var _simplifiers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./simplifiers */ "./resources/js/utils/simplifiers.js");
+
 
 function InteractionsWithCVModels() {
-  var CVModels = document.querySelectorAll('.cv');
+  var CVModels = document.querySelectorAll('.cv-models .cv');
 
   if (CVModels) {
     var handleModelHover = function handleModelHover(e) {
       e.stopPropagation();
-      console.log('hover : ', e.target);
       /**
        * @type {HTMLDivElement}
        */
@@ -5991,6 +6171,11 @@ function InteractionsWithCVModels() {
         _modelHoverStyle.classList.add('active');
 
         _modelHoverStyle.addEventListener('mouseleave', handleModelMouseLeave);
+
+        _modelHoverStyle.addEventListener('click', function (e) {
+          e.preventDefault();
+          handleModelClick(model);
+        });
       }
     };
 
@@ -6004,9 +6189,18 @@ function InteractionsWithCVModels() {
 
       e.target.addEventListener('mouseenter', handleModelHover);
     };
+    /**
+     * 
+     * @param {HTMLDivElement} model 
+     */
+
+
+    var handleModelClick = function handleModelClick(model) {
+      document.location.href = model.getAttribute('aria-link');
+    };
 
     CVModels.forEach(function (model) {
-      model.addEventListener("mouseenter", handleModelHover); //model.addEventListener('mouseleave', handleModelMouseLeave);
+      model.addEventListener("mouseenter", handleModelHover);
     });
   }
 }
@@ -6075,6 +6269,30 @@ function EditPasswordInteraction() {
     editPasswordMenu.addEventListener('click', handleEditPassword);
   }
 }
+
+/***/ }),
+
+/***/ "./resources/js/utils/simplifiers.js":
+/*!*******************************************!*\
+  !*** ./resources/js/utils/simplifiers.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "hasClass": () => (/* binding */ hasClass)
+/* harmony export */ });
+/**
+ * 
+ * @param {HTMLElement} element 
+ * @param {string} className 
+ */
+function hasClass(element, className) {
+  return element.classList.contains(className);
+}
+
+
 
 /***/ }),
 

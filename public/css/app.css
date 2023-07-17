@@ -10575,26 +10575,28 @@ li.nav-item a.text-white:hover {
   width: 1400px;
   display: flex;
 }
-.cv-models .cv {
+
+.cv {
   position: relative;
   width: 700px;
   transition: filter 0.3s ease-in;
   cursor: pointer;
 }
-.cv-models .cv h1, .cv-models .cv .h1, .cv-models .cv h3, .cv-models .cv .h3 {
+.cv h1, .cv .h1, .cv h3, .cv .h3 {
   font-weight: bolder;
 }
-.cv-models .cv .icon {
+.cv .icon {
   width: 20px;
   fill: #fff;
 }
-.cv-models .cv.cv-1 .skills .stage {
+
+.cv.cv-1 .skills .level {
   width: 150px;
   height: 10px;
   border-radius: 10px;
   position: relative;
 }
-.cv-models .cv.cv-1 .skills .skill .stage::after {
+.cv.cv-1 .skills .skill .level::after {
   content: "";
   position: absolute;
   top: 0;
@@ -10603,34 +10605,36 @@ li.nav-item a.text-white:hover {
   border-radius: 10px;
   background: #6610f2;
 }
-.cv-models .cv.cv-1 .skills .skill.skill-one .stage::after {
+.cv.cv-1 .skills .skill.skill-one .level::after {
   width: 130px;
 }
-.cv-models .cv.cv-1 .skills .skill.skill-two .stage::after {
+.cv.cv-1 .skills .skill.skill-two .level::after {
   width: 90px;
 }
-.cv-models .cv.cv-1 .skills .skill.skill-three .stage::after {
+.cv.cv-1 .skills .skill.skill-three .level::after {
   width: 70px;
 }
-.cv-models .cv.cv-1 .skills .skill.skill-four .stage::after {
+.cv.cv-1 .skills .skill.skill-four .level::after {
   width: 100px;
 }
-.cv-models .cv.cv-2 .icon {
+
+.cv.cv-2 .icon {
   fill: #000;
 }
-.cv-models .cv.cv-2 .icon.heart-icon {
+.cv.cv-2 .icon.heart-icon {
   width: 25px;
   margin-right: 10px;
 }
-.cv-models .cv.cv-2 .languages-list .stage, .cv-models .cv.cv-2 .skills-list .stage {
+.cv.cv-2 .languages-list .level, .cv.cv-2 .skills-list .level {
   display: inline-block;
   height: 10px;
   border-radius: 10px;
 }
-.cv-models .cv.cv-3 .left {
+
+.cv.cv-3 .left {
   position: relative;
 }
-.cv-models .cv.cv-3 .left::before {
+.cv.cv-3 .left::before {
   content: "";
   position: absolute;
   top: 0;
@@ -10641,14 +10645,14 @@ li.nav-item a.text-white:hover {
   border-bottom: 110px solid transparent;
   z-index: 5;
 }
-.cv-models .cv.cv-3 .left .profile-photo {
+.cv.cv-3 .left .profile-photo {
   position: relative;
   z-index: 10;
 }
-.cv-models .cv.cv-3 .right {
+.cv.cv-3 .right {
   position: relative;
 }
-.cv-models .cv.cv-3 .right::before {
+.cv.cv-3 .right::before {
   content: "";
   position: absolute;
   top: 0;
@@ -10657,62 +10661,63 @@ li.nav-item a.text-white:hover {
   border-left: 665px solid transparent;
   z-index: 3;
 }
-.cv-models .cv.cv-3 .icon {
+.cv.cv-3 .icon {
   fill: #000;
 }
-.cv-models .cv.cv-3 h3, .cv-models .cv.cv-3 .h3 {
+.cv.cv-3 h3, .cv.cv-3 .h3 {
   border-bottom: 1px solid #000;
 }
-.cv-models .cv.cv-3 h4, .cv-models .cv.cv-3 .h4 {
+.cv.cv-3 h4, .cv.cv-3 .h4 {
   font-weight: bolder;
   text-transform: capitalize;
 }
-.cv-models .cv.cv-3 .about {
+.cv.cv-3 .about {
   position: relative;
   z-index: 5;
 }
-.cv-models .cv.cv-3 .about h2, .cv-models .cv.cv-3 .about .h2, .cv-models .cv.cv-3 .about h3, .cv-models .cv.cv-3 .about .h3 {
+.cv.cv-3 .about h2, .cv.cv-3 .about .h2, .cv.cv-3 .about h3, .cv.cv-3 .about .h3 {
   font-weight: bolder;
 }
-.cv-models .cv.cv-3 .about h3, .cv-models .cv.cv-3 .about .h3 {
+.cv.cv-3 .about h3, .cv.cv-3 .about .h3 {
   border: none;
 }
-.cv-models .cv.cv-3 .about::after {
+.cv.cv-3 .about::after {
   content: "";
   display: table;
   clear: both;
 }
-.cv-models .cv.cv-3 .languages-list .stage, .cv-models .cv.cv-3 .skills-list .stage {
+.cv.cv-3 .languages-list .level, .cv.cv-3 .skills-list .level {
   display: inline-block;
   height: 10px;
   border-radius: 10px;
 }
-.cv-models .cv.cv-4 {
+
+.cv.cv-4 {
   background: #7ec4a3;
 }
-.cv-models .cv.cv-4 h3, .cv-models .cv.cv-4 .h3 {
+.cv.cv-4 h3, .cv.cv-4 .h3 {
   color: #adb5bd;
 }
-.cv-models .cv.cv-4 .icon {
+.cv.cv-4 .icon {
   fill: #000;
 }
-.cv-models .cv.cv-4 .left {
+.cv.cv-4 .left {
   width: calc(40% + 2px);
 }
-.cv-models .cv.cv-4 .cv-top .name {
+.cv.cv-4 .cv-top .name {
   color: #7ec4a3;
 }
-.cv-models .cv.cv-4 .cv-bottom {
+.cv.cv-4 .cv-bottom {
   top: -2px;
   height: calc(100% - 150px);
 }
-.cv-models .cv.cv-4 .stage {
+.cv.cv-4 .level {
   width: 150px;
   height: 10px;
   border-radius: 10px;
   position: relative;
 }
-.cv-models .cv.cv-4 .skill .stage::after {
+.cv.cv-4 .skill .level::after {
   content: "";
   position: absolute;
   top: 0;
@@ -10721,13 +10726,13 @@ li.nav-item a.text-white:hover {
   border-radius: 10px;
   background: #000;
 }
-.cv-models .cv.cv-4 .skill.skill-one .stage::after {
+.cv.cv-4 .skill.skill-one .level::after {
   width: 130px;
 }
-.cv-models .cv.cv-4 .skill.skill-two .stage::after {
+.cv.cv-4 .skill.skill-two .level::after {
   width: 90px;
 }
-.cv-models .cv.cv-4 .skill.skill-three .stage::after {
+.cv.cv-4 .skill.skill-three .level::after {
   width: 70px;
 }
 
@@ -10743,4 +10748,34 @@ li.nav-item a.text-white:hover {
 }
 .model-hover-style.active {
   background-color: rgba(173, 181, 189, 0.2745098039);
+}
+
+.cv-form .cv {
+  margin-top: 250px;
+}
+.cv-form .cv input::-moz-placeholder, .cv-form .cv textarea::-moz-placeholder {
+  color: #adb5bd;
+}
+.cv-form .cv input:-ms-input-placeholder, .cv-form .cv textarea:-ms-input-placeholder {
+  color: #adb5bd;
+}
+.cv-form .cv input::placeholder, .cv-form .cv textarea::placeholder {
+  color: #adb5bd;
+}
+.cv-form .cv .languages-list .btn.btn-secondary.add-into-list {
+  margin-left: 25px;
+}
+.cv-form .cv.cv-1 .skills .level.bar-level::after {
+  width: 0;
+}
+.cv-form .cv.cv-1 .skills .level.bar-level .level-cursor {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  top: -2.5px;
+  transition: transform 0.3s ease-in, box-shadow 0.3s;
+}
+.cv-form .cv.cv-1 .skills .level.bar-level .level-cursor:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 4px #0d6efd !important;
 }

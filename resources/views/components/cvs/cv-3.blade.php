@@ -1,5 +1,5 @@
 
-<div class="cv cv-3 d-flex col">
+<div class="cv cv-3 d-flex col" aria-link="/cv/3">
     <div class="left p-4 bg-secondary text-white">
         <div class="profile-photo mt-5 mb-5 text-center">
             <svg class="user bg-secondary d-block mt-0 mb-0 ms-auto me-auto" style="width: 150px; height:150px; border-radius: 50%" viewBox="0 0 448 512">
@@ -38,16 +38,16 @@
             <h3 class='mb-3'>LANGUES</h3>
             <div class="languages-list">
                 <div class="language-one">
-                    <p class="language-with-stage mb-0 ms-0 d-inline-block" style="width: 50%">Français</p>
-                    <p class="stage bg-primary d-inline-block mb-0" style="width: 47%"></p>
+                    <p class="language-with-level mb-0 ms-0 d-inline-block" style="width: 50%">Français</p>
+                    <p class="level bg-primary d-inline-block mb-0" style="width: 47%"></p>
                 </div>
                 <div class="language-two">
-                    <p class="language-with-stage mb-0 ms-0 d-inline-block" style="width: 50%">Anglais</p>
-                    <p class="stage bg-primary d-inline-block mb-0" style="width:40%"></p>
+                    <p class="language-with-level mb-0 ms-0 d-inline-block" style="width: 50%">Anglais</p>
+                    <p class="level bg-primary d-inline-block mb-0" style="width:40%"></p>
                 </div>
                 <div class="language-three">
-                    <p class="language-with-stage mb-0 ms-0 d-inline-block" style="width: 50%">Allemand</p>
-                    <p class="stage bg-primary d-inline-block mb-0" style="width:30%"></p>
+                    <p class="language-with-level mb-0 ms-0 d-inline-block" style="width: 50%">Allemand</p>
+                    <p class="level bg-primary d-inline-block mb-0" style="width:30%"></p>
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
     <div class="right bg-white p-5">
         <div class="about float-end mb-5">
             <h2 class="name">Nom et Prénom</h2>
-            <h3 class="work">POSTE / STAGE</h3>
+            <h3 class="work">POSTE / level</h3>
         </div>
         <div class="profil mb-5">
             <h3 class='mb-3'>PROFIL</h3>
