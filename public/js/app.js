@@ -5065,6 +5065,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
 /* harmony import */ var _icons_camera_icon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./icons/camera-icon */ "./resources/js/icons/camera-icon.js");
+/* harmony import */ var _icons_eye_icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./icons/eye-icon */ "./resources/js/icons/eye-icon.js");
+/* harmony import */ var _icons_download_icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons/download-icon */ "./resources/js/icons/download-icon.js");
+/* harmony import */ var _icons_check_icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./icons/check-icon */ "./resources/js/icons/check-icon.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -5075,29 +5078,49 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+
+
 var CVModels = /*#__PURE__*/function () {
   function CVModels() {
     _classCallCheck(this, CVModels);
 
     this.dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.form;
+    this.levelIndicator;
+    /**
+     * @type {HTMLSpanElement | undefined}
+     */
+
+    this.levelCursor;
+    /**
+     * @type {{x: number, y: number} | undefined}
+     */
+
+    this.levelCursorOrigin;
+    this.barLevelPosition;
+    this.moveFromBody = false;
+    this.inputWithLevelValue;
     var cvForm = document.querySelector('.cv-form .cv');
 
     if (cvForm) {
-      this.transformIntoForm();
+      this.transformToForm();
       this.filling();
+      this.addClickableSeeButton();
     }
   }
 
   _createClass(CVModels, [{
-    key: "transformIntoForm",
-    value: function transformIntoForm() {
+    key: "transformToForm",
+    value: function transformToForm() {
       var cv = document.querySelector('.cv');
       var form = this.dom.createElement('form');
-      form.href = cv.getAttribute('aria-link');
-      form.action = "POST";
+      form.action = cv.getAttribute('aria-link');
+      form.method = "POST";
       form.className = cv.className;
       form.innerHTML = cv.innerHTML;
       cv.replaceWith(form);
+      this.form = form;
     }
     /**
      * Remplissage du modèle de CV par les infos personnelles de la personne.
@@ -5109,10 +5132,13 @@ var CVModels = /*#__PURE__*/function () {
     value: function filling() {
       var _this = this;
 
+      this.throwErrorIfFormUndefined();
+      this.createHiddenInputForCvModel();
       /**
        * @type {HTMLElement[]}
        */
-      var elementsToBeInputs = Array.from(document.querySelectorAll("#input"));
+
+      var elementsToBeInputs = Array.from(this.form.querySelectorAll("#input"));
       elementsToBeInputs.forEach(function (element) {
         var inputName = element.getAttribute('aria-name');
         var inputType = element.getAttribute('aria-type');
@@ -5149,7 +5175,13 @@ var CVModels = /*#__PURE__*/function () {
         var inputNumber = parentElement.getAttribute('aria-input-number');
 
         if (inputNumber) {
-          parentElement.classList.add('d-flex', 'justify-content-between');
+          parentElement.classList.add('d-flex', 'justify-content-between'); // const parentElementChildren = Array.from(parentElement.children);
+          // if(parentElementChildren.indexOf(element)
+          //     === parentElementChildren.length - 1
+          // ){
+          //     console.log(parentElementChildren[parentElementChildren.length- 1])
+          //     parentElementChildren[parentElementChildren.length- 1].style.marginLeft = "5px"
+          // }
         }
 
         if (element.classList.contains('profile-photo')) {
@@ -5197,8 +5229,188 @@ var CVModels = /*#__PURE__*/function () {
       });
       var barLevels = document.querySelectorAll('.level.bar-level');
       barLevels.forEach(function (barLevel) {
-        barLevel.appendChild(_this.dom.createElement('span', 'level-cursor position-absolute start-0 shadow bg-primary'));
+        var levelCursor = _this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+
+        barLevel.appendChild(levelCursor);
+        levelCursor.addEventListener('mousedown', _this.handleLevelCursorMouseDown.bind(_this));
+        levelCursor.addEventListener('mouseup', _this.handleLevelCursorMouseUp.bind(_this));
+        barLevel.addEventListener('click', _this.handleBarLevelClick.bind(_this));
+        barLevel.addEventListener('mousemove', _this.handleLevelCursorMove.bind(_this));
+        barLevel.addEventListener('mouseleave', _this.handleBarLevelMouseleave.bind(_this));
       });
+    }
+  }, {
+    key: "throwErrorIfFormUndefined",
+    value: function throwErrorIfFormUndefined() {
+      if (!this.form) {
+        throw new Error('La propriété this.form est undefined');
+      }
+    }
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
+    key: "handleLevelCursorMouseDown",
+    value: function handleLevelCursorMouseDown(e) {
+      e.preventDefault();
+      this.levelCursor = e.target;
+      this.levelCursorOrigin = {
+        x: this.levelCursor.offsetTop,
+        y: this.levelCursor.offsetLeft
+      };
+    }
+  }, {
+    key: "handleLevelCursorMouseUp",
+    value: function handleLevelCursorMouseUp(e) {
+      e.preventDefault();
+      this.levelCursorOrigin = undefined;
+    }
+  }, {
+    key: "handleBarLevelClick",
+    value: function handleBarLevelClick(e) {
+      e.preventDefault();
+      this.barLevel = e.target;
+      var barLevelRect = this.barLevel.getBoundingClientRect();
+
+      if (!this.barLevelPosition) {
+        this.barLevelPosition = {
+          x: barLevelRect.x,
+          y: barLevelRect.y
+        };
+      }
+
+      this.levelCursorPosition = {
+        x: e.clientX,
+        y: e.clientY
+      };
+
+      if (!this.levelCursorOrigin && this.levelCursorPosition.x < this.barLevelPosition.x + this.barLevel.offsetWidth) {
+        var levelCursor = this.barLevel.querySelector('.level-cursor') ? this.barLevel.querySelector('.level-cursor') : this.barLevel.parentElement.querySelector('.level-cursor');
+        levelCursor.style.left = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+
+        if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.levelIndicator)) {
+          this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+          this.barLevel.appendChild(this.levelIndicator);
+        }
+
+        this.levelIndicator.style.width = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+      }
+    }
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
+    key: "handleLevelCursorMove",
+    value: function handleLevelCursorMove(e) {
+      e.preventDefault();
+
+      if (!this.moveFromBody) {
+        /**
+         * @type {HTMLParagraphElement}
+            */
+        this.barLevel = e.currentTarget;
+      }
+
+      var barLevelRect = this.barLevel.getBoundingClientRect();
+
+      if (!this.barLevelPosition) {
+        this.barLevelPosition = {
+          x: barLevelRect.x,
+          y: barLevelRect.y
+        };
+      }
+
+      if (this.levelCursorOrigin && this.levelCursor) {
+        this.levelCursorPosition = {
+          x: e.clientX,
+          y: e.clientY
+        };
+        var cursorPositionLessThanBarLevelWidthAndPosition = this.levelCursorPosition.x < this.barLevelPosition.x + this.barLevel.offsetWidth;
+        var cursorPositionGreaterOrEqualToBarLevelPosition = this.levelCursorPosition.x >= this.barLevelPosition.x;
+        var cursorPositionDoesntCollapse = cursorPositionLessThanBarLevelWidthAndPosition && cursorPositionGreaterOrEqualToBarLevelPosition;
+
+        if (cursorPositionDoesntCollapse) {
+          this.levelCursor.style.left = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.levelIndicator)) {
+            this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+            this.barLevel.appendChild(this.levelIndicator);
+          }
+
+          var levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
+          this.levelIndicator.style.width = levelIndicatorWidth + "px";
+
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue)) {
+            this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
+            this.inputWithLevelValue.type = "text";
+            this.inputWithLevelValue.hidden = true;
+            this.inputWithLevelValue.name = "level_one";
+            this.barLevel.appendChild(this.inputWithLevelValue);
+          }
+
+          this.inputWithLevelValue.setAttribute('value', "".concat((levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)));
+        }
+      }
+    }
+  }, {
+    key: "handleBarLevelMouseleave",
+    value: function handleBarLevelMouseleave(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+
+      if (this.levelCursorOrigin) {
+        document.body.addEventListener('mousemove', function (e) {
+          e.preventDefault();
+          _this2.moveFromBody = true;
+
+          _this2.handleLevelCursorMove(e);
+        });
+        document.body.addEventListener('click', function (e) {
+          e.preventDefault();
+          _this2.levelCursorOrigin = undefined;
+        });
+      }
+    }
+  }, {
+    key: "createHiddenInputForCvModel",
+    value: function createHiddenInputForCvModel() {
+      /**
+       * @type {HTMLInputElement}
+       */
+      var hiddenInputWithModelname = this.dom.createElement('input');
+      hiddenInputWithModelname.name = "model";
+      hiddenInputWithModelname.hidden = true;
+      hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
+      this.form.appendChild(hiddenInputWithModelname);
+    }
+  }, {
+    key: "addClickableSeeButton",
+    value: function addClickableSeeButton() {
+      this.throwErrorIfFormUndefined();
+      var seeButtonContainer = this.dom.createElement('div', 'see-button-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
+      seeButtonContainer.innerHTML = "Voir le CV ".concat((0,_icons_eye_icon__WEBPACK_IMPORTED_MODULE_3__["default"])("icon"));
+      document.body.appendChild(seeButtonContainer);
+      var seeButton = document.querySelector('.see-button-container eye-icon');
+
+      if (seeButton) {
+        seeButton.addEventListener('click', this.handleSeeCV.bind(this));
+      }
+    }
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
+    key: "handleSeeCV",
+    value: function handleSeeCV(e) {
+      e.preventDefault();
+      var eyeIcon = e.target;
     }
   }]);
 
@@ -5221,7 +5433,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ CameraIcon)
 /* harmony export */ });
 function CameraIcon(className) {
-  return "<svg  viewBox=\"0 0 512 512\" class=\"camera-icon ".concat(className, "\">\n    <path d=\"M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z\"/>\n    </svg>");
+  return "<svg  viewBox=\"0 0 512 512\" class=\"camera-icon ".concat(className ? className : "", "\">\n    <path d=\"M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z\"/>\n    </svg>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/check-icon.js":
+/*!******************************************!*\
+  !*** ./resources/js/icons/check-icon.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CheckIcon)
+/* harmony export */ });
+function CheckIcon(className) {
+  return "<svg viewBox=\"0 0 512 512\" class=\"check-icon ".concat(className ? className : "", "\">\n        <path d=\"M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z\"/>\n    </svg>");
 }
 
 /***/ }),
@@ -5238,7 +5467,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ CloseIcon)
 /* harmony export */ });
 function CloseIcon(className) {
-  return "<svg class='".concat(className, "' width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-x\">\n        <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"></line><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"></line>\n    </svg>");
+  return "<svg class='close-icon ".concat(className ? className : "", "' width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-x\">\n        <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"></line><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"></line>\n    </svg>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/download-icon.js":
+/*!*********************************************!*\
+  !*** ./resources/js/icons/download-icon.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ DownloadIcon)
+/* harmony export */ });
+function DownloadIcon(className) {
+  return "<svg viewBox=\"0 0 512 512\" className=\"dowload-icon ".concat(className ? className : "", "\">\n    <path d=\"M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z\"/>\n</svg>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/eye-icon.js":
+/*!****************************************!*\
+  !*** ./resources/js/icons/eye-icon.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ EyeIcon)
+/* harmony export */ });
+function EyeIcon(className) {
+  return "<svg  viewBox=\"0 0 576 512\" class=\"eye-icon ".concat(className ? className : "", "\">\n        <path d=\"M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z\"/>\n    </svg>");
 }
 
 /***/ }),

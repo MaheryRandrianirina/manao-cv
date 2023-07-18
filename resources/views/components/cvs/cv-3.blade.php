@@ -1,5 +1,6 @@
 
 <div class="cv cv-3 d-flex col" aria-link="/cv/3">
+    @csrf
     <div class="left p-4 bg-secondary text-white">
         <div class="profile-photo mt-5 mb-5 text-center">
             <svg class="user bg-secondary d-block mt-0 mb-0 ms-auto me-auto" style="width: 150px; height:150px; border-radius: 50%" viewBox="0 0 448 512">

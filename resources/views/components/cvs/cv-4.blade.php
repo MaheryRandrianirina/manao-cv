@@ -1,5 +1,6 @@
 
 <div class="cv cv-4 col ms-4 p-2" aria-link="/cv/4">
+    @csrf
     <div class="cv-top bg-white w-100 text-center position-relative pt-4" style="height: 150px">
         <h1 class="name mt-2">PRENOM NOM</h1>
         <p class="work text-uppercase fw-lighter">Poste occupé</p>

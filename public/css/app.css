@@ -10750,6 +10750,9 @@ li.nav-item a.text-white:hover {
   background-color: rgba(173, 181, 189, 0.2745098039);
 }
 
+.cv-form {
+  position: relative;
+}
 .cv-form .cv {
   margin-top: 250px;
 }
@@ -10765,6 +10768,12 @@ li.nav-item a.text-white:hover {
 .cv-form .cv .languages-list .btn.btn-secondary.add-into-list {
   margin-left: 25px;
 }
+.cv-form .cv .level.bar-level .level-indicator {
+  height: 10px;
+  background: #6610f2;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
 .cv-form .cv.cv-1 .skills .level.bar-level::after {
   width: 0;
 }
@@ -10772,10 +10781,32 @@ li.nav-item a.text-white:hover {
   height: 15px;
   width: 15px;
   border-radius: 50%;
+  left: 0;
   top: -2.5px;
   transition: transform 0.3s ease-in, box-shadow 0.3s;
 }
 .cv-form .cv.cv-1 .skills .level.bar-level .level-cursor:hover {
   transform: scale(1.1);
   box-shadow: 0 0 4px #0d6efd !important;
+}
+
+.see-button-container {
+  background-color: rgba(34, 34, 34, 0.5607843137);
+  bottom: 25px;
+  width: 150px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.see-button-container:hover {
+  background-color: #2c2c2c;
+  color: #0d6efd;
+}
+.see-button-container .eye-icon {
+  fill: #fff;
+  width: 25px;
+  transition: fill 0.3s ease;
+}
+.see-button-container:hover .eye-icon {
+  fill: #0d6efd;
 }

@@ -320,6 +320,7 @@ li.nav-item a.text-white:hover {
 }
 
 .cv-form {
+    position: relative;
     .cv {
         margin-top: 250px;
 
@@ -330,6 +331,15 @@ li.nav-item a.text-white:hover {
         .languages-list {
             .btn.btn-secondary.add-into-list {
                 margin-left: 25px;
+            }
+        }
+
+        .level.bar-level {
+            .level-indicator {
+                height: 10px;
+                background: $indigo;
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
             }
         }
     }
@@ -343,6 +353,7 @@ li.nav-item a.text-white:hover {
                 height: 15px;
                 width: 15px;
                 border-radius: 50%;
+                left: 0;
                 top: -2.5px;
                 transition: transform .3s ease-in, box-shadow .3s;
                 &:hover {
@@ -351,5 +362,30 @@ li.nav-item a.text-white:hover {
                 }
             }
         }
+    }
+}
+
+.see-button-container {
+    background-color: #2222228f;
+    bottom: 25px;
+    width: 150px;
+    color: $white;
+    cursor: pointer;
+    transition: background-color .3s ease, color .3s ease;
+
+    &:hover {
+        background-color: #2c2c2c;
+        color: $primary;
+    }
+
+    .eye-icon {
+        fill: $white;
+        width: 25px;
+        transition: fill .3s ease;
+        
+    }
+
+    &:hover .eye-icon {
+        fill: $primary;
     }
 }
