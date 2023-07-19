@@ -23,6 +23,19 @@ export default class CVModels {
         this.moveFromBody = false;
         this.inputWithLevelValue;
 
+        this.numbersStringEquivalents = {
+            1: "one",
+            2: "two",
+            3: "three",
+            4: "four",
+            5: "five",
+            6: "six",
+            7: "seven",
+            8: "eight",
+            9: "nine",
+            10: "ten"
+        };
+
         const cvForm = document.querySelector('.cv-form .cv');
         if(cvForm){
             this.transformToForm();
@@ -143,23 +156,16 @@ export default class CVModels {
                 const add = this.dom.createElement('button', 'btn btn-secondary add-into-list')
                 add.innerText = "En ajouter une autre"
                 listChildren[0].after(add)
+
+                add.addEventListener('click', this.handleAddNewList.bind(this));
             }
         })
 
-        const barLevels = document.querySelectorAll('.level.bar-level')
-        barLevels.forEach(barLevel => {
-            const levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary')
-            barLevel.appendChild(levelCursor);
-
-            levelCursor.addEventListener('mousedown', this.handleLevelCursorMouseDown.bind(this));
-            levelCursor.addEventListener('mouseup', this.handleLevelCursorMouseUp.bind(this));
-            barLevel.addEventListener('click', this.handleBarLevelClick.bind(this));
-            barLevel.addEventListener('mousemove', this.handleLevelCursorMove.bind(this));
-            barLevel.addEventListener('mouseleave', this.handleBarLevelMouseleave.bind(this));
-        })
+        this.addListenersToEveryBarLevels();
     }
 
-    throwErrorIfFormUndefined(){
+    throwErrorIfFormUndefined()
+    {
         if(!this.form){
             throw new Error('La propriété this.form est undefined');
         }
@@ -169,10 +175,186 @@ export default class CVModels {
      * 
      * @param {MouseEvent} e 
      */
+    handleAddNewList(e)
+    {
+        e.preventDefault();
+
+        /**
+         * @type {HTMLButtonElement}
+         */
+        const addNewListButton = e.target;
+        const previousList = addNewListButton.previousElementSibling;
+        const newList = addNewListButton.previousElementSibling.cloneNode();  
+        newList.innerHTML = previousList.innerHTML
+        
+        const newListLevelIndicators = Array.from(newList.querySelectorAll('.level-indicator'));
+        if(newListLevelIndicators.length > 0){
+            const lastListLevelIndicator = newListLevelIndicators[newListLevelIndicators.length - 1];
+            lastListLevelIndicator.parentElement.removeChild(lastListLevelIndicator);
+        }
+
+        const newListCursors = Array.from(newList.querySelectorAll('.level-cursor'));
+        if(newListCursors.length > 0){
+            const lastListCursor = newListCursors[newListCursors.length - 1]
+            lastListCursor.parentElement.removeChild(lastListCursor)
+        }
+
+        addNewListButton.before(newList)
+        if(newList.className.includes('one')){
+            newList.className = newList.className.replace("one", "two");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace('one', "two");
+                });
+            }
+        }else if(newList.className.includes('two')){
+            newList.className = newList.className.replace("two", "three");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("two", "three");
+                    
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                });
+            }
+        }else if(newList.className.includes('three')){
+            newList.className = newList.className.replace("three", "four");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("three", "four");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                });
+            }
+        }else if(newList.className.includes('four')){
+            newList.className = newList.className.replace("four", "five");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("four", "five");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                })
+            }
+        }else if(newList.className.includes('five')){
+            newList.className = newList.className.replace("five", "six");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("five", "six");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                })
+            }
+            
+            if(newList.parentElement.classList.contains('skills-list-left')){
+                const skillsListRight = newList.parentElement.nextElementSibling;
+                skillsListRight.appendChild(newList);
+                skillsListRight.appendChild(addNewListButton);
+            }
+        }else if(newList.className.includes('six')){
+            newList.className = newList.className.replace("six", "seven");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("six", "seven");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                })
+            }
+        }else if(newList.className.includes('seven')){
+            newList.className = newList.className.replace("seven", "eight");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("seven", "eight");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                })
+            }
+        }else if(newList.className.includes('eight')){
+            newList.className = newList.className.replace("eight", "nine");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("eight", "nine");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                })
+            }
+        }else if(newList.className.includes('nine')){
+            newList.className = newList.className.replace("nine", "ten");
+
+            const listsInputs = newList.querySelectorAll('input');
+            if(listsInputs){
+                listsInputs.forEach(listInput => {
+                    listInput.name = listInput.name.replace("nine", "ten");
+
+                    if(listInput.name.includes('level')){
+                        listInput.parentElement.removeChild(listInput);
+                    }
+                })
+            }
+        }
+        
+        if(this.inputWithLevelValue){
+            this.inputWithLevelValue = undefined;
+        }
+
+        this.addListenersToEveryBarLevels();
+    }
+    
+    addListenersToEveryBarLevels()
+    {
+        const barLevels = document.querySelectorAll('.level.bar-level')
+        barLevels.forEach(barLevel => {
+            if(!barLevel.querySelector('.level-cursor')){
+                const levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary')
+                barLevel.appendChild(levelCursor);
+
+                levelCursor.addEventListener('mousedown', this.handleLevelCursorMouseDown.bind(this));
+                levelCursor.addEventListener('mouseup', this.handleLevelCursorMouseUp.bind(this));
+                barLevel.addEventListener('click', this.handleBarLevelClick.bind(this));
+                barLevel.addEventListener('mousemove', this.handleLevelCursorMove.bind(this));
+                barLevel.addEventListener('mouseleave', this.handleBarLevelMouseleave.bind(this));
+            }
+        });
+    }
+
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
     handleLevelCursorMouseDown(e)
     {
         e.preventDefault();
-        this.levelCursor = e.target;
+        if(isUndefined(this.levelCursor) || this.levelCursor !== e.target){
+            this.levelCursor = e.target;
+        }
 
         this.levelCursorOrigin = {x: this.levelCursor.offsetTop, y: this.levelCursor.offsetLeft};
     }
@@ -182,40 +364,95 @@ export default class CVModels {
         e.preventDefault();
 
         this.levelCursorOrigin = undefined;
+        this.levelIndicator = undefined;
+        this.levelCursor = undefined;
+        this.barLevel = undefined;
     }
 
     handleBarLevelClick(e)
     {
         e.preventDefault();
-        this.barLevel = e.target;
-        const barLevelRect = this.barLevel.getBoundingClientRect();
-        if(!this.barLevelPosition){
-            this.barLevelPosition = {x: barLevelRect.x, y: barLevelRect.y};
+
+        if(e.target.classList.contains('bar-level')){
+            this.barLevel = e.target;
+        }else {
+            this.barLevel = e.currentTarget;
         }
         
         this.levelCursorPosition = {x: e.clientX, y: e.clientY};
-        if(!this.levelCursorOrigin && (
-            this.levelCursorPosition.x < this.barLevelPosition.x + this.barLevel.offsetWidth
-        )){
-            const levelCursor = this.barLevel.querySelector('.level-cursor') ? 
+        if(!this.levelCursorOrigin){
+            const barLevelRect = this.barLevel.getBoundingClientRect();
+            const barLevelRectPosition = {x: barLevelRect.x, y: barLevelRect.y}
+            if(!this.barLevelPosition || this.barLevelPosition !== barLevelRectPosition){
+                this.barLevelPosition = barLevelRectPosition;
+            }
+
+            const cursorPositionLessThanBarLevelWidthAndPosition = this.levelCursorPosition.x < this.barLevelPosition.x + this.barLevel.offsetWidth;
+            if(cursorPositionLessThanBarLevelWidthAndPosition){
+                const levelCursor = this.barLevel.querySelector('.level-cursor') ? 
                 this.barLevel.querySelector('.level-cursor') : 
                 this.barLevel.parentElement.querySelector('.level-cursor');
-            levelCursor.style.left =  
-                this.levelCursorPosition.x - this.barLevelPosition.x + "px"
-            
-            if(isUndefined(this.levelIndicator)){
+                levelCursor.style.left =  
+                    this.levelCursorPosition.x - this.barLevelPosition.x + "px"
                 
-                this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0')
+                const barLevelIndicator = this.barLevel.querySelector('.level-indicator');
+                if(isNull(barLevelIndicator)){
+                    this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+                    this.barLevel.appendChild(this.levelIndicator);
+                }else {
+                    this.levelIndicator = barLevelIndicator;
+                }
                 
-                this.barLevel.appendChild(this.levelIndicator)
-            
+                const levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
+                this.levelIndicator.style.width = levelIndicatorWidth + "px";
+
+                if(isUndefined(this.inputWithLevelValue) ||
+                    isNull(this.barLevel.querySelector('.level-value'))
+                ){
+                    this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
+                    this.inputWithLevelValue.type = "text";
+                    this.inputWithLevelValue.hidden = true;
+
+                    const previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
+                    let previousElementOfParentLevelInput;
+                    if(previousElementOfParent){
+                        previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value')
+                    }
+                    console.log(this.barLevel.parentElement, previousElementOfParent)
+                    if(isNull(previousElementOfParent)){
+                        this.inputWithLevelValue.name = "level_one"
+                    }else if(previousElementOfParentLevelInput.name.includes('one')){
+                        this.inputWithLevelValue.name = "level_two";
+                    }else if(previousElementOfParentLevelInput.name.includes('two')){
+                        this.inputWithLevelValue.name = "level_three";
+                    }else if(previousElementOfParentLevelInput.name.includes('three')){
+                        this.inputWithLevelValue.name = "level_four";
+                    }else if(previousElementOfParentLevelInput.name.includes('four')){
+                        this.inputWithLevelValue.name = "level_five";
+                    }else if(previousElementOfParentLevelInput.name.includes('five')){
+                        this.inputWithLevelValue.name = "level_six";
+                    }else if(previousElementOfParentLevelInput.name.includes('six')){
+                        this.inputWithLevelValue.name = "level_seven";
+                    }else if(previousElementOfParentLevelInput.name.includes('seven')){
+                        this.inputWithLevelValue.name = "level_eight";
+                    }else if(previousElementOfParentLevelInput.name.includes("eight")){
+                        this.inputWithLevelValue.name = "level_eight";
+                    }else if(previousElementOfParentLevelInput.name.includes("eight")){
+                        this.inputWithLevelValue.name = "level_nine";
+                    }else if(previousElementOfParentLevelInput.name.includes("nine")){
+                        this.inputWithLevelValue.name = "level_ten";
+                    }
+
+
+                    this.barLevel.appendChild(this.inputWithLevelValue)
+                }
+                
+                this.inputWithLevelValue.setAttribute('value', 
+                    `${(levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)}`
+                );
             }
-                
             
-            this.levelIndicator.style.width = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
         }
-        
-        
     }
 
     /**
@@ -225,46 +462,83 @@ export default class CVModels {
     handleLevelCursorMove(e)
     {
         e.preventDefault();
-        
-        if(!this.moveFromBody){
+        if(!this.moveFromBody || (e.currentTarget.classList.contains('bar-level'))){
             /**
              * @type {HTMLParagraphElement}
                 */
             this.barLevel = e.currentTarget;
         }
         
-        const barLevelRect = this.barLevel.getBoundingClientRect();
-        if(!this.barLevelPosition){
-            this.barLevelPosition = {x: barLevelRect.x, y: barLevelRect.y};
-        }
+        if(this.levelCursorOrigin && this.levelCursor && this.barLevel){
+            const barLevelRect = this.barLevel.getBoundingClientRect();
+            const barLevelRectPosition = {x: barLevelRect.x, y: barLevelRect.y}
+            if(!this.barLevelPosition || this.barLevelPosition !== barLevelRectPosition){
+                this.barLevelPosition = barLevelRectPosition;
+            }
 
-        if(this.levelCursorOrigin && this.levelCursor){
             this.levelCursorPosition = {x: e.clientX, y: e.clientY};
+
             const cursorPositionLessThanBarLevelWidthAndPosition = this.levelCursorPosition.x < 
                 this.barLevelPosition.x + this.barLevel.offsetWidth;
             const cursorPositionGreaterOrEqualToBarLevelPosition = this.levelCursorPosition.x >= this.barLevelPosition.x;
             const cursorPositionDoesntCollapse = cursorPositionLessThanBarLevelWidthAndPosition && cursorPositionGreaterOrEqualToBarLevelPosition;
             if(cursorPositionDoesntCollapse){
                 this.levelCursor.style.left =  this.levelCursorPosition.x - this.barLevelPosition.x + "px";
-                if(isUndefined(this.levelIndicator)){
-                    this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0')
-                    this.barLevel.appendChild(this.levelIndicator)
-                    
+                
+                const barLevelIndicator = this.barLevel.querySelector('.level-indicator');
+                if(isNull(barLevelIndicator)){
+                    this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+                    this.barLevel.appendChild(this.levelIndicator);
+                }else {
+                    this.levelIndicator = barLevelIndicator;
                 }
                 
                 const levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
                 this.levelIndicator.style.width = levelIndicatorWidth + "px";
-
                 
-                if(isUndefined(this.inputWithLevelValue)){
+                if(isUndefined(this.inputWithLevelValue) ||
+                    isNull(this.barLevel.querySelector('.level-value'))
+                ){
                     this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
                     this.inputWithLevelValue.type = "text";
                     this.inputWithLevelValue.hidden = true;
-                    this.inputWithLevelValue.name = "level_one";
+
+                    const previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
+                    let previousElementOfParentLevelInput;
+                    if(previousElementOfParent){
+                        previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value')
+                    }
+                    
+                    if(isNull(previousElementOfParent)){
+                        this.inputWithLevelValue.name = "level_one"
+                    }else if(previousElementOfParentLevelInput.name.includes('one')){
+                        this.inputWithLevelValue.name = "level_two";
+                    }else if(previousElementOfParentLevelInput.name.includes('two')){
+                        this.inputWithLevelValue.name = "level_three";
+                    }else if(previousElementOfParentLevelInput.name.includes('three')){
+                        this.inputWithLevelValue.name = "level_four";
+                    }else if(previousElementOfParentLevelInput.name.includes('four')){
+                        this.inputWithLevelValue.name = "level_five";
+                    }else if(previousElementOfParentLevelInput.name.includes('five')){
+                        this.inputWithLevelValue.name = "level_six";
+                    }else if(previousElementOfParentLevelInput.name.includes('six')){
+                        this.inputWithLevelValue.name = "level_seven";
+                    }else if(previousElementOfParentLevelInput.name.includes('seven')){
+                        this.inputWithLevelValue.name = "level_eight";
+                    }else if(previousElementOfParentLevelInput.name.includes("eight")){
+                        this.inputWithLevelValue.name = "level_eight";
+                    }else if(previousElementOfParentLevelInput.name.includes("eight")){
+                        this.inputWithLevelValue.name = "level_nine";
+                    }else if(previousElementOfParentLevelInput.name.includes("nine")){
+                        this.inputWithLevelValue.name = "level_ten";
+                    }
+
                     this.barLevel.appendChild(this.inputWithLevelValue)
                 }
-                
-                this.inputWithLevelValue.setAttribute('value', `${(levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)}`);
+
+                this.inputWithLevelValue.setAttribute('value', 
+                    `${(levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)}`
+                );
 
             }
         }

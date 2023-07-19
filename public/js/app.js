@@ -5101,6 +5101,18 @@ var CVModels = /*#__PURE__*/function () {
     this.barLevelPosition;
     this.moveFromBody = false;
     this.inputWithLevelValue;
+    this.numbersStringEquivalents = {
+      1: "one",
+      2: "two",
+      3: "three",
+      4: "four",
+      5: "five",
+      6: "six",
+      7: "seven",
+      8: "eight",
+      9: "nine",
+      10: "ten"
+    };
     var cvForm = document.querySelector('.cv-form .cv');
 
     if (cvForm) {
@@ -5225,19 +5237,10 @@ var CVModels = /*#__PURE__*/function () {
 
           add.innerText = "En ajouter une autre";
           listChildren[0].after(add);
+          add.addEventListener('click', _this.handleAddNewList.bind(_this));
         }
       });
-      var barLevels = document.querySelectorAll('.level.bar-level');
-      barLevels.forEach(function (barLevel) {
-        var levelCursor = _this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
-
-        barLevel.appendChild(levelCursor);
-        levelCursor.addEventListener('mousedown', _this.handleLevelCursorMouseDown.bind(_this));
-        levelCursor.addEventListener('mouseup', _this.handleLevelCursorMouseUp.bind(_this));
-        barLevel.addEventListener('click', _this.handleBarLevelClick.bind(_this));
-        barLevel.addEventListener('mousemove', _this.handleLevelCursorMove.bind(_this));
-        barLevel.addEventListener('mouseleave', _this.handleBarLevelMouseleave.bind(_this));
-      });
+      this.addListenersToEveryBarLevels();
     }
   }, {
     key: "throwErrorIfFormUndefined",
@@ -5252,10 +5255,201 @@ var CVModels = /*#__PURE__*/function () {
      */
 
   }, {
+    key: "handleAddNewList",
+    value: function handleAddNewList(e) {
+      e.preventDefault();
+      /**
+       * @type {HTMLButtonElement}
+       */
+
+      var addNewListButton = e.target;
+      var previousList = addNewListButton.previousElementSibling;
+      var newList = addNewListButton.previousElementSibling.cloneNode();
+      newList.innerHTML = previousList.innerHTML;
+      var newListLevelIndicators = Array.from(newList.querySelectorAll('.level-indicator'));
+
+      if (newListLevelIndicators.length > 0) {
+        var lastListLevelIndicator = newListLevelIndicators[newListLevelIndicators.length - 1];
+        lastListLevelIndicator.parentElement.removeChild(lastListLevelIndicator);
+      }
+
+      var newListCursors = Array.from(newList.querySelectorAll('.level-cursor'));
+
+      if (newListCursors.length > 0) {
+        var lastListCursor = newListCursors[newListCursors.length - 1];
+        lastListCursor.parentElement.removeChild(lastListCursor);
+      }
+
+      addNewListButton.before(newList);
+
+      if (newList.className.includes('one')) {
+        newList.className = newList.className.replace("one", "two");
+        var listsInputs = newList.querySelectorAll('input');
+
+        if (listsInputs) {
+          listsInputs.forEach(function (listInput) {
+            listInput.name = listInput.name.replace('one', "two");
+          });
+        }
+      } else if (newList.className.includes('two')) {
+        newList.className = newList.className.replace("two", "three");
+
+        var _listsInputs = newList.querySelectorAll('input');
+
+        if (_listsInputs) {
+          _listsInputs.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("two", "three");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      } else if (newList.className.includes('three')) {
+        newList.className = newList.className.replace("three", "four");
+
+        var _listsInputs2 = newList.querySelectorAll('input');
+
+        if (_listsInputs2) {
+          _listsInputs2.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("three", "four");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      } else if (newList.className.includes('four')) {
+        newList.className = newList.className.replace("four", "five");
+
+        var _listsInputs3 = newList.querySelectorAll('input');
+
+        if (_listsInputs3) {
+          _listsInputs3.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("four", "five");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      } else if (newList.className.includes('five')) {
+        newList.className = newList.className.replace("five", "six");
+
+        var _listsInputs4 = newList.querySelectorAll('input');
+
+        if (_listsInputs4) {
+          _listsInputs4.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("five", "six");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+
+        if (newList.parentElement.classList.contains('skills-list-left')) {
+          var skillsListRight = newList.parentElement.nextElementSibling;
+          skillsListRight.appendChild(newList);
+          skillsListRight.appendChild(addNewListButton);
+        }
+      } else if (newList.className.includes('six')) {
+        newList.className = newList.className.replace("six", "seven");
+
+        var _listsInputs5 = newList.querySelectorAll('input');
+
+        if (_listsInputs5) {
+          _listsInputs5.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("six", "seven");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      } else if (newList.className.includes('seven')) {
+        newList.className = newList.className.replace("seven", "eight");
+
+        var _listsInputs6 = newList.querySelectorAll('input');
+
+        if (_listsInputs6) {
+          _listsInputs6.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("seven", "eight");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      } else if (newList.className.includes('eight')) {
+        newList.className = newList.className.replace("eight", "nine");
+
+        var _listsInputs7 = newList.querySelectorAll('input');
+
+        if (_listsInputs7) {
+          _listsInputs7.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("eight", "nine");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      } else if (newList.className.includes('nine')) {
+        newList.className = newList.className.replace("nine", "ten");
+
+        var _listsInputs8 = newList.querySelectorAll('input');
+
+        if (_listsInputs8) {
+          _listsInputs8.forEach(function (listInput) {
+            listInput.name = listInput.name.replace("nine", "ten");
+
+            if (listInput.name.includes('level')) {
+              listInput.parentElement.removeChild(listInput);
+            }
+          });
+        }
+      }
+
+      if (this.inputWithLevelValue) {
+        this.inputWithLevelValue = undefined;
+      }
+
+      this.addListenersToEveryBarLevels();
+    }
+  }, {
+    key: "addListenersToEveryBarLevels",
+    value: function addListenersToEveryBarLevels() {
+      var _this2 = this;
+
+      var barLevels = document.querySelectorAll('.level.bar-level');
+      barLevels.forEach(function (barLevel) {
+        if (!barLevel.querySelector('.level-cursor')) {
+          var levelCursor = _this2.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+
+          barLevel.appendChild(levelCursor);
+          levelCursor.addEventListener('mousedown', _this2.handleLevelCursorMouseDown.bind(_this2));
+          levelCursor.addEventListener('mouseup', _this2.handleLevelCursorMouseUp.bind(_this2));
+          barLevel.addEventListener('click', _this2.handleBarLevelClick.bind(_this2));
+          barLevel.addEventListener('mousemove', _this2.handleLevelCursorMove.bind(_this2));
+          barLevel.addEventListener('mouseleave', _this2.handleBarLevelMouseleave.bind(_this2));
+        }
+      });
+    }
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
     key: "handleLevelCursorMouseDown",
     value: function handleLevelCursorMouseDown(e) {
       e.preventDefault();
-      this.levelCursor = e.target;
+
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.levelCursor) || this.levelCursor !== e.target) {
+        this.levelCursor = e.target;
+      }
+
       this.levelCursorOrigin = {
         x: this.levelCursor.offsetTop,
         y: this.levelCursor.offsetLeft
@@ -5266,19 +5460,19 @@ var CVModels = /*#__PURE__*/function () {
     value: function handleLevelCursorMouseUp(e) {
       e.preventDefault();
       this.levelCursorOrigin = undefined;
+      this.levelIndicator = undefined;
+      this.levelCursor = undefined;
+      this.barLevel = undefined;
     }
   }, {
     key: "handleBarLevelClick",
     value: function handleBarLevelClick(e) {
       e.preventDefault();
-      this.barLevel = e.target;
-      var barLevelRect = this.barLevel.getBoundingClientRect();
 
-      if (!this.barLevelPosition) {
-        this.barLevelPosition = {
-          x: barLevelRect.x,
-          y: barLevelRect.y
-        };
+      if (e.target.classList.contains('bar-level')) {
+        this.barLevel = e.target;
+      } else {
+        this.barLevel = e.currentTarget;
       }
 
       this.levelCursorPosition = {
@@ -5286,16 +5480,76 @@ var CVModels = /*#__PURE__*/function () {
         y: e.clientY
       };
 
-      if (!this.levelCursorOrigin && this.levelCursorPosition.x < this.barLevelPosition.x + this.barLevel.offsetWidth) {
-        var levelCursor = this.barLevel.querySelector('.level-cursor') ? this.barLevel.querySelector('.level-cursor') : this.barLevel.parentElement.querySelector('.level-cursor');
-        levelCursor.style.left = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+      if (!this.levelCursorOrigin) {
+        var barLevelRect = this.barLevel.getBoundingClientRect();
+        var barLevelRectPosition = {
+          x: barLevelRect.x,
+          y: barLevelRect.y
+        };
 
-        if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.levelIndicator)) {
-          this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
-          this.barLevel.appendChild(this.levelIndicator);
+        if (!this.barLevelPosition || this.barLevelPosition !== barLevelRectPosition) {
+          this.barLevelPosition = barLevelRectPosition;
         }
 
-        this.levelIndicator.style.width = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+        var cursorPositionLessThanBarLevelWidthAndPosition = this.levelCursorPosition.x < this.barLevelPosition.x + this.barLevel.offsetWidth;
+
+        if (cursorPositionLessThanBarLevelWidthAndPosition) {
+          var levelCursor = this.barLevel.querySelector('.level-cursor') ? this.barLevel.querySelector('.level-cursor') : this.barLevel.parentElement.querySelector('.level-cursor');
+          levelCursor.style.left = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+          var barLevelIndicator = this.barLevel.querySelector('.level-indicator');
+
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(barLevelIndicator)) {
+            this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+            this.barLevel.appendChild(this.levelIndicator);
+          } else {
+            this.levelIndicator = barLevelIndicator;
+          }
+
+          var levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
+          this.levelIndicator.style.width = levelIndicatorWidth + "px";
+
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.barLevel.querySelector('.level-value'))) {
+            this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
+            this.inputWithLevelValue.type = "text";
+            this.inputWithLevelValue.hidden = true;
+            var previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
+            var previousElementOfParentLevelInput;
+
+            if (previousElementOfParent) {
+              previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value');
+            }
+
+            console.log(this.barLevel.parentElement, previousElementOfParent);
+
+            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
+              this.inputWithLevelValue.name = "level_one";
+            } else if (previousElementOfParentLevelInput.name.includes('one')) {
+              this.inputWithLevelValue.name = "level_two";
+            } else if (previousElementOfParentLevelInput.name.includes('two')) {
+              this.inputWithLevelValue.name = "level_three";
+            } else if (previousElementOfParentLevelInput.name.includes('three')) {
+              this.inputWithLevelValue.name = "level_four";
+            } else if (previousElementOfParentLevelInput.name.includes('four')) {
+              this.inputWithLevelValue.name = "level_five";
+            } else if (previousElementOfParentLevelInput.name.includes('five')) {
+              this.inputWithLevelValue.name = "level_six";
+            } else if (previousElementOfParentLevelInput.name.includes('six')) {
+              this.inputWithLevelValue.name = "level_seven";
+            } else if (previousElementOfParentLevelInput.name.includes('seven')) {
+              this.inputWithLevelValue.name = "level_eight";
+            } else if (previousElementOfParentLevelInput.name.includes("eight")) {
+              this.inputWithLevelValue.name = "level_eight";
+            } else if (previousElementOfParentLevelInput.name.includes("eight")) {
+              this.inputWithLevelValue.name = "level_nine";
+            } else if (previousElementOfParentLevelInput.name.includes("nine")) {
+              this.inputWithLevelValue.name = "level_ten";
+            }
+
+            this.barLevel.appendChild(this.inputWithLevelValue);
+          }
+
+          this.inputWithLevelValue.setAttribute('value', "".concat((levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)));
+        }
       }
     }
     /**
@@ -5308,23 +5562,24 @@ var CVModels = /*#__PURE__*/function () {
     value: function handleLevelCursorMove(e) {
       e.preventDefault();
 
-      if (!this.moveFromBody) {
+      if (!this.moveFromBody || e.currentTarget.classList.contains('bar-level')) {
         /**
          * @type {HTMLParagraphElement}
             */
         this.barLevel = e.currentTarget;
       }
 
-      var barLevelRect = this.barLevel.getBoundingClientRect();
-
-      if (!this.barLevelPosition) {
-        this.barLevelPosition = {
+      if (this.levelCursorOrigin && this.levelCursor && this.barLevel) {
+        var barLevelRect = this.barLevel.getBoundingClientRect();
+        var barLevelRectPosition = {
           x: barLevelRect.x,
           y: barLevelRect.y
         };
-      }
 
-      if (this.levelCursorOrigin && this.levelCursor) {
+        if (!this.barLevelPosition || this.barLevelPosition !== barLevelRectPosition) {
+          this.barLevelPosition = barLevelRectPosition;
+        }
+
         this.levelCursorPosition = {
           x: e.clientX,
           y: e.clientY
@@ -5335,20 +5590,53 @@ var CVModels = /*#__PURE__*/function () {
 
         if (cursorPositionDoesntCollapse) {
           this.levelCursor.style.left = this.levelCursorPosition.x - this.barLevelPosition.x + "px";
+          var barLevelIndicator = this.barLevel.querySelector('.level-indicator');
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.levelIndicator)) {
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(barLevelIndicator)) {
             this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
             this.barLevel.appendChild(this.levelIndicator);
+          } else {
+            this.levelIndicator = barLevelIndicator;
           }
 
           var levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
           this.levelIndicator.style.width = levelIndicatorWidth + "px";
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue)) {
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.barLevel.querySelector('.level-value'))) {
             this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
             this.inputWithLevelValue.type = "text";
             this.inputWithLevelValue.hidden = true;
-            this.inputWithLevelValue.name = "level_one";
+            var previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
+            var previousElementOfParentLevelInput;
+
+            if (previousElementOfParent) {
+              previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value');
+            }
+
+            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
+              this.inputWithLevelValue.name = "level_one";
+            } else if (previousElementOfParentLevelInput.name.includes('one')) {
+              this.inputWithLevelValue.name = "level_two";
+            } else if (previousElementOfParentLevelInput.name.includes('two')) {
+              this.inputWithLevelValue.name = "level_three";
+            } else if (previousElementOfParentLevelInput.name.includes('three')) {
+              this.inputWithLevelValue.name = "level_four";
+            } else if (previousElementOfParentLevelInput.name.includes('four')) {
+              this.inputWithLevelValue.name = "level_five";
+            } else if (previousElementOfParentLevelInput.name.includes('five')) {
+              this.inputWithLevelValue.name = "level_six";
+            } else if (previousElementOfParentLevelInput.name.includes('six')) {
+              this.inputWithLevelValue.name = "level_seven";
+            } else if (previousElementOfParentLevelInput.name.includes('seven')) {
+              this.inputWithLevelValue.name = "level_eight";
+            } else if (previousElementOfParentLevelInput.name.includes("eight")) {
+              this.inputWithLevelValue.name = "level_eight";
+            } else if (previousElementOfParentLevelInput.name.includes("eight")) {
+              this.inputWithLevelValue.name = "level_nine";
+            } else if (previousElementOfParentLevelInput.name.includes("nine")) {
+              this.inputWithLevelValue.name = "level_ten";
+            }
+
             this.barLevel.appendChild(this.inputWithLevelValue);
           }
 
@@ -5359,20 +5647,20 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleBarLevelMouseleave",
     value: function handleBarLevelMouseleave(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       e.preventDefault();
 
       if (this.levelCursorOrigin) {
         document.body.addEventListener('mousemove', function (e) {
           e.preventDefault();
-          _this2.moveFromBody = true;
+          _this3.moveFromBody = true;
 
-          _this2.handleLevelCursorMove(e);
+          _this3.handleLevelCursorMove(e);
         });
         document.body.addEventListener('click', function (e) {
           e.preventDefault();
-          _this2.levelCursorOrigin = undefined;
+          _this3.levelCursorOrigin = undefined;
         });
       }
     }

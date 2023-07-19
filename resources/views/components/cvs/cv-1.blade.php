@@ -43,19 +43,19 @@
                 <div class="formation-list list customizable-list">
                     <div class="formation-one">
                         <div class="graduation">
-                            <h4 id="input" aria-name="graduation">DIPLOME XXXXXXXXX</h4>
-                            <p id="input" aria-name="etablissement" class="college">Université ou école</p>
+                            <h4 id="input" aria-name="graduation_one">DIPLOME XXXXXXXXX</h4>
+                            <p id="input" aria-name="etablissement_one" class="college">Université ou école</p>
                             <p class="date" aria-input-number="2">
-                                <span aria-name="year_debut" id="input" aria-type="number">20XX</span> <span id="separator">-</span> <span aria-name="year_end" id="input" aria-type="number">20XX</span>
+                                <span aria-name="year_debut_one" id="input" aria-type="number">20XX</span> <span id="separator">-</span> <span aria-name="year_end_one" id="input" aria-type="number">20XX</span>
                             </p>
                         </div>
                     </div>
                     <div class="formation-two">
                         <div class="graduation">
-                            <h4 id="input" aria-name="graduation">DIPLOME XXXXXXXXX</h4>
-                            <p id="input" aria-name="etablissement" class="college">Université ou école</p>
+                            <h4 id="input" aria-name="graduation_two">DIPLOME XXXXXXXXX</h4>
+                            <p id="input" aria-name="etablissement_two" class="college">Université ou école</p>
                             <p class="date" aria-input-number="2">
-                                <span aria-name="year_debut" id="input" aria-type="number">20XX</span> <span id="separator">-</span> <span aria-name="year_end" id="input" aria-type="number">20XX</span>
+                                <span aria-name="year_debut_two" id="input" aria-type="number">20XX</span> <span id="separator">-</span> <span aria-name="year_end_two" id="input" aria-type="number">20XX</span>
                             </p>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                             <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
                         </svg>
                         <p class="language-with-level mb-0 ms-3" aria-input-number="2">
-                            <span id="input" aria-name="language">Français</span> <span id="separator">:</span> <span id="input" aria-name="level">Bilingue</span>
+                            <span id="input" aria-name="language_one">Français</span> <span id="separator">:</span> <span id="input" aria-name="level_one">Bilingue</span>
                         </p>
                     </div>
                     <div class="language-two d-flex justify-content-start">
@@ -77,7 +77,7 @@
                             <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
                         </svg>
                         <p class="language-with-level mb-0 ms-3" aria-input-number="2">
-                            <span id="input" aria-name="language">Anglais</span> <span id="separator">:</span> <span id="input" aria-name="level">Courant</span>
+                            <span id="input" aria-name="language_two">Anglais</span> <span id="separator">:</span> <span id="input" aria-name="level_two">Courant</span>
                         </p>
                     </div>
                 </div>
@@ -94,29 +94,29 @@
                 <div class="experiences-list list customizable-list">
                     <div class="experience-one">
                         <h4 class="company-name" aria-input-number="2">
-                            <span id="input" aria-name="company_name">NOM DE L'ENTREPRISE</span> <span id="separator">|</span> <span id="input" aria-name="company_work">Poste occupé</span>
+                            <span id="input" aria-name="company_name_one">NOM DE L'ENTREPRISE</span> <span id="separator">|</span> <span id="input" aria-name="company_work_one">Poste occupé</span>
                         </h4>
                         <p class="date" aria-input-number="2">
-                            <span id="input" aria-name="year_month_debut">Sept. 20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_month_end">Juil. 20XX</span>
+                            <span id="input" aria-name="year_month_debut_one">Sept. 20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_month_end_one">Juil. 20XX</span>
                         </p>
                         <div class="task">
                             <p>
                                 <span >Tâches réalisées : </span>
-                                <span id="textarea" aria-name="task-one">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span> 
+                                <span id="textarea" aria-name="task_one">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span> 
                             </p>
                         </div>
                     </div>
                     <div class="experience-two">
                         <h4 class="company-name" aria-input-number="2">
-                            <span id="input" aria-name="company_name">NOM DE L'ENTREPRISE</span> <span id="separator">|</span> <span id="input" aria-name="company_work">Poste occupé</span>
+                            <span id="input" aria-name="company_name_two">NOM DE L'ENTREPRISE</span> <span id="separator">|</span> <span id="input" aria-name="company_work_two">Poste occupé</span>
                         </h4>
                         <p class="date" aria-input-number="2">
-                            <span id="input" aria-name="year_month debut">Sept. 20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_month end">Juil. 20XX</span>
+                            <span id="input" aria-name="year_month_debut_two">Sept. 20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_month_end_two">Juil. 20XX</span>
                         </p>
                         <div class="task">
                             <p>
                                 <span >Tâches réalisées : </span>
-                                <span id="textarea" aria-name="task-two">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span> 
+                                <span id="textarea" aria-name="task_two">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span> 
                             </p>
                         </div>
                     </div>
@@ -127,21 +127,21 @@
                 <div class="skills-list d-flex justify-content-between">
                     <div class="skills-list-left list customizable-list">
                         <div class="skill skill-one">
-                            <p id="input" aria-name="skill-one" class="name mb-0">Pack Office</p>
+                            <p id="input" aria-name="skill_one" class="name mb-0">Pack Office</p>
                             <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                         <div class="skill skill-two">
-                            <p id="input" aria-name="skill-two" class="name mb-0">Photoshop</p>
+                            <p id="input" aria-name="skill_two" class="name mb-0">Photoshop</p>
                             <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                         <div class="skill skill-three">
-                            <p id="input" aria-name="skill-three" class="name mb-0">Compétence</p>
+                            <p id="input" aria-name="skill_three" class="name mb-0">Compétence</p>
                             <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                     </div>
                     <div class="skills-list-right list customizable-list">
                         <div class="skill skill-four">
-                            <p id="input" aria-name="skill-four" class="name mb-0">Compétence</p>
+                            <p id="input" aria-name="skill_four" class="name mb-0">Compétence</p>
                             <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                     </div>
