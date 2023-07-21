@@ -10582,14 +10582,23 @@ li.nav-item a.text-white:hover {
   transition: filter 0.3s ease-in;
   cursor: pointer;
 }
-.cv h1, .cv .h1, .cv h3, .cv .h3 {
+.cv h2, .cv .h2, .cv h3, .cv .h3 {
   font-weight: bolder;
 }
 .cv .icon {
   width: 20px;
   fill: #fff;
 }
+.cv svg.profile-photo, .cv img.profile-photo {
+  display: block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
 
+.cv.cv-1 .task .task-label {
+  font-weight: 600;
+}
 .cv.cv-1 .skills .level {
   width: 150px;
   height: 10px;
@@ -10754,7 +10763,9 @@ li.nav-item a.text-white:hover {
   position: relative;
 }
 .cv-form .cv {
+  margin: 0 auto;
   margin-top: 250px;
+  width: 90%;
 }
 .cv-form .cv input::-moz-placeholder, .cv-form .cv textarea::-moz-placeholder {
   color: #adb5bd;
@@ -10773,6 +10784,16 @@ li.nav-item a.text-white:hover {
   background: #6610f2;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+}
+.cv-form .cv .left {
+  width: 40%;
+}
+.cv-form .cv .left .profile-photo {
+  margin-right: auto;
+  margin-left: auto;
+}
+.cv-form .cv .right {
+  width: 60%;
 }
 .cv-form .cv.cv-1 .skills .level.bar-level::after {
   width: 0;

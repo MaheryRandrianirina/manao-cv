@@ -4,11 +4,17 @@ import CameraIcon from "./icons/camera-icon";
 import EyeIcon from "./icons/eye-icon";
 import DownloadIcon from "./icons/download-icon";
 import CheckIcon from "./icons/check-icon";
+import innerUserIcon from "./icons/inner-user-icon";
+import { formatString, getClassFrom } from "./utils/simplifiers";
 
 export default class CVModels {
 
     constructor(){
         this.dom = new DOMInteractions();
+    }
+
+    createCVForm()
+    {
         this.form;
         this.levelIndicator;
         /**
@@ -22,6 +28,14 @@ export default class CVModels {
         this.barLevelPosition;
         this.moveFromBody = false;
         this.inputWithLevelValue;
+        this.modelName = "";
+        this.formInputs;
+        this.formTextareas;
+        this.divFromForm;
+        /**
+         * @type {HTMLInputElement | undefined}
+         */
+        this.profilePhotoInput;
 
         this.numbersStringEquivalents = {
             1: "one",
@@ -35,6 +49,17 @@ export default class CVModels {
             9: "nine",
             10: "ten"
         };
+
+        this.textStylePerModel = {
+            "cv-1" : {
+                "name": "uppercase"
+            }
+        }
+
+        /**
+         * @type {{[inputName: string]: string} | {}}
+         */
+        this.inputsValues = {};
 
         const cvForm = document.querySelector('.cv-form .cv');
         if(cvForm){
@@ -50,7 +75,9 @@ export default class CVModels {
         const form = this.dom.createElement('form');
         form.action = cv.getAttribute('aria-link');
         form.method = "POST";
-        form.className = cv.className;
+
+        const arrayClassList = Array.from(cv.classList);
+        form.className = arrayClassList.join(' ');
         form.innerHTML = cv.innerHTML;
         cv.replaceWith(form);
 
@@ -79,9 +106,10 @@ export default class CVModels {
             /**
              * @type {HTMLInputElement}
              */
-            const input = this.dom.createElement('input', element.className + " form-control mb-2");
+            const input = this.dom.createElement('input', getClassFrom(element) + " form-control mb-2");
             input.name = inputName ? inputName : "";
             input.type = inputType ? inputType : "text";
+            input.setAttribute('aria-nodename', element.nodeName)
             
             if(inputName.includes("level")){
                 input.placeholder = "Niveau";
@@ -106,6 +134,12 @@ export default class CVModels {
             const inputNumber = parentElement.getAttribute('aria-input-number');
             if(inputNumber){
                 parentElement.classList.add('d-flex', 'justify-content-between');
+
+                const separator = parentElement.querySelector('#separator');
+                if(separator){
+                    parentElement.setAttribute('aria-separator', separator.innerHTML);
+                    separator.parentElement.removeChild(separator);
+                }
                 // const parentElementChildren = Array.from(parentElement.children);
                 // if(parentElementChildren.indexOf(element)
                 //     === parentElementChildren.length - 1
@@ -116,7 +150,9 @@ export default class CVModels {
             }
 
             if(element.classList.contains('profile-photo')){
-                element.before(this.dom.createElement('label', 'mb-1').innerText = "Choisir une photo : ")
+                const label = this.dom.createElement('label', 'mb-1');
+                element.before(label);
+                label.innerText = "Choisir une photo : ";
             }
 
             element.replaceWith(input);
@@ -128,16 +164,12 @@ export default class CVModels {
             /**
              * @type {HTMLTextAreaElement}
              */
-            const textarea = this.dom.createElement('textarea', element.className + " form-control");
+            const textarea = this.dom.createElement('textarea', Array.from(element.classList).join(' ') + " form-control");
             textarea.name = textareaName ? textareaName : "";
-            textarea.placeholder = "Ecrire quelque chose"
+            textarea.placeholder = "Ecrire quelque chose";
+            textarea.setAttribute('aria-nodename', element.nodeName)
 
             element.replaceWith(textarea)
-        })
-
-        const separators = document.querySelectorAll('#separator');
-        separators.forEach(separator => {
-            separator.parentElement.removeChild(separator)
         })
 
         const lists = document.querySelectorAll('.list.customizable-list')
@@ -211,15 +243,15 @@ export default class CVModels {
             }
         }else if(newList.className.includes('two')){
             newList.className = newList.className.replace("two", "three");
-
+            
             const listsInputs = newList.querySelectorAll('input');
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("two", "three");
                     
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 });
             }
         }else if(newList.className.includes('three')){
@@ -230,9 +262,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("three", "four");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 });
             }
         }else if(newList.className.includes('four')){
@@ -243,9 +275,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("four", "five");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 })
             }
         }else if(newList.className.includes('five')){
@@ -256,9 +288,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("five", "six");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 })
             }
             
@@ -275,9 +307,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("six", "seven");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 })
             }
         }else if(newList.className.includes('seven')){
@@ -288,9 +320,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("seven", "eight");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 })
             }
         }else if(newList.className.includes('eight')){
@@ -301,9 +333,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("eight", "nine");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 })
             }
         }else if(newList.className.includes('nine')){
@@ -314,9 +346,9 @@ export default class CVModels {
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("nine", "ten");
 
-                    if(listInput.name.includes('level')){
-                        listInput.parentElement.removeChild(listInput);
-                    }
+                    // if(listInput.name.includes('level')){
+                    //     listInput.parentElement.removeChild(listInput);
+                    // }
                 })
             }
         }
@@ -410,15 +442,14 @@ export default class CVModels {
                     isNull(this.barLevel.querySelector('.level-value'))
                 ){
                     this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
-                    this.inputWithLevelValue.type = "text";
-                    this.inputWithLevelValue.hidden = true;
+                    this.inputWithLevelValue.type = "hidden";
 
                     const previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
                     let previousElementOfParentLevelInput;
                     if(previousElementOfParent){
                         previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value')
                     }
-                    console.log(this.barLevel.parentElement, previousElementOfParent)
+                    
                     if(isNull(previousElementOfParent)){
                         this.inputWithLevelValue.name = "level_one"
                     }else if(previousElementOfParentLevelInput.name.includes('one')){
@@ -568,9 +599,11 @@ export default class CVModels {
          */
         const hiddenInputWithModelname = this.dom.createElement('input');
         hiddenInputWithModelname.name = "model";
-        hiddenInputWithModelname.hidden = true;
+        hiddenInputWithModelname.type = "hidden";
         hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
         this.form.appendChild(hiddenInputWithModelname);
+
+        this.modelName = hiddenInputWithModelname.value;
     }
 
     addClickableSeeButton()
@@ -584,7 +617,7 @@ export default class CVModels {
 
         document.body.appendChild(seeButtonContainer);
 
-        const seeButton = document.querySelector('.see-button-container eye-icon');
+        const seeButton = document.querySelector('.see-button-container');
         if(seeButton){
             seeButton.addEventListener('click', this.handleSeeCV.bind(this))
         }
@@ -599,6 +632,225 @@ export default class CVModels {
         e.preventDefault();
 
         const eyeIcon = e.target;
-
+        this.transformFormToRealCV();
     }
+
+    transformFormToRealCV()
+    {
+        let formInputs;
+        let formTextareas;
+        if(this.form){
+            formInputs = this.form.querySelectorAll('input')
+            formTextareas = this.form.querySelectorAll('textarea');
+        }else {
+            const form = document.querySelector('form');
+            if(form){
+                formInputs = form.querySelectorAll('input');
+                formTextareas = form.querySelectorAll('textarea')
+            }
+        }
+        
+        if(formInputs){
+            this.formInputs = formInputs;
+
+            this.transformProfilePhotoInputToImg();
+
+            this.transformEachInputToText();
+
+            this.removeAllAddlistButtons();
+        }
+
+        if(formTextareas){
+            this.formTextareas = formTextareas;
+            this.transformEachTextareaToText();
+        }
+        
+        this.divFromForm = this.transformFormToDiv();
+    }
+
+    /**
+     * remplace l'élément form par un élément div
+     * @returns {HTMLDivElement} div remplaceant l'élément form
+     */
+    transformFormToDiv()
+    {
+        this.throwErrorIfFormUndefined();
+
+        const divToReplaceForm = this.dom.createElement('div', getClassFrom(this.form));
+        divToReplaceForm.setAttribute("aria-link", this.form.getAttribute("action"));
+        divToReplaceForm.innerHTML = this.form.innerHTML;
+        this.form.replaceWith(divToReplaceForm);
+
+        return divToReplaceForm;
+    }
+
+    transformEachInputToText()
+    {
+        if(this.formInputs){
+            this.formInputs.forEach(formInput => {
+                
+                if(formInput.getAttribute('type') !== "hidden" 
+                    && !formInput.classList.contains('profile-photo')
+                    && !formInput.classList.contains('level-value')){
+                    const className = getClassFrom(formInput);
+                    
+                    const elementToReplaceInput = this.dom.createElement(
+                        formInput.getAttribute('aria-nodename').toLowerCase(), 
+                        className.replace('form-control', '').replace('mb-2', 'mb-0')
+                    );
+                    
+                    const inputValue = formInput.value;
+                    this.saveInputsValues(formInput.name, inputValue);
+
+                    let elementInnerText;
+                    
+                    if(formInput.name === "name"){
+                        elementInnerText = this.textStylePerModel[this.modelName].name 
+                            === "uppercase" 
+                            ? inputValue.toUpperCase() : 
+                            inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+                    }else if(formInput.name === "email" || formInput.name === 'url_linkedin'){
+                        elementInnerText = inputValue;
+                    }else {
+                        elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+                        
+                        if(formInput.name === "phone_number"){
+                            elementInnerText = formatString(elementInnerText, "phone_number");
+                        }
+                    }
+
+                    elementToReplaceInput.innerHTML = elementInnerText;
+                    if(elementToReplaceInput.nodeName.toLowerCase() === "svg" 
+                        && elementToReplaceInput.classList.contains('profile-photo')
+                    ){
+                        formInput.parentElement.removeChild(formInput.previousElementSibling);
+                        elementToReplaceInput.innerHTML = innerUserIcon();
+                    }
+
+                    const formInputParent = formInput.parentElement;
+                    const formInputParentChildren = Array.from(formInputParent.children);
+                    const separator = formInputParent.getAttribute('aria-separator');
+                    if(formInputParent.classList.contains('justify-content-between')
+                        && separator && formInputParentChildren.length > 1
+                        && !formInputParent.querySelector('#separator')
+                    ){
+                        formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
+
+                        const separatorSpan = this.dom.createElement('span');
+                        separatorSpan.innerText = " " + separator + " ";
+                        separatorSpan.setAttribute('id', 'separator');
+
+                        formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
+                    }
+
+                    formInput.replaceWith(elementToReplaceInput);
+                }else if(!formInput.classList.contains('profile-photo')) {
+                    if(formInput.name.includes('level')){
+                        this.saveInputsValues(formInput.name, formInput.value);
+                        
+                        const inputParentElement = formInput.parentElement;
+
+                        const levelCursor = inputParentElement.querySelector('.level-cursor');
+                        if(levelCursor){
+                            inputParentElement.removeChild(levelCursor)
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    saveInputsValues(inputName, inputValue)
+    {
+        if(inputValue){
+            this.inputsValues[inputName] = inputValue;
+        }
+    }
+
+    transformProfilePhotoInputToImg()
+    {
+        this.throwErrorIfFormUndefined();
+
+        this.profilePhotoInput = this.form.querySelector('.profile-photo');
+        
+        if(this.profilePhotoInput){
+            this.profilePhotoInput.parentElement.removeChild(this.profilePhotoInput.previousElementSibling);
+
+            this.showProfilePhoto();
+        }
+    }
+
+    showProfilePhoto(e)
+    {
+        this.throwErrorIfUndefined(this.profilePhotoInput, "this.profilePhotoInput");
+
+        const file = this.profilePhotoInput.files[0];
+        if(file){
+            /**
+            * @type {HTMLImageElement}
+            */
+            const profilePhotoImg = this.dom.createElement('img', 'profile-photo');
+            profilePhotoImg.src = URL.createObjectURL(file);
+
+            this.profilePhotoInput.replaceWith(profilePhotoImg);
+        }
+        
+    }
+
+    transformEachTextareaToText()
+    {
+        this.throwErrorIfUndefined(this.formTextareas, "this.formTextareas");
+
+        this.formTextareas.forEach(formTextarea => {
+            const className = getClassFrom(formTextarea);
+            const elementToReplaceInput = this.dom.createElement(
+                formTextarea.getAttribute('aria-nodename').toLowerCase(), 
+                className.replace('form-control', '').replace('mb-2', 'mb-0')
+            );
+                    
+            const inputValue = formTextarea.value;
+            this.saveInputsValues(formTextarea.name, inputValue);
+            let elementInnerText;
+                    
+            if(formTextarea.name === "name"){
+                elementInnerText = this.textStylePerModel[this.modelName].name === "uppercase" ? inputValue.toUpperCase() : 
+                    inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+            }else {
+                elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+            }
+
+            elementToReplaceInput.innerHTML = elementInnerText;
+            formTextarea.replaceWith(elementToReplaceInput);
+        })
+    }
+
+    removeAllAddlistButtons()
+    {
+        this.throwErrorIfFormUndefined();
+
+        const addIntoListButtons = this.form.querySelectorAll('.btn.add-into-list');
+        if(addIntoListButtons){
+            addIntoListButtons.forEach(addIntoListButton => {
+                addIntoListButton.parentElement.removeChild(addIntoListButton)
+            })
+        }
+    }
+
+    /**
+     * Lève une erreur si une variable est undefined
+     * @param {any} variable 
+     * @param {string} stringVariable la variable sous forme de chaîne de caractères. ex: throwErrorIfUndefined(this.formInputs, "this.formInputs")
+     */
+    throwErrorIfUndefined(variable, stringVariable)
+    {
+        if(isUndefined(variable)){
+            throw new Error(stringVariable + " est undefined");
+        }
+    }
+
+    throwErrorIfDivFromFormUndefined()
+    {
+        return this.throwErrorIfUndefined(this.divFromForm, "this.divFromForm");
+    }
+
 }

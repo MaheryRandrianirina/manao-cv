@@ -4988,7 +4988,8 @@ window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"];
 alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
 (0,_auth__WEBPACK_IMPORTED_MODULE_1__.ScrollIfErrors)();
 new _interactions__WEBPACK_IMPORTED_MODULE_3__["default"]();
-new _cv__WEBPACK_IMPORTED_MODULE_4__["default"]();
+var cvModel = new _cv__WEBPACK_IMPORTED_MODULE_4__["default"]();
+cvModel.createCVForm();
 
 /***/ }),
 
@@ -5068,6 +5069,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icons_eye_icon__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./icons/eye-icon */ "./resources/js/icons/eye-icon.js");
 /* harmony import */ var _icons_download_icon__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons/download-icon */ "./resources/js/icons/download-icon.js");
 /* harmony import */ var _icons_check_icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./icons/check-icon */ "./resources/js/icons/check-icon.js");
+/* harmony import */ var _icons_inner_user_icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./icons/inner-user-icon */ "./resources/js/icons/inner-user-icon.js");
+/* harmony import */ var _utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/simplifiers */ "./resources/js/utils/simplifiers.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -5081,55 +5084,81 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+
 var CVModels = /*#__PURE__*/function () {
   function CVModels() {
     _classCallCheck(this, CVModels);
 
     this.dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    this.form;
-    this.levelIndicator;
-    /**
-     * @type {HTMLSpanElement | undefined}
-     */
-
-    this.levelCursor;
-    /**
-     * @type {{x: number, y: number} | undefined}
-     */
-
-    this.levelCursorOrigin;
-    this.barLevelPosition;
-    this.moveFromBody = false;
-    this.inputWithLevelValue;
-    this.numbersStringEquivalents = {
-      1: "one",
-      2: "two",
-      3: "three",
-      4: "four",
-      5: "five",
-      6: "six",
-      7: "seven",
-      8: "eight",
-      9: "nine",
-      10: "ten"
-    };
-    var cvForm = document.querySelector('.cv-form .cv');
-
-    if (cvForm) {
-      this.transformToForm();
-      this.filling();
-      this.addClickableSeeButton();
-    }
   }
 
   _createClass(CVModels, [{
+    key: "createCVForm",
+    value: function createCVForm() {
+      this.form;
+      this.levelIndicator;
+      /**
+       * @type {HTMLSpanElement | undefined}
+       */
+
+      this.levelCursor;
+      /**
+       * @type {{x: number, y: number} | undefined}
+       */
+
+      this.levelCursorOrigin;
+      this.barLevelPosition;
+      this.moveFromBody = false;
+      this.inputWithLevelValue;
+      this.modelName = "";
+      this.formInputs;
+      this.formTextareas;
+      this.divFromForm;
+      /**
+       * @type {HTMLInputElement | undefined}
+       */
+
+      this.profilePhotoInput;
+      this.numbersStringEquivalents = {
+        1: "one",
+        2: "two",
+        3: "three",
+        4: "four",
+        5: "five",
+        6: "six",
+        7: "seven",
+        8: "eight",
+        9: "nine",
+        10: "ten"
+      };
+      this.textStylePerModel = {
+        "cv-1": {
+          "name": "uppercase"
+        }
+      };
+      /**
+       * @type {{[inputName: string]: string} | {}}
+       */
+
+      this.inputsValues = {};
+      var cvForm = document.querySelector('.cv-form .cv');
+
+      if (cvForm) {
+        this.transformToForm();
+        this.filling();
+        this.addClickableSeeButton();
+      }
+    }
+  }, {
     key: "transformToForm",
     value: function transformToForm() {
       var cv = document.querySelector('.cv');
       var form = this.dom.createElement('form');
       form.action = cv.getAttribute('aria-link');
       form.method = "POST";
-      form.className = cv.className;
+      var arrayClassList = Array.from(cv.classList);
+      form.className = arrayClassList.join(' ');
       form.innerHTML = cv.innerHTML;
       cv.replaceWith(form);
       this.form = form;
@@ -5159,10 +5188,11 @@ var CVModels = /*#__PURE__*/function () {
          * @type {HTMLInputElement}
          */
 
-        var input = _this.dom.createElement('input', element.className + " form-control mb-2");
+        var input = _this.dom.createElement('input', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(element) + " form-control mb-2");
 
         input.name = inputName ? inputName : "";
         input.type = inputType ? inputType : "text";
+        input.setAttribute('aria-nodename', element.nodeName);
 
         if (inputName.includes("level")) {
           input.placeholder = "Niveau";
@@ -5187,17 +5217,27 @@ var CVModels = /*#__PURE__*/function () {
         var inputNumber = parentElement.getAttribute('aria-input-number');
 
         if (inputNumber) {
-          parentElement.classList.add('d-flex', 'justify-content-between'); // const parentElementChildren = Array.from(parentElement.children);
+          parentElement.classList.add('d-flex', 'justify-content-between');
+          var separator = parentElement.querySelector('#separator');
+
+          if (separator) {
+            parentElement.setAttribute('aria-separator', separator.innerHTML);
+            separator.parentElement.removeChild(separator);
+          } // const parentElementChildren = Array.from(parentElement.children);
           // if(parentElementChildren.indexOf(element)
           //     === parentElementChildren.length - 1
           // ){
           //     console.log(parentElementChildren[parentElementChildren.length- 1])
           //     parentElementChildren[parentElementChildren.length- 1].style.marginLeft = "5px"
           // }
+
         }
 
         if (element.classList.contains('profile-photo')) {
-          element.before(_this.dom.createElement('label', 'mb-1').innerText = "Choisir une photo : ");
+          var label = _this.dom.createElement('label', 'mb-1');
+
+          element.before(label);
+          label.innerText = "Choisir une photo : ";
         }
 
         element.replaceWith(input);
@@ -5209,15 +5249,12 @@ var CVModels = /*#__PURE__*/function () {
          * @type {HTMLTextAreaElement}
          */
 
-        var textarea = _this.dom.createElement('textarea', element.className + " form-control");
+        var textarea = _this.dom.createElement('textarea', Array.from(element.classList).join(' ') + " form-control");
 
         textarea.name = textareaName ? textareaName : "";
         textarea.placeholder = "Ecrire quelque chose";
+        textarea.setAttribute('aria-nodename', element.nodeName);
         element.replaceWith(textarea);
-      });
-      var separators = document.querySelectorAll('#separator');
-      separators.forEach(function (separator) {
-        separator.parentElement.removeChild(separator);
       });
       var lists = document.querySelectorAll('.list.customizable-list');
       lists.forEach(function (list) {
@@ -5298,11 +5335,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs) {
           _listsInputs.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("two", "three");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("two", "three"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       } else if (newList.className.includes('three')) {
@@ -5312,11 +5347,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs2) {
           _listsInputs2.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("three", "four");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("three", "four"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       } else if (newList.className.includes('four')) {
@@ -5326,11 +5359,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs3) {
           _listsInputs3.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("four", "five");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("four", "five"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       } else if (newList.className.includes('five')) {
@@ -5340,11 +5371,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs4) {
           _listsInputs4.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("five", "six");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("five", "six"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
 
@@ -5360,11 +5389,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs5) {
           _listsInputs5.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("six", "seven");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("six", "seven"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       } else if (newList.className.includes('seven')) {
@@ -5374,11 +5401,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs6) {
           _listsInputs6.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("seven", "eight");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("seven", "eight"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       } else if (newList.className.includes('eight')) {
@@ -5388,11 +5413,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs7) {
           _listsInputs7.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("eight", "nine");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("eight", "nine"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       } else if (newList.className.includes('nine')) {
@@ -5402,11 +5425,9 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs8) {
           _listsInputs8.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("nine", "ten");
-
-            if (listInput.name.includes('level')) {
-              listInput.parentElement.removeChild(listInput);
-            }
+            listInput.name = listInput.name.replace("nine", "ten"); // if(listInput.name.includes('level')){
+            //     listInput.parentElement.removeChild(listInput);
+            // }
           });
         }
       }
@@ -5510,16 +5531,13 @@ var CVModels = /*#__PURE__*/function () {
 
           if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.barLevel.querySelector('.level-value'))) {
             this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
-            this.inputWithLevelValue.type = "text";
-            this.inputWithLevelValue.hidden = true;
+            this.inputWithLevelValue.type = "hidden";
             var previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
             var previousElementOfParentLevelInput;
 
             if (previousElementOfParent) {
               previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value');
             }
-
-            console.log(this.barLevel.parentElement, previousElementOfParent);
 
             if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
               this.inputWithLevelValue.name = "level_one";
@@ -5672,9 +5690,10 @@ var CVModels = /*#__PURE__*/function () {
        */
       var hiddenInputWithModelname = this.dom.createElement('input');
       hiddenInputWithModelname.name = "model";
-      hiddenInputWithModelname.hidden = true;
+      hiddenInputWithModelname.type = "hidden";
       hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
       this.form.appendChild(hiddenInputWithModelname);
+      this.modelName = hiddenInputWithModelname.value;
     }
   }, {
     key: "addClickableSeeButton",
@@ -5683,7 +5702,7 @@ var CVModels = /*#__PURE__*/function () {
       var seeButtonContainer = this.dom.createElement('div', 'see-button-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
       seeButtonContainer.innerHTML = "Voir le CV ".concat((0,_icons_eye_icon__WEBPACK_IMPORTED_MODULE_3__["default"])("icon"));
       document.body.appendChild(seeButtonContainer);
-      var seeButton = document.querySelector('.see-button-container eye-icon');
+      var seeButton = document.querySelector('.see-button-container');
 
       if (seeButton) {
         seeButton.addEventListener('click', this.handleSeeCV.bind(this));
@@ -5699,6 +5718,211 @@ var CVModels = /*#__PURE__*/function () {
     value: function handleSeeCV(e) {
       e.preventDefault();
       var eyeIcon = e.target;
+      this.transformFormToRealCV();
+    }
+  }, {
+    key: "transformFormToRealCV",
+    value: function transformFormToRealCV() {
+      var formInputs;
+      var formTextareas;
+
+      if (this.form) {
+        formInputs = this.form.querySelectorAll('input');
+        formTextareas = this.form.querySelectorAll('textarea');
+      } else {
+        var form = document.querySelector('form');
+
+        if (form) {
+          formInputs = form.querySelectorAll('input');
+          formTextareas = form.querySelectorAll('textarea');
+        }
+      }
+
+      if (formInputs) {
+        this.formInputs = formInputs;
+        this.transformProfilePhotoInputToImg();
+        this.transformEachInputToText();
+        this.removeAllAddlistButtons();
+      }
+
+      if (formTextareas) {
+        this.formTextareas = formTextareas;
+        this.transformEachTextareaToText();
+      }
+
+      this.divFromForm = this.transformFormToDiv();
+    }
+    /**
+     * remplace l'élément form par un élément div
+     * @returns {HTMLDivElement} div remplaceant l'élément form
+     */
+
+  }, {
+    key: "transformFormToDiv",
+    value: function transformFormToDiv() {
+      this.throwErrorIfFormUndefined();
+      var divToReplaceForm = this.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(this.form));
+      divToReplaceForm.setAttribute("aria-link", this.form.getAttribute("action"));
+      divToReplaceForm.innerHTML = this.form.innerHTML;
+      this.form.replaceWith(divToReplaceForm);
+      return divToReplaceForm;
+    }
+  }, {
+    key: "transformEachInputToText",
+    value: function transformEachInputToText() {
+      var _this4 = this;
+
+      if (this.formInputs) {
+        this.formInputs.forEach(function (formInput) {
+          if (formInput.getAttribute('type') !== "hidden" && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value')) {
+            var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formInput);
+
+            var elementToReplaceInput = _this4.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+
+            var inputValue = formInput.value;
+
+            _this4.saveInputsValues(formInput.name, inputValue);
+
+            var elementInnerText;
+
+            if (formInput.name === "name") {
+              elementInnerText = _this4.textStylePerModel[_this4.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+            } else if (formInput.name === "email" || formInput.name === 'url_linkedin') {
+              elementInnerText = inputValue;
+            } else {
+              elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+
+              if (formInput.name === "phone_number") {
+                elementInnerText = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.formatString)(elementInnerText, "phone_number");
+              }
+            }
+
+            elementToReplaceInput.innerHTML = elementInnerText;
+
+            if (elementToReplaceInput.nodeName.toLowerCase() === "svg" && elementToReplaceInput.classList.contains('profile-photo')) {
+              formInput.parentElement.removeChild(formInput.previousElementSibling);
+              elementToReplaceInput.innerHTML = (0,_icons_inner_user_icon__WEBPACK_IMPORTED_MODULE_6__["default"])();
+            }
+
+            var formInputParent = formInput.parentElement;
+            var formInputParentChildren = Array.from(formInputParent.children);
+            var separator = formInputParent.getAttribute('aria-separator');
+
+            if (formInputParent.classList.contains('justify-content-between') && separator && formInputParentChildren.length > 1 && !formInputParent.querySelector('#separator')) {
+              formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formInputParent).replace('between', 'start');
+
+              var separatorSpan = _this4.dom.createElement('span');
+
+              separatorSpan.innerText = " " + separator + " ";
+              separatorSpan.setAttribute('id', 'separator');
+              formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
+            }
+
+            formInput.replaceWith(elementToReplaceInput);
+          } else if (!formInput.classList.contains('profile-photo')) {
+            if (formInput.name.includes('level')) {
+              _this4.saveInputsValues(formInput.name, formInput.value);
+
+              var inputParentElement = formInput.parentElement;
+              var levelCursor = inputParentElement.querySelector('.level-cursor');
+
+              if (levelCursor) {
+                inputParentElement.removeChild(levelCursor);
+              }
+            }
+          }
+        });
+      }
+    }
+  }, {
+    key: "saveInputsValues",
+    value: function saveInputsValues(inputName, inputValue) {
+      if (inputValue) {
+        this.inputsValues[inputName] = inputValue;
+      }
+    }
+  }, {
+    key: "transformProfilePhotoInputToImg",
+    value: function transformProfilePhotoInputToImg() {
+      this.throwErrorIfFormUndefined();
+      this.profilePhotoInput = this.form.querySelector('.profile-photo');
+
+      if (this.profilePhotoInput) {
+        this.profilePhotoInput.parentElement.removeChild(this.profilePhotoInput.previousElementSibling);
+        this.showProfilePhoto();
+      }
+    }
+  }, {
+    key: "showProfilePhoto",
+    value: function showProfilePhoto(e) {
+      this.throwErrorIfUndefined(this.profilePhotoInput, "this.profilePhotoInput");
+      var file = this.profilePhotoInput.files[0];
+
+      if (file) {
+        /**
+        * @type {HTMLImageElement}
+        */
+        var profilePhotoImg = this.dom.createElement('img', 'profile-photo');
+        profilePhotoImg.src = URL.createObjectURL(file);
+        this.profilePhotoInput.replaceWith(profilePhotoImg);
+      }
+    }
+  }, {
+    key: "transformEachTextareaToText",
+    value: function transformEachTextareaToText() {
+      var _this5 = this;
+
+      this.throwErrorIfUndefined(this.formTextareas, "this.formTextareas");
+      this.formTextareas.forEach(function (formTextarea) {
+        var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formTextarea);
+
+        var elementToReplaceInput = _this5.dom.createElement(formTextarea.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+
+        var inputValue = formTextarea.value;
+
+        _this5.saveInputsValues(formTextarea.name, inputValue);
+
+        var elementInnerText;
+
+        if (formTextarea.name === "name") {
+          elementInnerText = _this5.textStylePerModel[_this5.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+        } else {
+          elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+        }
+
+        elementToReplaceInput.innerHTML = elementInnerText;
+        formTextarea.replaceWith(elementToReplaceInput);
+      });
+    }
+  }, {
+    key: "removeAllAddlistButtons",
+    value: function removeAllAddlistButtons() {
+      this.throwErrorIfFormUndefined();
+      var addIntoListButtons = this.form.querySelectorAll('.btn.add-into-list');
+
+      if (addIntoListButtons) {
+        addIntoListButtons.forEach(function (addIntoListButton) {
+          addIntoListButton.parentElement.removeChild(addIntoListButton);
+        });
+      }
+    }
+    /**
+     * Lève une erreur si une variable est undefined
+     * @param {any} variable 
+     * @param {string} stringVariable la variable sous forme de chaîne de caractères. ex: throwErrorIfUndefined(this.formInputs, "this.formInputs")
+     */
+
+  }, {
+    key: "throwErrorIfUndefined",
+    value: function throwErrorIfUndefined(variable, stringVariable) {
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(variable)) {
+        throw new Error(stringVariable + " est undefined");
+      }
+    }
+  }, {
+    key: "throwErrorIfDivFromFormUndefined",
+    value: function throwErrorIfDivFromFormUndefined() {
+      return this.throwErrorIfUndefined(this.divFromForm, "this.divFromForm");
     }
   }]);
 
@@ -5790,6 +6014,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function EyeIcon(className) {
   return "<svg  viewBox=\"0 0 576 512\" class=\"eye-icon ".concat(className ? className : "", "\">\n        <path d=\"M288 144a110.94 110.94 0 0 0-31.24 5 55.4 55.4 0 0 1 7.24 27 56 56 0 0 1-56 56 55.4 55.4 0 0 1-27-7.24A111.71 111.71 0 1 0 288 144zm284.52 97.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400c-98.65 0-189.09-55-237.93-144C98.91 167 189.34 112 288 112s189.09 55 237.93 144C477.1 345 386.66 400 288 400z\"/>\n    </svg>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/inner-user-icon.js":
+/*!***********************************************!*\
+  !*** ./resources/js/icons/inner-user-icon.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ innerUserIcon)
+/* harmony export */ });
+function innerUserIcon() {
+  return "\n        <path d=\"M313.6 304c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h452c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zM224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z\"/>\n    ";
 }
 
 /***/ }),
@@ -6674,8 +6915,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ InteractionsWithCVModels)
 /* harmony export */ });
-/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
-/* harmony import */ var _simplifiers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./simplifiers */ "./resources/js/utils/simplifiers.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modules/DOMInteractions */ "./resources/js/modules/DOMInteractions.js");
+/* harmony import */ var _simplifiers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./simplifiers */ "./resources/js/utils/simplifiers.js");
+
 
 
 function InteractionsWithCVModels() {
@@ -6690,10 +6934,10 @@ function InteractionsWithCVModels() {
 
       var model = e.currentTarget;
       var modelRect = model.getBoundingClientRect();
-      var dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_0__["default"]();
+      var dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
       var modelHoverStyle = document.querySelector('.model-hover-style');
 
-      if (modelHoverStyle === null) {
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(modelHoverStyle)) {
         var _modelHoverStyle = dom.createElement('div', 'position-absolute model-hover-style');
 
         var modelHoverStyleParagraph = dom.createElement('p');
@@ -6752,6 +6996,7 @@ function InteractionsWithCVModels() {
 
     CVModels.forEach(function (model) {
       model.addEventListener("mouseenter", handleModelHover);
+      model.addEventListener("mouseover", handleModelHover);
     });
   }
 }
@@ -6832,6 +7077,8 @@ function EditPasswordInteraction() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "formatString": () => (/* binding */ formatString),
+/* harmony export */   "getClassFrom": () => (/* binding */ getClassFrom),
 /* harmony export */   "hasClass": () => (/* binding */ hasClass)
 /* harmony export */ });
 /**
@@ -6841,6 +7088,29 @@ __webpack_require__.r(__webpack_exports__);
  */
 function hasClass(element, className) {
   return element.classList.contains(className);
+}
+/**
+ * 
+ * @param {HTMLElement} element 
+ */
+
+
+function getClassFrom(element) {
+  return Array.from(element.classList).join(' ');
+}
+/**
+ * 
+ * @param {string} text 
+ * @param {"phone_number"} type
+ */
+
+
+function formatString(text, type) {
+  if (type === "phone_number") {
+    return text.slice(0, 3) + " " + text.slice(3, 5) + " " + text.slice(5, 8) + " " + text.slice(7, 10);
+  } else {
+    throw new Error("Le type de formatage " + type + " n'existe pas.");
+  }
 }
 
 

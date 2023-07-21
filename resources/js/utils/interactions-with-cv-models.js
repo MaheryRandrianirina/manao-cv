@@ -1,3 +1,4 @@
+import { isNull } from "lodash";
 import DOMInteractions from "../modules/DOMInteractions";
 import { hasClass } from "./simplifiers";
 
@@ -7,6 +8,7 @@ export default function InteractionsWithCVModels(){
     if(CVModels){
         CVModels.forEach(model => {
             model.addEventListener("mouseenter", handleModelHover);
+            model.addEventListener("mouseover", handleModelHover);
         })
 
         function handleModelHover(e){
@@ -20,7 +22,7 @@ export default function InteractionsWithCVModels(){
             const dom = new DOMInteractions();
             const modelHoverStyle = document.querySelector('.model-hover-style')
 
-            if(modelHoverStyle === null){
+            if(isNull(modelHoverStyle)){
                 const modelHoverStyle = dom.createElement('div', 'position-absolute model-hover-style');
                 const modelHoverStyleParagraph = dom.createElement('p')
                 modelHoverStyleParagraph.innerText = "Remplir"

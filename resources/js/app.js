@@ -13,4 +13,5 @@ ScrollIfErrors();
 
 new Interactions();
 
-new CVModels();
+const cvModel = new CVModels();
+cvModel.createCVForm();
