@@ -118,13 +118,16 @@ li.nav-item a.text-white:hover {
         position: relative;
         width: 700px;
         transition: filter .3s ease-in;
+
         h2, h3 {
             font-weight: bolder;
         }
+
         .icon {
             width: 20px;
             fill: $white;
         }
+
         cursor: pointer;
 
         svg.profile-photo, img.profile-photo {
@@ -331,8 +334,8 @@ li.nav-item a.text-white:hover {
     position: relative;
     .cv {
         margin: 0 auto;
-        margin-top: 250px;
-        width: 90%;
+        margin-top: 120px;
+        width: 85%;
         input::placeholder, textarea::placeholder {
             color: $gray;
         }
@@ -386,7 +389,7 @@ li.nav-item a.text-white:hover {
     }
 }
 
-.see-button-container {
+.see-button-container, .console-container {
     background-color: #2222228f;
     bottom: 25px;
     width: 150px;
@@ -399,14 +402,42 @@ li.nav-item a.text-white:hover {
         color: $primary;
     }
 
-    .eye-icon {
+    .eye-icon, .save-icon, .download-icon, .check-icon {
         fill: $white;
         width: 25px;
         transition: fill .3s ease;
         
     }
 
-    &:hover .eye-icon {
+    .check-icon {
+        fill: $gray-500;
+    }
+
+    .check-icon.active {
+        fill: $white;
+    }
+
+    &:hover .eye-icon, .save-icon:hover, .download-icon:hover, .check-icon.active:hover {
         fill: $primary;
+    }
+}
+
+.close-icon-container {
+    top: 80px;
+    right: 2%;
+    background: #adb5bd46;
+    border-radius: 50%;
+    padding: 2px;
+    cursor: pointer;
+    transition: background .3s ease;
+
+    .close-icon {
+        stroke: $secondary;
+        width: 25px;
+        transition: stroke .3s ease;
+    }
+
+    &:hover {
+        background: $danger;
     }
 }

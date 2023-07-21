@@ -128,21 +128,21 @@
                     <div class="skills-list-left list customizable-list">
                         <div class="skill skill-one">
                             <p id="input" aria-name="skill_one" class="name mb-0">Pack Office</p>
-                            <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
+                            <p id="skill_level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                         <div class="skill skill-two">
                             <p id="input" aria-name="skill_two" class="name mb-0">Photoshop</p>
-                            <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
+                            <p id="skill_level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                         <div class="skill skill-three">
                             <p id="input" aria-name="skill_three" class="name mb-0">Compétence</p>
-                            <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
+                            <p id="skill_level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                     </div>
                     <div class="skills-list-right list customizable-list">
                         <div class="skill skill-four">
                             <p id="input" aria-name="skill_four" class="name mb-0">Compétence</p>
-                            <p id="level" aria-level="0" class="level bg-gray bar-level"></p>
+                            <p id="skill_level" aria-level="0" class="level bg-gray bar-level"></p>
                         </div>
                     </div>
                 </div>

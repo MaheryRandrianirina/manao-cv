@@ -1,4 +1,4 @@
-import { find, includes, isNull, isUndefined, replace } from "lodash";
+import { find, includes, isNull, isNumber, isUndefined, replace } from "lodash";
 import DOMInteractions from "./modules/DOMInteractions";
 import CameraIcon from "./icons/camera-icon";
 import EyeIcon from "./icons/eye-icon";
@@ -6,15 +6,14 @@ import DownloadIcon from "./icons/download-icon";
 import CheckIcon from "./icons/check-icon";
 import innerUserIcon from "./icons/inner-user-icon";
 import { formatString, getClassFrom } from "./utils/simplifiers";
+import SaveIcon from "./icons/save-icon";
+import CloseIcon from "./icons/close-icon";
+import UserIcon from "./icons/user-icon";
 
 export default class CVModels {
 
     constructor(){
         this.dom = new DOMInteractions();
-    }
-
-    createCVForm()
-    {
         this.form;
         this.levelIndicator;
         /**
@@ -32,6 +31,10 @@ export default class CVModels {
         this.formInputs;
         this.formTextareas;
         this.divFromForm;
+        this.seeButtonContainer;
+        this.console;
+        this.closeIconContainer;
+        this.shownProfilePhoto = false;
         /**
          * @type {HTMLInputElement | undefined}
          */
@@ -60,7 +63,15 @@ export default class CVModels {
          * @type {{[inputName: string]: string} | {}}
          */
         this.inputsValues = {};
+        this.inputsValuesLength = 0;
+        /**
+         * @type {{[inputName: string]: string} | {}}
+         */
+        this.inputsPlaceholders = {};
+    }
 
+    createCVForm()
+    {
         const cvForm = document.querySelector('.cv-form .cv');
         if(cvForm){
             this.transformToForm();
@@ -109,27 +120,50 @@ export default class CVModels {
             const input = this.dom.createElement('input', getClassFrom(element) + " form-control mb-2");
             input.name = inputName ? inputName : "";
             input.type = inputType ? inputType : "text";
-            input.setAttribute('aria-nodename', element.nodeName)
+            input.setAttribute('aria-nodename', element.nodeName);
             
-            if(inputName.includes("level")){
-                input.placeholder = "Niveau";
-            }else if(inputName.includes("graduation")){
-                input.placeholder = "Diplôme";
-            }else if(inputName.includes('year_debut')){
-                input.placeholder = "Date de début";
-            }else if(inputName.includes('year_end')) {
-                input.placeholder = "Année de fin";
-            }else if(inputName.includes('language')) {
-                input.placeholder = "Langue";
-            }else if(inputName.includes('year_month_debut')){
-                input.placeholder = "Mois et année de début"
-            }else if(inputName.includes('year_month_end')){
-                input.placeholder = "Mois et année de fin"
-            }else if(inputName.includes('skill')){
-                input.placeholder = "Compétence";
-            }else { 
-                input.placeholder = element.innerText;
+            if(this.inputsValuesLength > 0 && this.inputsValues[input.name]){
+                input.setAttribute('value', this.inputsValues[input.name]);
+            }else {
+                if(inputName.includes("level")){
+                    input.placeholder = "Niveau";
+                }else if(inputName.includes("graduation")){
+                    input.placeholder = "Diplôme";
+                }else if(inputName.includes('year_debut')){
+                    input.placeholder = "Date de début";
+                }else if(inputName.includes('year_end')) {
+                    input.placeholder = "Année de fin";
+                }else if(inputName.includes('language')) {
+                    input.placeholder = "Langue";
+                }else if(inputName.includes('year_month_debut')){
+                    input.placeholder = "Mois et année de début"
+                }else if(inputName.includes('year_month_end')){
+                    input.placeholder = "Mois et année de fin"
+                }else if(inputName.includes('skill')){
+                    
+                    input.placeholder = "Compétence";
+                    if(this.inputsValuesLength > 0){
+                        this.barLevel = element.parentElement.querySelector('.bar-level');
+
+                        this.levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+                        this.barLevel.appendChild(this.levelCursor);
+                        
+                        this.levelIndicator = element.parentElement.querySelector('.level-indicator');
+                        
+                        this.levelCursor.style.left = this.levelIndicator.offsetWidth + "px";
+                        
+                    }
+                }else { 
+                    if(this.inputsPlaceholders
+                        && this.inputsPlaceholders[input.name]
+                    ){
+                        input.placeholder = this.inputsPlaceholders[input.name];
+                    }else {
+                        input.placeholder = element.innerText;
+                    }
+                }
             }
+            
 
             const inputNumber = parentElement.getAttribute('aria-input-number');
             if(inputNumber){
@@ -140,13 +174,6 @@ export default class CVModels {
                     parentElement.setAttribute('aria-separator', separator.innerHTML);
                     separator.parentElement.removeChild(separator);
                 }
-                // const parentElementChildren = Array.from(parentElement.children);
-                // if(parentElementChildren.indexOf(element)
-                //     === parentElementChildren.length - 1
-                // ){
-                //     console.log(parentElementChildren[parentElementChildren.length- 1])
-                //     parentElementChildren[parentElementChildren.length- 1].style.marginLeft = "5px"
-                // }
             }
 
             if(element.classList.contains('profile-photo')){
@@ -174,22 +201,32 @@ export default class CVModels {
 
         const lists = document.querySelectorAll('.list.customizable-list')
         lists.forEach(list => {
-            const listChildren = Array.from(list.children)
-            const childrenLength = listChildren.length
+            const listChildren = Array.from(list.children);
+            const childrenLength = listChildren.length;
+            const levelValueInput = list.querySelector('.level-value');
+            // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER AU CAS OU C'EST LA
+            // PREMIERE ENTREE DE L'UTILISATEUR DANS LA PAGE
             for(let i = 0; i < childrenLength; i++){
-                if(listChildren[i+1]){
-                    list.removeChild(listChildren[i+1])
+                
+                if(listChildren[i+1] && isNull(levelValueInput)){
+                    list.removeChild(listChildren[i+1]);
                 }
             }
 
             if(list.classList.contains('skills-list-right')){
-                list.innerHTML = ""
-            }else {
-                const add = this.dom.createElement('button', 'btn btn-secondary add-into-list')
-                add.innerText = "En ajouter une autre"
-                listChildren[0].after(add)
+                list.innerHTML = "";
+            }else if(list.classList.contains('skills-list-left')) {
+                const addIntoListButton = this.dom.createElement('button', 'btn btn-secondary add-into-list');
+                addIntoListButton.innerText = "En ajouter une autre";
+                
+                if(isNull(levelValueInput)){
+                    listChildren[0].after(addIntoListButton);
+                }else {
+                    listChildren[childrenLength - 1].after(addIntoListButton);
+                }
+                
 
-                add.addEventListener('click', this.handleAddNewList.bind(this));
+                addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
             }
         })
 
@@ -248,10 +285,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("two", "three");
-                    
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 });
             }
         }else if(newList.className.includes('three')){
@@ -261,10 +294,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("three", "four");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 });
             }
         }else if(newList.className.includes('four')){
@@ -274,10 +303,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("four", "five");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 })
             }
         }else if(newList.className.includes('five')){
@@ -287,10 +312,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("five", "six");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 })
             }
             
@@ -306,10 +327,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("six", "seven");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 })
             }
         }else if(newList.className.includes('seven')){
@@ -319,10 +336,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("seven", "eight");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 })
             }
         }else if(newList.className.includes('eight')){
@@ -332,10 +345,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("eight", "nine");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 })
             }
         }else if(newList.className.includes('nine')){
@@ -345,10 +354,6 @@ export default class CVModels {
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("nine", "ten");
-
-                    // if(listInput.name.includes('level')){
-                    //     listInput.parentElement.removeChild(listInput);
-                    // }
                 })
             }
         }
@@ -364,16 +369,18 @@ export default class CVModels {
     {
         const barLevels = document.querySelectorAll('.level.bar-level')
         barLevels.forEach(barLevel => {
-            if(!barLevel.querySelector('.level-cursor')){
-                const levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary')
-                barLevel.appendChild(levelCursor);
+            let levelCursor = barLevel.querySelector('.level-cursor');
 
-                levelCursor.addEventListener('mousedown', this.handleLevelCursorMouseDown.bind(this));
-                levelCursor.addEventListener('mouseup', this.handleLevelCursorMouseUp.bind(this));
-                barLevel.addEventListener('click', this.handleBarLevelClick.bind(this));
-                barLevel.addEventListener('mousemove', this.handleLevelCursorMove.bind(this));
-                barLevel.addEventListener('mouseleave', this.handleBarLevelMouseleave.bind(this));
+            if(isNull(levelCursor)){
+                levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+                barLevel.appendChild(levelCursor);   
             }
+
+            levelCursor.addEventListener('mousedown', this.handleLevelCursorMouseDown.bind(this));
+            levelCursor.addEventListener('mouseup', this.handleLevelCursorMouseUp.bind(this));
+            barLevel.addEventListener('click', this.handleBarLevelClick.bind(this));
+            barLevel.addEventListener('mousemove', this.handleLevelCursorMove.bind(this));
+            barLevel.addEventListener('mouseleave', this.handleBarLevelMouseleave.bind(this));
         });
     }
 
@@ -437,10 +444,8 @@ export default class CVModels {
                 
                 const levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
                 this.levelIndicator.style.width = levelIndicatorWidth + "px";
-
-                if(isUndefined(this.inputWithLevelValue) ||
-                    isNull(this.barLevel.querySelector('.level-value'))
-                ){
+                const barLevelInputWithLevelValue = this.barLevel.querySelector('.level-value');
+                if(isNull(barLevelInputWithLevelValue)){
                     this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
                     this.inputWithLevelValue.type = "hidden";
 
@@ -451,31 +456,32 @@ export default class CVModels {
                     }
                     
                     if(isNull(previousElementOfParent)){
-                        this.inputWithLevelValue.name = "level_one"
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one"
                     }else if(previousElementOfParentLevelInput.name.includes('one')){
-                        this.inputWithLevelValue.name = "level_two";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
                     }else if(previousElementOfParentLevelInput.name.includes('two')){
-                        this.inputWithLevelValue.name = "level_three";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
                     }else if(previousElementOfParentLevelInput.name.includes('three')){
-                        this.inputWithLevelValue.name = "level_four";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
                     }else if(previousElementOfParentLevelInput.name.includes('four')){
-                        this.inputWithLevelValue.name = "level_five";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
                     }else if(previousElementOfParentLevelInput.name.includes('five')){
-                        this.inputWithLevelValue.name = "level_six";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
                     }else if(previousElementOfParentLevelInput.name.includes('six')){
-                        this.inputWithLevelValue.name = "level_seven";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
                     }else if(previousElementOfParentLevelInput.name.includes('seven')){
-                        this.inputWithLevelValue.name = "level_eight";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
                     }else if(previousElementOfParentLevelInput.name.includes("eight")){
-                        this.inputWithLevelValue.name = "level_eight";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
                     }else if(previousElementOfParentLevelInput.name.includes("eight")){
-                        this.inputWithLevelValue.name = "level_nine";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
                     }else if(previousElementOfParentLevelInput.name.includes("nine")){
-                        this.inputWithLevelValue.name = "level_ten";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
                     }
 
-
                     this.barLevel.appendChild(this.inputWithLevelValue)
+                }else {
+                    this.inputWithLevelValue = barLevelInputWithLevelValue;
                 }
                 
                 this.inputWithLevelValue.setAttribute('value', 
@@ -527,8 +533,9 @@ export default class CVModels {
                 const levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
                 this.levelIndicator.style.width = levelIndicatorWidth + "px";
                 
+                const barLevelInputWithLevelValue = this.barLevel.querySelector('.level-value');
                 if(isUndefined(this.inputWithLevelValue) ||
-                    isNull(this.barLevel.querySelector('.level-value'))
+                    isNull(barLevelInputWithLevelValue)
                 ){
                     this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
                     this.inputWithLevelValue.type = "text";
@@ -541,30 +548,32 @@ export default class CVModels {
                     }
                     
                     if(isNull(previousElementOfParent)){
-                        this.inputWithLevelValue.name = "level_one"
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one"
                     }else if(previousElementOfParentLevelInput.name.includes('one')){
-                        this.inputWithLevelValue.name = "level_two";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
                     }else if(previousElementOfParentLevelInput.name.includes('two')){
-                        this.inputWithLevelValue.name = "level_three";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
                     }else if(previousElementOfParentLevelInput.name.includes('three')){
-                        this.inputWithLevelValue.name = "level_four";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
                     }else if(previousElementOfParentLevelInput.name.includes('four')){
-                        this.inputWithLevelValue.name = "level_five";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
                     }else if(previousElementOfParentLevelInput.name.includes('five')){
-                        this.inputWithLevelValue.name = "level_six";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
                     }else if(previousElementOfParentLevelInput.name.includes('six')){
-                        this.inputWithLevelValue.name = "level_seven";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
                     }else if(previousElementOfParentLevelInput.name.includes('seven')){
-                        this.inputWithLevelValue.name = "level_eight";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
                     }else if(previousElementOfParentLevelInput.name.includes("eight")){
-                        this.inputWithLevelValue.name = "level_eight";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
                     }else if(previousElementOfParentLevelInput.name.includes("eight")){
-                        this.inputWithLevelValue.name = "level_nine";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
                     }else if(previousElementOfParentLevelInput.name.includes("nine")){
-                        this.inputWithLevelValue.name = "level_ten";
+                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
                     }
 
                     this.barLevel.appendChild(this.inputWithLevelValue)
+                }else if(barLevelInputWithLevelValue){
+                    this.inputWithLevelValue = barLevelInputWithLevelValue;
                 }
 
                 this.inputWithLevelValue.setAttribute('value', 
@@ -594,28 +603,31 @@ export default class CVModels {
 
     createHiddenInputForCvModel()
     {
-        /**
-         * @type {HTMLInputElement}
-         */
-        const hiddenInputWithModelname = this.dom.createElement('input');
-        hiddenInputWithModelname.name = "model";
-        hiddenInputWithModelname.type = "hidden";
-        hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
-        this.form.appendChild(hiddenInputWithModelname);
+        if(isNull(this.form.querySelector('.cv-model'))){
+            /**
+             * @type {HTMLInputElement}
+             */
+            const hiddenInputWithModelname = this.dom.createElement('input', 'cv-model');
+            hiddenInputWithModelname.name = "model";
+            hiddenInputWithModelname.type = "hidden";
+            hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
+            this.form.appendChild(hiddenInputWithModelname);
 
-        this.modelName = hiddenInputWithModelname.value;
+            this.modelName = hiddenInputWithModelname.value;
+        }
     }
 
     addClickableSeeButton()
     {
         this.throwErrorIfFormUndefined();
         
-        const seeButtonContainer = this.dom.createElement('div', 
+        this.seeButtonContainer = this.dom.createElement('div', 
             'see-button-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto'
         );
-        seeButtonContainer.innerHTML = `Voir le CV ${EyeIcon("icon")}`;
 
-        document.body.appendChild(seeButtonContainer);
+        this.seeButtonContainer.innerHTML = `Voir le CV ${EyeIcon("icon")}`;
+
+        document.body.appendChild(this.seeButtonContainer);
 
         const seeButton = document.querySelector('.see-button-container');
         if(seeButton){
@@ -631,7 +643,6 @@ export default class CVModels {
     {
         e.preventDefault();
 
-        const eyeIcon = e.target;
         this.transformFormToRealCV();
     }
 
@@ -650,6 +661,10 @@ export default class CVModels {
             }
         }
         
+        this.addCloseButton();
+
+        this.removeLevelCursors();
+
         if(formInputs){
             this.formInputs = formInputs;
 
@@ -666,32 +681,68 @@ export default class CVModels {
         }
         
         this.divFromForm = this.transformFormToDiv();
+
+        this.replaceSeeButtonContainerToConsole();
     }
 
-    /**
-     * remplace l'élément form par un élément div
-     * @returns {HTMLDivElement} div remplaceant l'élément form
-     */
-    transformFormToDiv()
+    addCloseButton()
     {
-        this.throwErrorIfFormUndefined();
+        this.closeIconContainer = this.dom.createElement('div', "close-icon-container position-fixed");
+        this.closeIconContainer.innerHTML = CloseIcon();
 
-        const divToReplaceForm = this.dom.createElement('div', getClassFrom(this.form));
-        divToReplaceForm.setAttribute("aria-link", this.form.getAttribute("action"));
-        divToReplaceForm.innerHTML = this.form.innerHTML;
-        this.form.replaceWith(divToReplaceForm);
+        document.body.appendChild(this.closeIconContainer);
 
-        return divToReplaceForm;
+        this.closeIconContainer.addEventListener('click', this.handleCloseFinalCV.bind(this));
+    }
+
+    handleCloseFinalCV(e)
+    {
+        e.preventDefault();
+
+        this.createCVForm();
+
+        this.removeConsole();
+
+        this.removeCloseButton();
+    }
+
+    removeCloseButton()
+    {
+        if(this.closeIconContainer){
+            this.closeIconContainer.parentElement.removeChild(this.closeIconContainer);
+        }
+    }
+
+    removeConsole()
+    {
+        if(this.console){
+            this.console.parentElement.removeChild(this.console);
+        }
+    }
+
+    removeLevelCursors()
+    {
+        const levelValueInputs = this.form.querySelectorAll('.level-value');
+        
+        if(levelValueInputs.length > 0){
+            const levelCursors = this.form.querySelectorAll('.level-cursor');
+            
+            levelCursors.forEach(levelCursor => {
+                levelCursor.parentElement.removeChild(levelCursor);
+            })
+        }
     }
 
     transformEachInputToText()
     {
         if(this.formInputs){
             this.formInputs.forEach(formInput => {
-                
-                if(formInput.getAttribute('type') !== "hidden" 
+
+                const formInputIsHidden = formInput.type === "hidden" ;
+                if(!formInputIsHidden
                     && !formInput.classList.contains('profile-photo')
-                    && !formInput.classList.contains('level-value')){
+                    && !formInput.classList.contains('level-value')
+                ){
                     const className = getClassFrom(formInput);
                     
                     const elementToReplaceInput = this.dom.createElement(
@@ -700,7 +751,11 @@ export default class CVModels {
                     );
                     
                     const inputValue = formInput.value;
-                    this.saveInputsValues(formInput.name, inputValue);
+                    if(inputValue && inputValue.length > 0){
+                        this.saveInputsValues(formInput.name, inputValue);
+                    }else {
+                        this.savePlaceholder(formInput.name, formInput.getAttribute('placeholder'));
+                    }
 
                     let elementInnerText;
                     
@@ -729,6 +784,7 @@ export default class CVModels {
 
                     const formInputParent = formInput.parentElement;
                     const formInputParentChildren = Array.from(formInputParent.children);
+
                     const separator = formInputParent.getAttribute('aria-separator');
                     if(formInputParent.classList.contains('justify-content-between')
                         && separator && formInputParentChildren.length > 1
@@ -737,14 +793,23 @@ export default class CVModels {
                         formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
 
                         const separatorSpan = this.dom.createElement('span');
-                        separatorSpan.innerText = " " + separator + " ";
+                        separatorSpan.innerText = separator;
+                        separatorSpan.style.marginLeft = "5px";
+                        separatorSpan.style.marginRight = "5px";
                         separatorSpan.setAttribute('id', 'separator');
 
                         formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
                     }
 
+                    elementToReplaceInput.setAttribute('id', "input");
+                    elementToReplaceInput.setAttribute('aria-name', formInput.name);
+                    
+                    if(formInput.type !== "text"){
+                        elementToReplaceInput.setAttribute('aria-type', formInput.type);
+                    }
+
                     formInput.replaceWith(elementToReplaceInput);
-                }else if(!formInput.classList.contains('profile-photo')) {
+                }else if(!formInputIsHidden && !formInput.classList.contains('profile-photo')) {
                     if(formInput.name.includes('level')){
                         this.saveInputsValues(formInput.name, formInput.value);
                         
@@ -755,6 +820,15 @@ export default class CVModels {
                             inputParentElement.removeChild(levelCursor)
                         }
                     }
+                }else if(formInput.classList.contains('profile-photo')) {
+                    if(!this.shownProfilePhoto){
+                        formInput.innerHTML = UserIcon(getClassFrom(formInput));
+                        
+                        const userIcon = formInput.querySelector('.profile-photo');
+                        formInput.replaceWith(userIcon);
+                    }
+                }else if(formInputIsHidden) {
+                    this.saveInputsValues(formInput.name, formInput.value);
                 }
             })
         }
@@ -764,7 +838,14 @@ export default class CVModels {
     {
         if(inputValue){
             this.inputsValues[inputName] = inputValue;
+
+            this.inputsValuesLength++;
         }
+    }
+
+    savePlaceholder(inputName, inputPlacehoder)
+    {
+        this.inputsPlaceholders[inputName] = inputPlacehoder;
     }
 
     transformProfilePhotoInputToImg()
@@ -776,25 +857,26 @@ export default class CVModels {
         if(this.profilePhotoInput){
             this.profilePhotoInput.parentElement.removeChild(this.profilePhotoInput.previousElementSibling);
 
-            this.showProfilePhoto();
+            const file = this.profilePhotoInput.files[0];
+            if(file){
+                this.saveInputsValues(formInput.name, file);
+                this.showProfilePhoto(file);
+            }
         }
     }
 
-    showProfilePhoto(e)
+    showProfilePhoto(file)
     {
         this.throwErrorIfUndefined(this.profilePhotoInput, "this.profilePhotoInput");
+        /**
+        * @type {HTMLImageElement}
+        */
+        const profilePhotoImg = this.dom.createElement('img', 'profile-photo');
+        profilePhotoImg.src = URL.createObjectURL(file);
 
-        const file = this.profilePhotoInput.files[0];
-        if(file){
-            /**
-            * @type {HTMLImageElement}
-            */
-            const profilePhotoImg = this.dom.createElement('img', 'profile-photo');
-            profilePhotoImg.src = URL.createObjectURL(file);
+        this.profilePhotoInput.replaceWith(profilePhotoImg);
 
-            this.profilePhotoInput.replaceWith(profilePhotoImg);
-        }
-        
+        this.shownProfilePhoto = true;
     }
 
     transformEachTextareaToText()
@@ -803,13 +885,14 @@ export default class CVModels {
 
         this.formTextareas.forEach(formTextarea => {
             const className = getClassFrom(formTextarea);
-            const elementToReplaceInput = this.dom.createElement(
+            const elementToReplaceTextarea = this.dom.createElement(
                 formTextarea.getAttribute('aria-nodename').toLowerCase(), 
                 className.replace('form-control', '').replace('mb-2', 'mb-0')
             );
                     
             const inputValue = formTextarea.value;
             this.saveInputsValues(formTextarea.name, inputValue);
+
             let elementInnerText;
                     
             if(formTextarea.name === "name"){
@@ -819,9 +902,43 @@ export default class CVModels {
                 elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             }
 
-            elementToReplaceInput.innerHTML = elementInnerText;
-            formTextarea.replaceWith(elementToReplaceInput);
+            elementToReplaceTextarea.innerHTML = elementInnerText;
+            elementToReplaceTextarea.setAttribute('id', "textarea");
+            elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
+            formTextarea.replaceWith(elementToReplaceTextarea);
         })
+    }
+
+    /**
+     * remplace l'élément form par un élément div
+     * @returns {HTMLDivElement} div remplaceant l'élément form
+     */
+    transformFormToDiv()
+    {
+        this.throwErrorIfFormUndefined();
+
+        const divToReplaceForm = this.dom.createElement('div', getClassFrom(this.form));
+        divToReplaceForm.setAttribute("aria-link", this.form.getAttribute("action"));
+        divToReplaceForm.innerHTML = this.form.innerHTML;
+        this.form.replaceWith(divToReplaceForm);
+
+        return divToReplaceForm;
+    }
+
+    replaceSeeButtonContainerToConsole()
+    {
+        if(this.seeButtonContainer){
+            this.console = this.dom.createElement('div', 
+                'console-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto'
+            );
+
+            this.console.innerHTML = `
+            ${DownloadIcon()}
+            ${SaveIcon()}
+            ${CheckIcon("finish")}
+            `
+            this.seeButtonContainer.replaceWith(this.console)
+        }
     }
 
     removeAllAddlistButtons()

@@ -10764,8 +10764,8 @@ li.nav-item a.text-white:hover {
 }
 .cv-form .cv {
   margin: 0 auto;
-  margin-top: 250px;
-  width: 90%;
+  margin-top: 120px;
+  width: 85%;
 }
 .cv-form .cv input::-moz-placeholder, .cv-form .cv textarea::-moz-placeholder {
   color: #adb5bd;
@@ -10811,7 +10811,7 @@ li.nav-item a.text-white:hover {
   box-shadow: 0 0 4px #0d6efd !important;
 }
 
-.see-button-container {
+.see-button-container, .console-container {
   background-color: rgba(34, 34, 34, 0.5607843137);
   bottom: 25px;
   width: 150px;
@@ -10819,15 +10819,39 @@ li.nav-item a.text-white:hover {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-.see-button-container:hover {
+.see-button-container:hover, .console-container:hover {
   background-color: #2c2c2c;
   color: #0d6efd;
 }
-.see-button-container .eye-icon {
+.see-button-container .eye-icon, .see-button-container .save-icon, .see-button-container .download-icon, .see-button-container .check-icon, .console-container .eye-icon, .console-container .save-icon, .console-container .download-icon, .console-container .check-icon {
   fill: #fff;
   width: 25px;
   transition: fill 0.3s ease;
 }
-.see-button-container:hover .eye-icon {
+.see-button-container .check-icon, .console-container .check-icon {
+  fill: #adb5bd;
+}
+.see-button-container .check-icon.active, .console-container .check-icon.active {
+  fill: #fff;
+}
+.see-button-container:hover .eye-icon, .see-button-container .save-icon:hover, .see-button-container .download-icon:hover, .see-button-container .check-icon.active:hover, .console-container:hover .eye-icon, .console-container .save-icon:hover, .console-container .download-icon:hover, .console-container .check-icon.active:hover {
   fill: #0d6efd;
+}
+
+.close-icon-container {
+  top: 80px;
+  right: 2%;
+  background: rgba(173, 181, 189, 0.2745098039);
+  border-radius: 50%;
+  padding: 2px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.close-icon-container .close-icon {
+  stroke: #ece7ef;
+  width: 25px;
+  transition: stroke 0.3s ease;
+}
+.close-icon-container:hover {
+  background: #dc3545;
 }

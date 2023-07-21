@@ -5071,6 +5071,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icons_check_icon__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./icons/check-icon */ "./resources/js/icons/check-icon.js");
 /* harmony import */ var _icons_inner_user_icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./icons/inner-user-icon */ "./resources/js/icons/inner-user-icon.js");
 /* harmony import */ var _utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/simplifiers */ "./resources/js/utils/simplifiers.js");
+/* harmony import */ var _icons_save_icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./icons/save-icon */ "./resources/js/icons/save-icon.js");
+/* harmony import */ var _icons_close_icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./icons/close-icon */ "./resources/js/icons/close-icon.js");
+/* harmony import */ var _icons_user_icon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./icons/user-icon */ "./resources/js/icons/user-icon.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -5086,62 +5089,75 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+
+
+
 var CVModels = /*#__PURE__*/function () {
   function CVModels() {
     _classCallCheck(this, CVModels);
 
     this.dom = new _modules_DOMInteractions__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.form;
+    this.levelIndicator;
+    /**
+     * @type {HTMLSpanElement | undefined}
+     */
+
+    this.levelCursor;
+    /**
+     * @type {{x: number, y: number} | undefined}
+     */
+
+    this.levelCursorOrigin;
+    this.barLevelPosition;
+    this.moveFromBody = false;
+    this.inputWithLevelValue;
+    this.modelName = "";
+    this.formInputs;
+    this.formTextareas;
+    this.divFromForm;
+    this.seeButtonContainer;
+    this.console;
+    this.closeIconContainer;
+    this.shownProfilePhoto = false;
+    /**
+     * @type {HTMLInputElement | undefined}
+     */
+
+    this.profilePhotoInput;
+    this.numbersStringEquivalents = {
+      1: "one",
+      2: "two",
+      3: "three",
+      4: "four",
+      5: "five",
+      6: "six",
+      7: "seven",
+      8: "eight",
+      9: "nine",
+      10: "ten"
+    };
+    this.textStylePerModel = {
+      "cv-1": {
+        "name": "uppercase"
+      }
+    };
+    /**
+     * @type {{[inputName: string]: string} | {}}
+     */
+
+    this.inputsValues = {};
+    this.inputsValuesLength = 0;
+    /**
+     * @type {{[inputName: string]: string} | {}}
+     */
+
+    this.inputsPlaceholders = {};
   }
 
   _createClass(CVModels, [{
     key: "createCVForm",
     value: function createCVForm() {
-      this.form;
-      this.levelIndicator;
-      /**
-       * @type {HTMLSpanElement | undefined}
-       */
-
-      this.levelCursor;
-      /**
-       * @type {{x: number, y: number} | undefined}
-       */
-
-      this.levelCursorOrigin;
-      this.barLevelPosition;
-      this.moveFromBody = false;
-      this.inputWithLevelValue;
-      this.modelName = "";
-      this.formInputs;
-      this.formTextareas;
-      this.divFromForm;
-      /**
-       * @type {HTMLInputElement | undefined}
-       */
-
-      this.profilePhotoInput;
-      this.numbersStringEquivalents = {
-        1: "one",
-        2: "two",
-        3: "three",
-        4: "four",
-        5: "five",
-        6: "six",
-        7: "seven",
-        8: "eight",
-        9: "nine",
-        10: "ten"
-      };
-      this.textStylePerModel = {
-        "cv-1": {
-          "name": "uppercase"
-        }
-      };
-      /**
-       * @type {{[inputName: string]: string} | {}}
-       */
-
-      this.inputsValues = {};
       var cvForm = document.querySelector('.cv-form .cv');
 
       if (cvForm) {
@@ -5194,24 +5210,42 @@ var CVModels = /*#__PURE__*/function () {
         input.type = inputType ? inputType : "text";
         input.setAttribute('aria-nodename', element.nodeName);
 
-        if (inputName.includes("level")) {
-          input.placeholder = "Niveau";
-        } else if (inputName.includes("graduation")) {
-          input.placeholder = "Diplôme";
-        } else if (inputName.includes('year_debut')) {
-          input.placeholder = "Date de début";
-        } else if (inputName.includes('year_end')) {
-          input.placeholder = "Année de fin";
-        } else if (inputName.includes('language')) {
-          input.placeholder = "Langue";
-        } else if (inputName.includes('year_month_debut')) {
-          input.placeholder = "Mois et année de début";
-        } else if (inputName.includes('year_month_end')) {
-          input.placeholder = "Mois et année de fin";
-        } else if (inputName.includes('skill')) {
-          input.placeholder = "Compétence";
+        if (_this.inputsValuesLength > 0 && _this.inputsValues[input.name]) {
+          input.setAttribute('value', _this.inputsValues[input.name]);
         } else {
-          input.placeholder = element.innerText;
+          if (inputName.includes("level")) {
+            input.placeholder = "Niveau";
+          } else if (inputName.includes("graduation")) {
+            input.placeholder = "Diplôme";
+          } else if (inputName.includes('year_debut')) {
+            input.placeholder = "Date de début";
+          } else if (inputName.includes('year_end')) {
+            input.placeholder = "Année de fin";
+          } else if (inputName.includes('language')) {
+            input.placeholder = "Langue";
+          } else if (inputName.includes('year_month_debut')) {
+            input.placeholder = "Mois et année de début";
+          } else if (inputName.includes('year_month_end')) {
+            input.placeholder = "Mois et année de fin";
+          } else if (inputName.includes('skill')) {
+            input.placeholder = "Compétence";
+
+            if (_this.inputsValuesLength > 0) {
+              _this.barLevel = element.parentElement.querySelector('.bar-level');
+              _this.levelCursor = _this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+
+              _this.barLevel.appendChild(_this.levelCursor);
+
+              _this.levelIndicator = element.parentElement.querySelector('.level-indicator');
+              _this.levelCursor.style.left = _this.levelIndicator.offsetWidth + "px";
+            }
+          } else {
+            if (_this.inputsPlaceholders && _this.inputsPlaceholders[input.name]) {
+              input.placeholder = _this.inputsPlaceholders[input.name];
+            } else {
+              input.placeholder = element.innerText;
+            }
+          }
         }
 
         var inputNumber = parentElement.getAttribute('aria-input-number');
@@ -5223,14 +5257,7 @@ var CVModels = /*#__PURE__*/function () {
           if (separator) {
             parentElement.setAttribute('aria-separator', separator.innerHTML);
             separator.parentElement.removeChild(separator);
-          } // const parentElementChildren = Array.from(parentElement.children);
-          // if(parentElementChildren.indexOf(element)
-          //     === parentElementChildren.length - 1
-          // ){
-          //     console.log(parentElementChildren[parentElementChildren.length- 1])
-          //     parentElementChildren[parentElementChildren.length- 1].style.marginLeft = "5px"
-          // }
-
+          }
         }
 
         if (element.classList.contains('profile-photo')) {
@@ -5260,21 +5287,29 @@ var CVModels = /*#__PURE__*/function () {
       lists.forEach(function (list) {
         var listChildren = Array.from(list.children);
         var childrenLength = listChildren.length;
+        var levelValueInput = list.querySelector('.level-value'); // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER AU CAS OU C'EST LA
+        // PREMIERE ENTREE DE L'UTILISATEUR DANS LA PAGE
 
         for (var i = 0; i < childrenLength; i++) {
-          if (listChildren[i + 1]) {
+          if (listChildren[i + 1] && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
             list.removeChild(listChildren[i + 1]);
           }
         }
 
         if (list.classList.contains('skills-list-right')) {
           list.innerHTML = "";
-        } else {
-          var add = _this.dom.createElement('button', 'btn btn-secondary add-into-list');
+        } else if (list.classList.contains('skills-list-left')) {
+          var addIntoListButton = _this.dom.createElement('button', 'btn btn-secondary add-into-list');
 
-          add.innerText = "En ajouter une autre";
-          listChildren[0].after(add);
-          add.addEventListener('click', _this.handleAddNewList.bind(_this));
+          addIntoListButton.innerText = "En ajouter une autre";
+
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
+            listChildren[0].after(addIntoListButton);
+          } else {
+            listChildren[childrenLength - 1].after(addIntoListButton);
+          }
+
+          addIntoListButton.addEventListener('click', _this.handleAddNewList.bind(_this));
         }
       });
       this.addListenersToEveryBarLevels();
@@ -5335,9 +5370,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs) {
           _listsInputs.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("two", "three"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("two", "three");
           });
         }
       } else if (newList.className.includes('three')) {
@@ -5347,9 +5380,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs2) {
           _listsInputs2.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("three", "four"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("three", "four");
           });
         }
       } else if (newList.className.includes('four')) {
@@ -5359,9 +5390,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs3) {
           _listsInputs3.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("four", "five"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("four", "five");
           });
         }
       } else if (newList.className.includes('five')) {
@@ -5371,9 +5400,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs4) {
           _listsInputs4.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("five", "six"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("five", "six");
           });
         }
 
@@ -5389,9 +5416,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs5) {
           _listsInputs5.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("six", "seven"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("six", "seven");
           });
         }
       } else if (newList.className.includes('seven')) {
@@ -5401,9 +5426,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs6) {
           _listsInputs6.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("seven", "eight"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("seven", "eight");
           });
         }
       } else if (newList.className.includes('eight')) {
@@ -5413,9 +5436,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs7) {
           _listsInputs7.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("eight", "nine"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("eight", "nine");
           });
         }
       } else if (newList.className.includes('nine')) {
@@ -5425,9 +5446,7 @@ var CVModels = /*#__PURE__*/function () {
 
         if (_listsInputs8) {
           _listsInputs8.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("nine", "ten"); // if(listInput.name.includes('level')){
-            //     listInput.parentElement.removeChild(listInput);
-            // }
+            listInput.name = listInput.name.replace("nine", "ten");
           });
         }
       }
@@ -5445,16 +5464,18 @@ var CVModels = /*#__PURE__*/function () {
 
       var barLevels = document.querySelectorAll('.level.bar-level');
       barLevels.forEach(function (barLevel) {
-        if (!barLevel.querySelector('.level-cursor')) {
-          var levelCursor = _this2.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+        var levelCursor = barLevel.querySelector('.level-cursor');
 
+        if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelCursor)) {
+          levelCursor = _this2.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
           barLevel.appendChild(levelCursor);
-          levelCursor.addEventListener('mousedown', _this2.handleLevelCursorMouseDown.bind(_this2));
-          levelCursor.addEventListener('mouseup', _this2.handleLevelCursorMouseUp.bind(_this2));
-          barLevel.addEventListener('click', _this2.handleBarLevelClick.bind(_this2));
-          barLevel.addEventListener('mousemove', _this2.handleLevelCursorMove.bind(_this2));
-          barLevel.addEventListener('mouseleave', _this2.handleBarLevelMouseleave.bind(_this2));
         }
+
+        levelCursor.addEventListener('mousedown', _this2.handleLevelCursorMouseDown.bind(_this2));
+        levelCursor.addEventListener('mouseup', _this2.handleLevelCursorMouseUp.bind(_this2));
+        barLevel.addEventListener('click', _this2.handleBarLevelClick.bind(_this2));
+        barLevel.addEventListener('mousemove', _this2.handleLevelCursorMove.bind(_this2));
+        barLevel.addEventListener('mouseleave', _this2.handleBarLevelMouseleave.bind(_this2));
       });
     }
     /**
@@ -5528,8 +5549,9 @@ var CVModels = /*#__PURE__*/function () {
 
           var levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
           this.levelIndicator.style.width = levelIndicatorWidth + "px";
+          var barLevelInputWithLevelValue = this.barLevel.querySelector('.level-value');
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.barLevel.querySelector('.level-value'))) {
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(barLevelInputWithLevelValue)) {
             this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
             this.inputWithLevelValue.type = "hidden";
             var previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
@@ -5540,30 +5562,32 @@ var CVModels = /*#__PURE__*/function () {
             }
 
             if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
-              this.inputWithLevelValue.name = "level_one";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one";
             } else if (previousElementOfParentLevelInput.name.includes('one')) {
-              this.inputWithLevelValue.name = "level_two";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
             } else if (previousElementOfParentLevelInput.name.includes('two')) {
-              this.inputWithLevelValue.name = "level_three";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
             } else if (previousElementOfParentLevelInput.name.includes('three')) {
-              this.inputWithLevelValue.name = "level_four";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
             } else if (previousElementOfParentLevelInput.name.includes('four')) {
-              this.inputWithLevelValue.name = "level_five";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
             } else if (previousElementOfParentLevelInput.name.includes('five')) {
-              this.inputWithLevelValue.name = "level_six";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
             } else if (previousElementOfParentLevelInput.name.includes('six')) {
-              this.inputWithLevelValue.name = "level_seven";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
             } else if (previousElementOfParentLevelInput.name.includes('seven')) {
-              this.inputWithLevelValue.name = "level_eight";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
             } else if (previousElementOfParentLevelInput.name.includes("eight")) {
-              this.inputWithLevelValue.name = "level_eight";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
             } else if (previousElementOfParentLevelInput.name.includes("eight")) {
-              this.inputWithLevelValue.name = "level_nine";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
             } else if (previousElementOfParentLevelInput.name.includes("nine")) {
-              this.inputWithLevelValue.name = "level_ten";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
             }
 
             this.barLevel.appendChild(this.inputWithLevelValue);
+          } else {
+            this.inputWithLevelValue = barLevelInputWithLevelValue;
           }
 
           this.inputWithLevelValue.setAttribute('value', "".concat((levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)));
@@ -5619,8 +5643,9 @@ var CVModels = /*#__PURE__*/function () {
 
           var levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
           this.levelIndicator.style.width = levelIndicatorWidth + "px";
+          var barLevelInputWithLevelValue = this.barLevel.querySelector('.level-value');
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.barLevel.querySelector('.level-value'))) {
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(barLevelInputWithLevelValue)) {
             this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
             this.inputWithLevelValue.type = "text";
             this.inputWithLevelValue.hidden = true;
@@ -5632,30 +5657,32 @@ var CVModels = /*#__PURE__*/function () {
             }
 
             if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
-              this.inputWithLevelValue.name = "level_one";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one";
             } else if (previousElementOfParentLevelInput.name.includes('one')) {
-              this.inputWithLevelValue.name = "level_two";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
             } else if (previousElementOfParentLevelInput.name.includes('two')) {
-              this.inputWithLevelValue.name = "level_three";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
             } else if (previousElementOfParentLevelInput.name.includes('three')) {
-              this.inputWithLevelValue.name = "level_four";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
             } else if (previousElementOfParentLevelInput.name.includes('four')) {
-              this.inputWithLevelValue.name = "level_five";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
             } else if (previousElementOfParentLevelInput.name.includes('five')) {
-              this.inputWithLevelValue.name = "level_six";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
             } else if (previousElementOfParentLevelInput.name.includes('six')) {
-              this.inputWithLevelValue.name = "level_seven";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
             } else if (previousElementOfParentLevelInput.name.includes('seven')) {
-              this.inputWithLevelValue.name = "level_eight";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
             } else if (previousElementOfParentLevelInput.name.includes("eight")) {
-              this.inputWithLevelValue.name = "level_eight";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
             } else if (previousElementOfParentLevelInput.name.includes("eight")) {
-              this.inputWithLevelValue.name = "level_nine";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
             } else if (previousElementOfParentLevelInput.name.includes("nine")) {
-              this.inputWithLevelValue.name = "level_ten";
+              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
             }
 
             this.barLevel.appendChild(this.inputWithLevelValue);
+          } else if (barLevelInputWithLevelValue) {
+            this.inputWithLevelValue = barLevelInputWithLevelValue;
           }
 
           this.inputWithLevelValue.setAttribute('value', "".concat((levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)));
@@ -5685,23 +5712,25 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "createHiddenInputForCvModel",
     value: function createHiddenInputForCvModel() {
-      /**
-       * @type {HTMLInputElement}
-       */
-      var hiddenInputWithModelname = this.dom.createElement('input');
-      hiddenInputWithModelname.name = "model";
-      hiddenInputWithModelname.type = "hidden";
-      hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
-      this.form.appendChild(hiddenInputWithModelname);
-      this.modelName = hiddenInputWithModelname.value;
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.form.querySelector('.cv-model'))) {
+        /**
+         * @type {HTMLInputElement}
+         */
+        var hiddenInputWithModelname = this.dom.createElement('input', 'cv-model');
+        hiddenInputWithModelname.name = "model";
+        hiddenInputWithModelname.type = "hidden";
+        hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
+        this.form.appendChild(hiddenInputWithModelname);
+        this.modelName = hiddenInputWithModelname.value;
+      }
     }
   }, {
     key: "addClickableSeeButton",
     value: function addClickableSeeButton() {
       this.throwErrorIfFormUndefined();
-      var seeButtonContainer = this.dom.createElement('div', 'see-button-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
-      seeButtonContainer.innerHTML = "Voir le CV ".concat((0,_icons_eye_icon__WEBPACK_IMPORTED_MODULE_3__["default"])("icon"));
-      document.body.appendChild(seeButtonContainer);
+      this.seeButtonContainer = this.dom.createElement('div', 'see-button-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
+      this.seeButtonContainer.innerHTML = "Voir le CV ".concat((0,_icons_eye_icon__WEBPACK_IMPORTED_MODULE_3__["default"])("icon"));
+      document.body.appendChild(this.seeButtonContainer);
       var seeButton = document.querySelector('.see-button-container');
 
       if (seeButton) {
@@ -5717,7 +5746,6 @@ var CVModels = /*#__PURE__*/function () {
     key: "handleSeeCV",
     value: function handleSeeCV(e) {
       e.preventDefault();
-      var eyeIcon = e.target;
       this.transformFormToRealCV();
     }
   }, {
@@ -5738,6 +5766,9 @@ var CVModels = /*#__PURE__*/function () {
         }
       }
 
+      this.addCloseButton();
+      this.removeLevelCursors();
+
       if (formInputs) {
         this.formInputs = formInputs;
         this.transformProfilePhotoInputToImg();
@@ -5751,21 +5782,49 @@ var CVModels = /*#__PURE__*/function () {
       }
 
       this.divFromForm = this.transformFormToDiv();
+      this.replaceSeeButtonContainerToConsole();
     }
-    /**
-     * remplace l'élément form par un élément div
-     * @returns {HTMLDivElement} div remplaceant l'élément form
-     */
-
   }, {
-    key: "transformFormToDiv",
-    value: function transformFormToDiv() {
-      this.throwErrorIfFormUndefined();
-      var divToReplaceForm = this.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(this.form));
-      divToReplaceForm.setAttribute("aria-link", this.form.getAttribute("action"));
-      divToReplaceForm.innerHTML = this.form.innerHTML;
-      this.form.replaceWith(divToReplaceForm);
-      return divToReplaceForm;
+    key: "addCloseButton",
+    value: function addCloseButton() {
+      this.closeIconContainer = this.dom.createElement('div', "close-icon-container position-fixed");
+      this.closeIconContainer.innerHTML = (0,_icons_close_icon__WEBPACK_IMPORTED_MODULE_9__["default"])();
+      document.body.appendChild(this.closeIconContainer);
+      this.closeIconContainer.addEventListener('click', this.handleCloseFinalCV.bind(this));
+    }
+  }, {
+    key: "handleCloseFinalCV",
+    value: function handleCloseFinalCV(e) {
+      e.preventDefault();
+      this.createCVForm();
+      this.removeConsole();
+      this.removeCloseButton();
+    }
+  }, {
+    key: "removeCloseButton",
+    value: function removeCloseButton() {
+      if (this.closeIconContainer) {
+        this.closeIconContainer.parentElement.removeChild(this.closeIconContainer);
+      }
+    }
+  }, {
+    key: "removeConsole",
+    value: function removeConsole() {
+      if (this.console) {
+        this.console.parentElement.removeChild(this.console);
+      }
+    }
+  }, {
+    key: "removeLevelCursors",
+    value: function removeLevelCursors() {
+      var levelValueInputs = this.form.querySelectorAll('.level-value');
+
+      if (levelValueInputs.length > 0) {
+        var levelCursors = this.form.querySelectorAll('.level-cursor');
+        levelCursors.forEach(function (levelCursor) {
+          levelCursor.parentElement.removeChild(levelCursor);
+        });
+      }
     }
   }, {
     key: "transformEachInputToText",
@@ -5774,14 +5833,20 @@ var CVModels = /*#__PURE__*/function () {
 
       if (this.formInputs) {
         this.formInputs.forEach(function (formInput) {
-          if (formInput.getAttribute('type') !== "hidden" && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value')) {
+          var formInputIsHidden = formInput.type === "hidden";
+
+          if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value')) {
             var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formInput);
 
             var elementToReplaceInput = _this4.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
 
             var inputValue = formInput.value;
 
-            _this4.saveInputsValues(formInput.name, inputValue);
+            if (inputValue && inputValue.length > 0) {
+              _this4.saveInputsValues(formInput.name, inputValue);
+            } else {
+              _this4.savePlaceholder(formInput.name, formInput.getAttribute('placeholder'));
+            }
 
             var elementInnerText;
 
@@ -5813,13 +5878,22 @@ var CVModels = /*#__PURE__*/function () {
 
               var separatorSpan = _this4.dom.createElement('span');
 
-              separatorSpan.innerText = " " + separator + " ";
+              separatorSpan.innerText = separator;
+              separatorSpan.style.marginLeft = "5px";
+              separatorSpan.style.marginRight = "5px";
               separatorSpan.setAttribute('id', 'separator');
               formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
             }
 
+            elementToReplaceInput.setAttribute('id', "input");
+            elementToReplaceInput.setAttribute('aria-name', formInput.name);
+
+            if (formInput.type !== "text") {
+              elementToReplaceInput.setAttribute('aria-type', formInput.type);
+            }
+
             formInput.replaceWith(elementToReplaceInput);
-          } else if (!formInput.classList.contains('profile-photo')) {
+          } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo')) {
             if (formInput.name.includes('level')) {
               _this4.saveInputsValues(formInput.name, formInput.value);
 
@@ -5830,6 +5904,14 @@ var CVModels = /*#__PURE__*/function () {
                 inputParentElement.removeChild(levelCursor);
               }
             }
+          } else if (formInput.classList.contains('profile-photo')) {
+            if (!_this4.shownProfilePhoto) {
+              formInput.innerHTML = (0,_icons_user_icon__WEBPACK_IMPORTED_MODULE_10__["default"])((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formInput));
+              var userIcon = formInput.querySelector('.profile-photo');
+              formInput.replaceWith(userIcon);
+            }
+          } else if (formInputIsHidden) {
+            _this4.saveInputsValues(formInput.name, formInput.value);
           }
         });
       }
@@ -5839,7 +5921,13 @@ var CVModels = /*#__PURE__*/function () {
     value: function saveInputsValues(inputName, inputValue) {
       if (inputValue) {
         this.inputsValues[inputName] = inputValue;
+        this.inputsValuesLength++;
       }
+    }
+  }, {
+    key: "savePlaceholder",
+    value: function savePlaceholder(inputName, inputPlacehoder) {
+      this.inputsPlaceholders[inputName] = inputPlacehoder;
     }
   }, {
     key: "transformProfilePhotoInputToImg",
@@ -5849,23 +5937,26 @@ var CVModels = /*#__PURE__*/function () {
 
       if (this.profilePhotoInput) {
         this.profilePhotoInput.parentElement.removeChild(this.profilePhotoInput.previousElementSibling);
-        this.showProfilePhoto();
+        var file = this.profilePhotoInput.files[0];
+
+        if (file) {
+          this.saveInputsValues(formInput.name, file);
+          this.showProfilePhoto(file);
+        }
       }
     }
   }, {
     key: "showProfilePhoto",
-    value: function showProfilePhoto(e) {
+    value: function showProfilePhoto(file) {
       this.throwErrorIfUndefined(this.profilePhotoInput, "this.profilePhotoInput");
-      var file = this.profilePhotoInput.files[0];
+      /**
+      * @type {HTMLImageElement}
+      */
 
-      if (file) {
-        /**
-        * @type {HTMLImageElement}
-        */
-        var profilePhotoImg = this.dom.createElement('img', 'profile-photo');
-        profilePhotoImg.src = URL.createObjectURL(file);
-        this.profilePhotoInput.replaceWith(profilePhotoImg);
-      }
+      var profilePhotoImg = this.dom.createElement('img', 'profile-photo');
+      profilePhotoImg.src = URL.createObjectURL(file);
+      this.profilePhotoInput.replaceWith(profilePhotoImg);
+      this.shownProfilePhoto = true;
     }
   }, {
     key: "transformEachTextareaToText",
@@ -5876,7 +5967,7 @@ var CVModels = /*#__PURE__*/function () {
       this.formTextareas.forEach(function (formTextarea) {
         var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formTextarea);
 
-        var elementToReplaceInput = _this5.dom.createElement(formTextarea.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+        var elementToReplaceTextarea = _this5.dom.createElement(formTextarea.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
 
         var inputValue = formTextarea.value;
 
@@ -5890,9 +5981,35 @@ var CVModels = /*#__PURE__*/function () {
           elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
         }
 
-        elementToReplaceInput.innerHTML = elementInnerText;
-        formTextarea.replaceWith(elementToReplaceInput);
+        elementToReplaceTextarea.innerHTML = elementInnerText;
+        elementToReplaceTextarea.setAttribute('id', "textarea");
+        elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
+        formTextarea.replaceWith(elementToReplaceTextarea);
       });
+    }
+    /**
+     * remplace l'élément form par un élément div
+     * @returns {HTMLDivElement} div remplaceant l'élément form
+     */
+
+  }, {
+    key: "transformFormToDiv",
+    value: function transformFormToDiv() {
+      this.throwErrorIfFormUndefined();
+      var divToReplaceForm = this.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(this.form));
+      divToReplaceForm.setAttribute("aria-link", this.form.getAttribute("action"));
+      divToReplaceForm.innerHTML = this.form.innerHTML;
+      this.form.replaceWith(divToReplaceForm);
+      return divToReplaceForm;
+    }
+  }, {
+    key: "replaceSeeButtonContainerToConsole",
+    value: function replaceSeeButtonContainerToConsole() {
+      if (this.seeButtonContainer) {
+        this.console = this.dom.createElement('div', 'console-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
+        this.console.innerHTML = "\n            ".concat((0,_icons_download_icon__WEBPACK_IMPORTED_MODULE_4__["default"])(), "\n            ").concat((0,_icons_save_icon__WEBPACK_IMPORTED_MODULE_8__["default"])(), "\n            ").concat((0,_icons_check_icon__WEBPACK_IMPORTED_MODULE_5__["default"])("finish"), "\n            ");
+        this.seeButtonContainer.replaceWith(this.console);
+      }
     }
   }, {
     key: "removeAllAddlistButtons",
@@ -5996,7 +6113,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ DownloadIcon)
 /* harmony export */ });
 function DownloadIcon(className) {
-  return "<svg viewBox=\"0 0 512 512\" className=\"dowload-icon ".concat(className ? className : "", "\">\n    <path d=\"M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z\"/>\n</svg>");
+  return "<svg viewBox=\"0 0 512 512\" class=\"download-icon ".concat(className ? className : "", "\">\n    <path d=\"M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z\"/>\n</svg>");
 }
 
 /***/ }),
@@ -6031,6 +6148,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function innerUserIcon() {
   return "\n        <path d=\"M313.6 304c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h452c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zM224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z\"/>\n    ";
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/save-icon.js":
+/*!*****************************************!*\
+  !*** ./resources/js/icons/save-icon.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ SaveIcon)
+/* harmony export */ });
+function SaveIcon() {
+  return "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\" class=\"save-icon\">\n    <path d=\"M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM272 80v80H144V80h128zm122 352H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h42v104c0 13.255 10.745 24 24 24h176c13.255 0 24-10.745 24-24V83.882l78.243 78.243a6 6 0 0 1 1.757 4.243V426a6 6 0 0 1-6 6zM224 232c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88zm0 128c-22.056 0-40-17.944-40-40s17.944-40 40-40 40 17.944 40 40-17.944 40-40 40z\"/>\n    </svg>";
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/user-icon.js":
+/*!*****************************************!*\
+  !*** ./resources/js/icons/user-icon.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ UserIcon)
+/* harmony export */ });
+/* harmony import */ var _inner_user_icon__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./inner-user-icon */ "./resources/js/icons/inner-user-icon.js");
+
+function UserIcon() {
+  return "<svg id=\"input\" aria-type=\"file\" aria-name=\"profile_photo\" class=\"profile-photo user bg-secondary d-block mt-0 mb-0 ms-auto me-auto\" style=\"width: 150px; height:150px; border-radius: 50%\" viewBox=\"0 0 448 512\">\n        ".concat((0,_inner_user_icon__WEBPACK_IMPORTED_MODULE_0__["default"])(), "\n    </svg>");
 }
 
 /***/ }),
