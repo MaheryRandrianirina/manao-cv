@@ -143,7 +143,7 @@ li.nav-item a.text-white:hover {
             font-weight: 600;
         }
         .skills {
-            .level {
+            .level.bar-level {
                 width: 150px;
                 height: 10px;
                 border-radius: 10px;
@@ -177,6 +177,10 @@ li.nav-item a.text-white:hover {
     .cv.cv-2 {
         .icon {
             fill: $black;
+        }
+
+        .level {
+            position: relative;
         }
 
         .icon.heart-icon {
@@ -278,8 +282,13 @@ li.nav-item a.text-white:hover {
             width: calc(40% + 2px);
         }
 
-        .cv-top .name {
-            color: $green-2;
+        .cv-top {
+            .name {
+                color: $green-2;
+            }
+            .work {
+                font-weight: bold;
+            }
         }
 
         .cv-bottom {
@@ -287,7 +296,7 @@ li.nav-item a.text-white:hover {
             height: calc(100% - 150px);
         }
 
-        .level {
+        .level.bar-level {
             width: 150px;
             height: 10px;
             border-radius: 10px;
@@ -346,12 +355,29 @@ li.nav-item a.text-white:hover {
             }
         }
 
+        .justify-content-between input {
+            width: 48%;
+        }
+
         .level.bar-level {
             .level-indicator {
                 height: 10px;
                 background: $indigo;
                 border-top-left-radius: 10px;
                 border-bottom-left-radius: 10px;
+            }
+        }
+        
+        .level.bar-level .level-cursor {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            left: 0;
+            top: -5px;
+            transition: transform .3s ease-in, box-shadow .3s;
+            &:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 4px $primary !important;
             }
         }
 
@@ -370,23 +396,232 @@ li.nav-item a.text-white:hover {
 
     .cv.cv-1 {
         .skills {
+            .skills-list-left, .skills-list-right {
+                width: 48%;
+            }
             .level.bar-level::after {
                 width: 0;
             }
-            .level.bar-level .level-cursor {
-                height: 15px;
-                width: 15px;
-                border-radius: 50%;
-                left: 0;
-                top: -2.5px;
-                transition: transform .3s ease-in, box-shadow .3s;
-                &:hover {
-                    transform: scale(1.1);
-                    box-shadow: 0 0 4px $primary !important;
+
+            input {
+                width: 100%;
+            }
+        }
+    }
+
+    .cv.cv-2 {
+        margin-left: auto !important;
+
+        .languages-list {
+            .language, .skill {
+                margin-bottom: 10px;
+            }
+            .btn.btn-secondary.add-into-list {
+                margin-left: unset;
+            }
+        }
+
+        .languages-list .btn.btn-secondary.add-into-list, 
+        .skills-list .btn.btn-secondary.add-into-list {
+            margin-top: 10px;
+        }
+
+        .experiences {
+            .date {
+                margin-bottom: 0;
+            }
+            .experience{
+                margin-bottom: 15px;
+            }
+            .task.list {
+                position: relative;
+                textarea {
+                    margin-bottom: 10px;
+                }
+                .btn.btn-secondary.add-into-list {
+                    margin-left: 52%;
+                }
+            }   
+        }
+
+        .level.bar-level {
+            width: 150px !important;
+            position: relative;
+            background: $gray-200 !important;
+
+            .level-indicator {
+                background: $gray;
+            }
+        }
+    }
+
+    .cv.cv-3 {
+        transform: translateY(-100px);
+        .left {
+            div.profile-photo {
+                color: $black;
+            }
+
+            .btn.btn-secondary.add-into-list {
+                background: $gray-400 !important;
+            }
+
+            .btn.btn-secondary.add-into-list:hover {
+                background-color: $gray-500 !important;
+            }
+        }
+
+        span.name {
+            margin-left: 10px;
+        }
+
+        .graduation {
+            .etablissement {
+                margin-right: 20px;
+            }
+        }
+
+        .experiences {
+            .experience {
+                margin-bottom: 15px;
+
+                textarea {
+                    margin-bottom: 10px;
+                }
+
+                .btn.btn-secondary.add-into-list {
+                    margin-left: 52%;
+                }
+
+                .date {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        
+        .level.bar-level {
+            width: 150px !important;
+            position: relative;
+            background: $gray !important;
+
+            .level-indicator {
+                background-color: $primary;
+            }
+
+            .level-cursor {
+                background-color: $white !important;
+            }
+            .level-cursor:hover {
+                transform: scale(1.1);
+                box-shadow: 0 0 4px $gray !important;
+            }
+        }
+        
+        .right::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-top: 177px solid #9ec5fe;
+            border-left: 1479px solid transparent;
+            z-index: 3;
+        }
+
+
+    }
+
+    form.cv-3 {
+        div.profile-photo {
+            margin-bottom: 60px !important;
+        }
+    }
+
+    div.cv.cv-3, div.cv.cv-2 {
+        .languages-list .language, .skills-list .skill {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .level.bar-level {
+            margin-top: 5px;
+        }
+    }
+
+    .cv.cv-4 {
+        
+        .left {
+            div.profile-photo {
+                label {
+                    color: $black;
+                }
+            }
+
+            .languages {
+                .btn.btn-secondary.add-into-list {
+                    margin-left: 0;
+                }
+            }
+        }
+        .level.bar-level::after {
+            width: 0;
+        }
+
+        .level-indicator {
+            background-color: $black !important;
+        }
+
+        .right {
+            .experience {
+                margin-bottom: 15px;
+
+                textarea {
+                    margin-bottom: 10px;
+                }
+
+                .btn.btn-secondary.add-into-list {
+                    margin-left: 52%;
+                }
+
+                .date {
+                    margin-bottom: 0;
                 }
             }
         }
     }
+
+    form.cv.cv-4 {
+        .cv-top {
+            h2 {
+                width: 70%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .work {
+                width: 45%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    }
+
+    div.cv-4 {
+        .cv-top {
+            .name {
+                display: block !important;
+            }
+        }
+    }
+}
+
+.cv-form.cv-3-form::before {
+    content: "";
+    display: block;
+    position: relative;
+    top: 120px;
+    background: $gray-900;
+    z-index: 5;
+    height: 100px;
+    width: 7.5%;
 }
 
 .see-button-container, .console-container {

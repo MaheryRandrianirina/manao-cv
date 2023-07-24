@@ -9,6 +9,7 @@ import { formatString, getClassFrom } from "./utils/simplifiers";
 import SaveIcon from "./icons/save-icon";
 import CloseIcon from "./icons/close-icon";
 import UserIcon from "./icons/user-icon";
+import axios from "axios";
 
 export default class CVModels {
 
@@ -55,7 +56,19 @@ export default class CVModels {
 
         this.textStylePerModel = {
             "cv-1" : {
+                "name": "uppercase",
+            },
+            "cv-2": {
+                "name" : "uppercase",
+                "firstname": "uppercase",
+                "work": "uppercase"
+            },
+            "cv-3": {
                 "name": "uppercase"
+            },
+            "cv-4": {
+                "name": "uppercase",
+                "firstname": "uppercase"
             }
         }
 
@@ -75,7 +88,9 @@ export default class CVModels {
         const cvForm = document.querySelector('.cv-form .cv');
         if(cvForm){
             this.transformToForm();
+
             this.filling();
+
             this.addClickableSeeButton();
         }
     }
@@ -121,49 +136,117 @@ export default class CVModels {
             input.name = inputName ? inputName : "";
             input.type = inputType ? inputType : "text";
             input.setAttribute('aria-nodename', element.nodeName);
+            input.setAttribute('autocomplete', "false");
             
-            if(this.inputsValuesLength > 0 && this.inputsValues[input.name]){
-                input.setAttribute('value', this.inputsValues[input.name]);
-            }else {
-                if(inputName.includes("level")){
-                    input.placeholder = "Niveau";
-                }else if(inputName.includes("graduation")){
-                    input.placeholder = "Diplôme";
-                }else if(inputName.includes('year_debut')){
-                    input.placeholder = "Date de début";
-                }else if(inputName.includes('year_end')) {
-                    input.placeholder = "Année de fin";
-                }else if(inputName.includes('language')) {
-                    input.placeholder = "Langue";
-                }else if(inputName.includes('year_month_debut')){
-                    input.placeholder = "Mois et année de début"
-                }else if(inputName.includes('year_month_end')){
-                    input.placeholder = "Mois et année de fin"
-                }else if(inputName.includes('skill')){
-                    
-                    input.placeholder = "Compétence";
-                    if(this.inputsValuesLength > 0){
-                        this.barLevel = element.parentElement.querySelector('.bar-level');
+            if(inputName.includes("level")){
+                input.placeholder = "Niveau";
+                input.setAttribute('required', "true");
+            }else if(inputName.includes("graduation")){
+                input.placeholder = "Diplôme";
+                input.setAttribute('required', "true");
+            }else if(inputName.includes('year_debut')){
+                input.placeholder = "Année de début";
+                input.setAttribute('required', "true");
+            }else if(inputName.includes('year_end')) {
+                input.placeholder = "Année de fin";
+                input.setAttribute('required', "true");
+            }else if(inputName.includes('language')) {
+                input.placeholder = "Langue";
+                input.setAttribute('required', "true");
 
-                        this.levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
-                        this.barLevel.appendChild(this.levelCursor);
-                        
-                        this.levelIndicator = element.parentElement.querySelector('.level-indicator');
-                        
-                        this.levelCursor.style.left = this.levelIndicator.offsetWidth + "px";
-                        
-                    }
-                }else { 
-                    if(this.inputsPlaceholders
-                        && this.inputsPlaceholders[input.name]
+                if(this.modelName === "cv-2" || this.modelName === "cv-3"){
+                    console.log("model : ", this.modelName)
+                    this.addLevelCursorWithIndicatorIfThereIsValue(element);
+                }
+            }else if(inputName.includes('year_month_debut')){
+                input.placeholder = "Mois et année de début";
+                input.setAttribute('required', "true");
+            }else if(inputName.includes('year_month_end')){
+                input.placeholder = "Mois et année de fin";
+                input.setAttribute('required', "true");
+            }else if((inputName.includes('skill') &&
+                this.modelName !== "cv-3") || (
+                this.modelName === "cv-2" && inputName.includes('lang')
+            )){
+                input.placeholder = "Compétence";
+                input.setAttribute('required', "true");
+
+                this.addLevelCursorWithIndicatorIfThereIsValue(element);
+            }else { 
+                if(this.inputsPlaceholders
+                    && this.inputsPlaceholders[input.name]
+                ){
+                    input.placeholder = this.inputsPlaceholders[input.name];
+                }else {
+                    input.placeholder = element.innerText;
+                }
+
+                if(inputName.includes('profile-photo') ||
+                    inputName.includes('name') || inputName.includes('work')
+                    || inputName.includes('phone') || inputName.includes('email')
+                    || inputName.includes('adress') || inputName.includes('profile-photo')
+                ){
+                    input.setAttribute('required', "true");
+
+                    if(element.parentElement.classList.contains('about')
+                        && isNull(element.parentElement.querySelector('.sex'))
                     ){
-                        input.placeholder = this.inputsPlaceholders[input.name];
-                    }else {
-                        input.placeholder = element.innerText;
+                        const sex = this.dom.createElement('div', 'sex');
+                        const manContainer = this.dom.createElement('div', 'man-container');
+                        const womanContainer = this.dom.createElement('div', 'woman-container');
+                        const manLabel = this.dom.createElement('label', 'man-label ms-1');
+                        const womanLabel = this.dom.createElement('label', 'woman-label ms-1');
+                        const man = this.dom.createElement('input', 'man');
+                        const woman = this.dom.createElement('input', 'woman');
+
+                        manLabel.innerText = "Homme";
+                        man.type = "radio";
+                        man.name = "sex";
+                        man.setAttribute("value", "man");
+
+                        womanLabel.innerText = "Femme";
+                        woman.type = "radio";
+                        woman.name = "sex";
+                        woman.setAttribute("value", "woman");
+                        
+                        element.parentElement.appendChild(sex);
+
+                        sex.appendChild(manContainer);
+                        manContainer.appendChild(man);
+                        manContainer.appendChild(manLabel);
+
+                        sex.appendChild(womanContainer);
+
+                        womanContainer.appendChild(woman);
+                        womanContainer.appendChild(womanLabel);
+
+                        man.addEventListener('click', (e)=>{
+                            if(woman.getAttribute('selected') === "true" ||
+                                !man.getAttribute('selected') ||
+                                !woman.getAttribute('selected')
+                            ){
+                                console.log("click")
+                                woman.setAttribute('selected', "false")
+                                man.setAttribute('selected', "true");
+                            }
+                        });
+
+                        woman.addEventListener('click', (e)=>{
+                            if(man.getAttribute('selected', "true") ||
+                                !woman.getAttribute('selected') ||
+                                !man.getAttribute('selected')
+                            ){
+                                man.setAttribute('selected', "false")
+                                woman.setAttribute('selected', "true");
+                            }
+                        });
                     }
                 }
             }
             
+            if(this.inputsValuesLength > 0 && this.inputsValues[input.name]){
+                input.setAttribute('value', this.inputsValues[input.name]);
+            }
 
             const inputNumber = parentElement.getAttribute('aria-input-number');
             if(inputNumber){
@@ -186,6 +269,7 @@ export default class CVModels {
         })
 
         const elementsToBeTextarea = document.querySelectorAll('#textarea');
+        
         elementsToBeTextarea.forEach(element => {
             const textareaName = element.getAttribute('aria-name');
             /**
@@ -196,7 +280,23 @@ export default class CVModels {
             textarea.placeholder = "Ecrire quelque chose";
             textarea.setAttribute('aria-nodename', element.nodeName)
 
-            element.replaceWith(textarea)
+            element.replaceWith(textarea);
+
+            const textareaParent = textarea.parentElement;
+            const textareaParentInnerHTML = textareaParent.innerHTML;
+            if(textareaParent.nodeName === "UL"){
+                const divToRempaceTextareaParent = this.dom.createElement('div', getClassFrom(textareaParent));
+                textareaParent.replaceWith(divToRempaceTextareaParent);
+
+                divToRempaceTextareaParent.innerHTML = textareaParentInnerHTML;
+
+                if(this.modelName === "cv-2" || this.modelName === "cv-3"){
+                    const label = this.dom.createElement('p', 'mb-1');
+                    label.innerText = "Tâches réalisées :";
+                    divToRempaceTextareaParent.before(label);
+                }
+            }
+            
         })
 
         const lists = document.querySelectorAll('.list.customizable-list')
@@ -208,29 +308,73 @@ export default class CVModels {
             // PREMIERE ENTREE DE L'UTILISATEUR DANS LA PAGE
             for(let i = 0; i < childrenLength; i++){
                 
-                if(listChildren[i+1] && isNull(levelValueInput)){
+                if(listChildren[i+1] 
+                    && isNull(levelValueInput)
+                ){
                     list.removeChild(listChildren[i+1]);
                 }
             }
 
-            if(list.classList.contains('skills-list-right')){
+            if(list.classList.contains('skills-list-right') && this.inputsValuesLength === 0){
                 list.innerHTML = "";
-            }else if(list.classList.contains('skills-list-left')) {
-                const addIntoListButton = this.dom.createElement('button', 'btn btn-secondary add-into-list');
+            }else {
+                let addIntoListButton = list.querySelector('.add-into-list');
+                if(isNull(addIntoListButton) 
+                ){
+                    if(this.inputsValuesLength > 0 
+                    && list.classList.contains('skills-list-left')
+                    && list.nextElementSibling.children.length > 0){
+                        return;
+                    }
+                    addIntoListButton = this.dom.createElement('button', 'btn btn-secondary add-into-list');
+                }
+                
                 addIntoListButton.innerText = "En ajouter une autre";
+
+                const lastChild = listChildren[childrenLength - 1];
+                if(lastChild.className.includes('task')){
+                    addIntoListButton.innerText = "Ajouter une autre tâche";
+                }else if(lastChild.className.includes('experience')){
+                    addIntoListButton.innerText = "Ajouter une autre expérience";
+                }else if(lastChild.className.includes('skill')){
+                    addIntoListButton.innerText = "Ajouter une autre compétence";
+                }else if(lastChild.className.includes('langua')){
+                    addIntoListButton.innerText = "Ajouter une autre langue";
+                }else if(lastChild.className.includes('formation')){
+                    addIntoListButton.innerText = "Ajouter une autre formation";
+                }else if(lastChild.className.includes('hobb')){
+                    addIntoListButton.innerText = "Ajouter un autre intérêt";
+                }
                 
                 if(isNull(levelValueInput)){
                     listChildren[0].after(addIntoListButton);
                 }else {
-                    listChildren[childrenLength - 1].after(addIntoListButton);
+                    lastChild.after(addIntoListButton);
                 }
                 
-
                 addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
             }
         })
 
         this.addListenersToEveryBarLevels();
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} element 
+     */
+    addLevelCursorWithIndicatorIfThereIsValue(element)
+    {
+        if(this.inputsValuesLength > 0){
+            this.barLevel = element.parentElement.querySelector('.bar-level');
+            this.levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+            this.barLevel.appendChild(this.levelCursor);
+            
+            this.levelIndicator = element.parentElement.querySelector('.level-indicator');
+            if(this.levelIndicator){
+                this.levelCursor.style.left = this.levelIndicator.offsetWidth + "px";
+            }
+        }
     }
 
     throwErrorIfFormUndefined()
@@ -367,10 +511,11 @@ export default class CVModels {
     
     addListenersToEveryBarLevels()
     {
-        const barLevels = document.querySelectorAll('.level.bar-level')
+        const barLevels = document.querySelectorAll('.level.bar-level');
         barLevels.forEach(barLevel => {
-            let levelCursor = barLevel.querySelector('.level-cursor');
 
+            let levelCursor = barLevel.querySelector('.level-cursor');
+            
             if(isNull(levelCursor)){
                 levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
                 barLevel.appendChild(levelCursor);   
@@ -612,7 +757,6 @@ export default class CVModels {
             hiddenInputWithModelname.type = "hidden";
             hiddenInputWithModelname.setAttribute('value', this.form.classList[1]);
             this.form.appendChild(hiddenInputWithModelname);
-
             this.modelName = hiddenInputWithModelname.value;
         }
     }
@@ -650,6 +794,7 @@ export default class CVModels {
     {
         let formInputs;
         let formTextareas;
+
         if(this.form){
             formInputs = this.form.querySelectorAll('input')
             formTextareas = this.form.querySelectorAll('textarea');
@@ -683,6 +828,10 @@ export default class CVModels {
         this.divFromForm = this.transformFormToDiv();
 
         this.replaceSeeButtonContainerToConsole();
+
+        this.addClickEventToConsoleButtons();
+
+        this.removeLevelCursorsIfExist();
     }
 
     addCloseButton()
@@ -737,11 +886,13 @@ export default class CVModels {
     {
         if(this.formInputs){
             this.formInputs.forEach(formInput => {
-
+                console.log(formInput)
                 const formInputIsHidden = formInput.type === "hidden" ;
                 if(!formInputIsHidden
                     && !formInput.classList.contains('profile-photo')
                     && !formInput.classList.contains('level-value')
+                    && !formInput.classList.contains('man')
+                    && !formInput.classList.contains('woman')
                 ){
                     const className = getClassFrom(formInput);
                     
@@ -761,6 +912,16 @@ export default class CVModels {
                     
                     if(formInput.name === "name"){
                         elementInnerText = this.textStylePerModel[this.modelName].name 
+                            === "uppercase" 
+                            ? inputValue.toUpperCase() : 
+                            inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+                    }else if(formInput.name === "firstname"){
+                        elementInnerText = this.textStylePerModel[this.modelName].firstname 
+                            === "uppercase" 
+                            ? inputValue.toUpperCase() : 
+                            inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+                    }else if(formInput.name === "work"){
+                        elementInnerText = this.textStylePerModel[this.modelName].work 
                             === "uppercase" 
                             ? inputValue.toUpperCase() : 
                             inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
@@ -809,7 +970,10 @@ export default class CVModels {
                     }
 
                     formInput.replaceWith(elementToReplaceInput);
-                }else if(!formInputIsHidden && !formInput.classList.contains('profile-photo')) {
+                }else if(!formInputIsHidden && !formInput.classList.contains('profile-photo')
+                    && !formInput.classList.contains('man')
+                    && !formInput.classList.contains('woman')
+                ) {
                     if(formInput.name.includes('level')){
                         this.saveInputsValues(formInput.name, formInput.value);
                         
@@ -829,6 +993,14 @@ export default class CVModels {
                     }
                 }else if(formInputIsHidden) {
                     this.saveInputsValues(formInput.name, formInput.value);
+                }else if(formInput.classList.contains('man')
+                    || formInput.classList.contains('woman')
+                ){
+                    if(formInput.getAttribute('selected') === "true"){
+                        this.saveInputsValues(formInput.name, formInput.value);
+                        const formInputGrandParent = formInput.parentElement.parentElement;
+                        formInputGrandParent.parentElement.removeChild(formInputGrandParent);
+                    }
                 }
             })
         }
@@ -852,14 +1024,14 @@ export default class CVModels {
     {
         this.throwErrorIfFormUndefined();
 
-        this.profilePhotoInput = this.form.querySelector('.profile-photo');
+        this.profilePhotoInput = this.form.querySelector('input.profile-photo');
         
         if(this.profilePhotoInput){
             this.profilePhotoInput.parentElement.removeChild(this.profilePhotoInput.previousElementSibling);
 
             const file = this.profilePhotoInput.files[0];
             if(file){
-                this.saveInputsValues(formInput.name, file);
+                this.saveInputsValues(this.profilePhotoInput.name, file);
                 this.showProfilePhoto(file);
             }
         }
@@ -903,8 +1075,10 @@ export default class CVModels {
             }
 
             elementToReplaceTextarea.innerHTML = elementInnerText;
+
             elementToReplaceTextarea.setAttribute('id', "textarea");
             elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
+
             formTextarea.replaceWith(elementToReplaceTextarea);
         })
     }
@@ -935,9 +1109,44 @@ export default class CVModels {
             this.console.innerHTML = `
             ${DownloadIcon()}
             ${SaveIcon()}
-            ${CheckIcon("finish")}
+            ${CheckIcon()}
             `
-            this.seeButtonContainer.replaceWith(this.console)
+            this.seeButtonContainer.replaceWith(this.console);
+        }
+    }
+
+    addClickEventToConsoleButtons()
+    {
+        this.throwErrorIfUndefined(this.console, "this.console");
+
+        const consoleButtons = this.console.querySelectorAll('.icon');
+        consoleButtons.forEach(consoleButton => {
+            consoleButton.addEventListener('click', this.handleConsoleButtonClick.bind(this));
+        })
+    }
+
+    handleConsoleButtonClick(e)
+    {
+        e.preventDefault();
+
+        const button = e.target;
+        console.log("console click")
+        if(button.classList.contains("save-icon") && this.inputsValuesLength > 0){
+            axios.post("/cv/save", this.inputsValues);
+        }
+
+    }
+
+    removeLevelCursorsIfExist()
+    {
+        this.throwErrorIfFormUndefined();
+
+        const levelCursors = document.querySelectorAll('.level-cursor');
+        if(levelCursors.length > 0){
+            levelCursors.forEach(levelCursor => {
+                levelCursor.parentElement.removeChild(levelCursor);
+                
+            })
         }
     }
 

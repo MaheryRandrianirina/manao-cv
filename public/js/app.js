@@ -5074,11 +5074,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icons_save_icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./icons/save-icon */ "./resources/js/icons/save-icon.js");
 /* harmony import */ var _icons_close_icon__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./icons/close-icon */ "./resources/js/icons/close-icon.js");
 /* harmony import */ var _icons_user_icon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./icons/user-icon */ "./resources/js/icons/user-icon.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_11__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
 
 
 
@@ -5140,6 +5143,18 @@ var CVModels = /*#__PURE__*/function () {
     this.textStylePerModel = {
       "cv-1": {
         "name": "uppercase"
+      },
+      "cv-2": {
+        "name": "uppercase",
+        "firstname": "uppercase",
+        "work": "uppercase"
+      },
+      "cv-3": {
+        "name": "uppercase"
+      },
+      "cv-4": {
+        "name": "uppercase",
+        "firstname": "uppercase"
       }
     };
     /**
@@ -5209,43 +5224,99 @@ var CVModels = /*#__PURE__*/function () {
         input.name = inputName ? inputName : "";
         input.type = inputType ? inputType : "text";
         input.setAttribute('aria-nodename', element.nodeName);
+        input.setAttribute('autocomplete', "false");
+
+        if (inputName.includes("level")) {
+          input.placeholder = "Niveau";
+          input.setAttribute('required', "true");
+        } else if (inputName.includes("graduation")) {
+          input.placeholder = "Diplôme";
+          input.setAttribute('required', "true");
+        } else if (inputName.includes('year_debut')) {
+          input.placeholder = "Année de début";
+          input.setAttribute('required', "true");
+        } else if (inputName.includes('year_end')) {
+          input.placeholder = "Année de fin";
+          input.setAttribute('required', "true");
+        } else if (inputName.includes('language')) {
+          input.placeholder = "Langue";
+          input.setAttribute('required', "true");
+
+          if (_this.modelName === "cv-2" || _this.modelName === "cv-3") {
+            console.log("model : ", _this.modelName);
+
+            _this.addLevelCursorWithIndicatorIfThereIsValue(element);
+          }
+        } else if (inputName.includes('year_month_debut')) {
+          input.placeholder = "Mois et année de début";
+          input.setAttribute('required', "true");
+        } else if (inputName.includes('year_month_end')) {
+          input.placeholder = "Mois et année de fin";
+          input.setAttribute('required', "true");
+        } else if (inputName.includes('skill') && _this.modelName !== "cv-3" || _this.modelName === "cv-2" && inputName.includes('lang')) {
+          input.placeholder = "Compétence";
+          input.setAttribute('required', "true");
+
+          _this.addLevelCursorWithIndicatorIfThereIsValue(element);
+        } else {
+          if (_this.inputsPlaceholders && _this.inputsPlaceholders[input.name]) {
+            input.placeholder = _this.inputsPlaceholders[input.name];
+          } else {
+            input.placeholder = element.innerText;
+          }
+
+          if (inputName.includes('profile-photo') || inputName.includes('name') || inputName.includes('work') || inputName.includes('phone') || inputName.includes('email') || inputName.includes('adress') || inputName.includes('profile-photo')) {
+            input.setAttribute('required', "true");
+
+            if (element.parentElement.classList.contains('about') && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(element.parentElement.querySelector('.sex'))) {
+              var sex = _this.dom.createElement('div', 'sex');
+
+              var manContainer = _this.dom.createElement('div', 'man-container');
+
+              var womanContainer = _this.dom.createElement('div', 'woman-container');
+
+              var manLabel = _this.dom.createElement('label', 'man-label ms-1');
+
+              var womanLabel = _this.dom.createElement('label', 'woman-label ms-1');
+
+              var man = _this.dom.createElement('input', 'man');
+
+              var woman = _this.dom.createElement('input', 'woman');
+
+              manLabel.innerText = "Homme";
+              man.type = "radio";
+              man.name = "sex";
+              man.setAttribute("value", "man");
+              womanLabel.innerText = "Femme";
+              woman.type = "radio";
+              woman.name = "sex";
+              woman.setAttribute("value", "woman");
+              element.parentElement.appendChild(sex);
+              sex.appendChild(manContainer);
+              manContainer.appendChild(man);
+              manContainer.appendChild(manLabel);
+              sex.appendChild(womanContainer);
+              womanContainer.appendChild(woman);
+              womanContainer.appendChild(womanLabel);
+              man.addEventListener('click', function (e) {
+                if (woman.getAttribute('selected') === "true" || !man.getAttribute('selected') || !woman.getAttribute('selected')) {
+                  console.log("click");
+                  woman.setAttribute('selected', "false");
+                  man.setAttribute('selected', "true");
+                }
+              });
+              woman.addEventListener('click', function (e) {
+                if (man.getAttribute('selected', "true") || !woman.getAttribute('selected') || !man.getAttribute('selected')) {
+                  man.setAttribute('selected', "false");
+                  woman.setAttribute('selected', "true");
+                }
+              });
+            }
+          }
+        }
 
         if (_this.inputsValuesLength > 0 && _this.inputsValues[input.name]) {
           input.setAttribute('value', _this.inputsValues[input.name]);
-        } else {
-          if (inputName.includes("level")) {
-            input.placeholder = "Niveau";
-          } else if (inputName.includes("graduation")) {
-            input.placeholder = "Diplôme";
-          } else if (inputName.includes('year_debut')) {
-            input.placeholder = "Date de début";
-          } else if (inputName.includes('year_end')) {
-            input.placeholder = "Année de fin";
-          } else if (inputName.includes('language')) {
-            input.placeholder = "Langue";
-          } else if (inputName.includes('year_month_debut')) {
-            input.placeholder = "Mois et année de début";
-          } else if (inputName.includes('year_month_end')) {
-            input.placeholder = "Mois et année de fin";
-          } else if (inputName.includes('skill')) {
-            input.placeholder = "Compétence";
-
-            if (_this.inputsValuesLength > 0) {
-              _this.barLevel = element.parentElement.querySelector('.bar-level');
-              _this.levelCursor = _this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
-
-              _this.barLevel.appendChild(_this.levelCursor);
-
-              _this.levelIndicator = element.parentElement.querySelector('.level-indicator');
-              _this.levelCursor.style.left = _this.levelIndicator.offsetWidth + "px";
-            }
-          } else {
-            if (_this.inputsPlaceholders && _this.inputsPlaceholders[input.name]) {
-              input.placeholder = _this.inputsPlaceholders[input.name];
-            } else {
-              input.placeholder = element.innerText;
-            }
-          }
         }
 
         var inputNumber = parentElement.getAttribute('aria-input-number');
@@ -5282,6 +5353,22 @@ var CVModels = /*#__PURE__*/function () {
         textarea.placeholder = "Ecrire quelque chose";
         textarea.setAttribute('aria-nodename', element.nodeName);
         element.replaceWith(textarea);
+        var textareaParent = textarea.parentElement;
+        var textareaParentInnerHTML = textareaParent.innerHTML;
+
+        if (textareaParent.nodeName === "UL") {
+          var divToRempaceTextareaParent = _this.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(textareaParent));
+
+          textareaParent.replaceWith(divToRempaceTextareaParent);
+          divToRempaceTextareaParent.innerHTML = textareaParentInnerHTML;
+
+          if (_this.modelName === "cv-2" || _this.modelName === "cv-3") {
+            var label = _this.dom.createElement('p', 'mb-1');
+
+            label.innerText = "Tâches réalisées :";
+            divToRempaceTextareaParent.before(label);
+          }
+        }
       });
       var lists = document.querySelectorAll('.list.customizable-list');
       lists.forEach(function (list) {
@@ -5296,23 +5383,65 @@ var CVModels = /*#__PURE__*/function () {
           }
         }
 
-        if (list.classList.contains('skills-list-right')) {
+        if (list.classList.contains('skills-list-right') && _this.inputsValuesLength === 0) {
           list.innerHTML = "";
-        } else if (list.classList.contains('skills-list-left')) {
-          var addIntoListButton = _this.dom.createElement('button', 'btn btn-secondary add-into-list');
+        } else {
+          var addIntoListButton = list.querySelector('.add-into-list');
+
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(addIntoListButton)) {
+            if (_this.inputsValuesLength > 0 && list.classList.contains('skills-list-left') && list.nextElementSibling.children.length > 0) {
+              return;
+            }
+
+            addIntoListButton = _this.dom.createElement('button', 'btn btn-secondary add-into-list');
+          }
 
           addIntoListButton.innerText = "En ajouter une autre";
+          var lastChild = listChildren[childrenLength - 1];
+
+          if (lastChild.className.includes('task')) {
+            addIntoListButton.innerText = "Ajouter une autre tâche";
+          } else if (lastChild.className.includes('experience')) {
+            addIntoListButton.innerText = "Ajouter une autre expérience";
+          } else if (lastChild.className.includes('skill')) {
+            addIntoListButton.innerText = "Ajouter une autre compétence";
+          } else if (lastChild.className.includes('langua')) {
+            addIntoListButton.innerText = "Ajouter une autre langue";
+          } else if (lastChild.className.includes('formation')) {
+            addIntoListButton.innerText = "Ajouter une autre formation";
+          } else if (lastChild.className.includes('hobb')) {
+            addIntoListButton.innerText = "Ajouter un autre intérêt";
+          }
 
           if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
             listChildren[0].after(addIntoListButton);
           } else {
-            listChildren[childrenLength - 1].after(addIntoListButton);
+            lastChild.after(addIntoListButton);
           }
 
           addIntoListButton.addEventListener('click', _this.handleAddNewList.bind(_this));
         }
       });
       this.addListenersToEveryBarLevels();
+    }
+    /**
+     * 
+     * @param {HTMLElement} element 
+     */
+
+  }, {
+    key: "addLevelCursorWithIndicatorIfThereIsValue",
+    value: function addLevelCursorWithIndicatorIfThereIsValue(element) {
+      if (this.inputsValuesLength > 0) {
+        this.barLevel = element.parentElement.querySelector('.bar-level');
+        this.levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+        this.barLevel.appendChild(this.levelCursor);
+        this.levelIndicator = element.parentElement.querySelector('.level-indicator');
+
+        if (this.levelIndicator) {
+          this.levelCursor.style.left = this.levelIndicator.offsetWidth + "px";
+        }
+      }
     }
   }, {
     key: "throwErrorIfFormUndefined",
@@ -5783,6 +5912,8 @@ var CVModels = /*#__PURE__*/function () {
 
       this.divFromForm = this.transformFormToDiv();
       this.replaceSeeButtonContainerToConsole();
+      this.addClickEventToConsoleButtons();
+      this.removeLevelCursorsIfExist();
     }
   }, {
     key: "addCloseButton",
@@ -5833,9 +5964,10 @@ var CVModels = /*#__PURE__*/function () {
 
       if (this.formInputs) {
         this.formInputs.forEach(function (formInput) {
+          console.log(formInput);
           var formInputIsHidden = formInput.type === "hidden";
 
-          if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value')) {
+          if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.getClassFrom)(formInput);
 
             var elementToReplaceInput = _this4.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
@@ -5852,6 +5984,10 @@ var CVModels = /*#__PURE__*/function () {
 
             if (formInput.name === "name") {
               elementInnerText = _this4.textStylePerModel[_this4.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+            } else if (formInput.name === "firstname") {
+              elementInnerText = _this4.textStylePerModel[_this4.modelName].firstname === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+            } else if (formInput.name === "work") {
+              elementInnerText = _this4.textStylePerModel[_this4.modelName].work === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "email" || formInput.name === 'url_linkedin') {
               elementInnerText = inputValue;
             } else {
@@ -5893,7 +6029,7 @@ var CVModels = /*#__PURE__*/function () {
             }
 
             formInput.replaceWith(elementToReplaceInput);
-          } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo')) {
+          } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             if (formInput.name.includes('level')) {
               _this4.saveInputsValues(formInput.name, formInput.value);
 
@@ -5912,6 +6048,13 @@ var CVModels = /*#__PURE__*/function () {
             }
           } else if (formInputIsHidden) {
             _this4.saveInputsValues(formInput.name, formInput.value);
+          } else if (formInput.classList.contains('man') || formInput.classList.contains('woman')) {
+            if (formInput.getAttribute('selected') === "true") {
+              _this4.saveInputsValues(formInput.name, formInput.value);
+
+              var formInputGrandParent = formInput.parentElement.parentElement;
+              formInputGrandParent.parentElement.removeChild(formInputGrandParent);
+            }
           }
         });
       }
@@ -5933,14 +6076,14 @@ var CVModels = /*#__PURE__*/function () {
     key: "transformProfilePhotoInputToImg",
     value: function transformProfilePhotoInputToImg() {
       this.throwErrorIfFormUndefined();
-      this.profilePhotoInput = this.form.querySelector('.profile-photo');
+      this.profilePhotoInput = this.form.querySelector('input.profile-photo');
 
       if (this.profilePhotoInput) {
         this.profilePhotoInput.parentElement.removeChild(this.profilePhotoInput.previousElementSibling);
         var file = this.profilePhotoInput.files[0];
 
         if (file) {
-          this.saveInputsValues(formInput.name, file);
+          this.saveInputsValues(this.profilePhotoInput.name, file);
           this.showProfilePhoto(file);
         }
       }
@@ -6007,8 +6150,42 @@ var CVModels = /*#__PURE__*/function () {
     value: function replaceSeeButtonContainerToConsole() {
       if (this.seeButtonContainer) {
         this.console = this.dom.createElement('div', 'console-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
-        this.console.innerHTML = "\n            ".concat((0,_icons_download_icon__WEBPACK_IMPORTED_MODULE_4__["default"])(), "\n            ").concat((0,_icons_save_icon__WEBPACK_IMPORTED_MODULE_8__["default"])(), "\n            ").concat((0,_icons_check_icon__WEBPACK_IMPORTED_MODULE_5__["default"])("finish"), "\n            ");
+        this.console.innerHTML = "\n            ".concat((0,_icons_download_icon__WEBPACK_IMPORTED_MODULE_4__["default"])(), "\n            ").concat((0,_icons_save_icon__WEBPACK_IMPORTED_MODULE_8__["default"])(), "\n            ").concat((0,_icons_check_icon__WEBPACK_IMPORTED_MODULE_5__["default"])(), "\n            ");
         this.seeButtonContainer.replaceWith(this.console);
+      }
+    }
+  }, {
+    key: "addClickEventToConsoleButtons",
+    value: function addClickEventToConsoleButtons() {
+      var _this6 = this;
+
+      this.throwErrorIfUndefined(this.console, "this.console");
+      var consoleButtons = this.console.querySelectorAll('.icon');
+      consoleButtons.forEach(function (consoleButton) {
+        consoleButton.addEventListener('click', _this6.handleConsoleButtonClick.bind(_this6));
+      });
+    }
+  }, {
+    key: "handleConsoleButtonClick",
+    value: function handleConsoleButtonClick(e) {
+      e.preventDefault();
+      var button = e.target;
+      console.log("console click");
+
+      if (button.classList.contains("save-icon") && this.inputsValuesLength > 0) {
+        axios__WEBPACK_IMPORTED_MODULE_11___default().post("/cv/save", this.inputsValues);
+      }
+    }
+  }, {
+    key: "removeLevelCursorsIfExist",
+    value: function removeLevelCursorsIfExist() {
+      this.throwErrorIfFormUndefined();
+      var levelCursors = document.querySelectorAll('.level-cursor');
+
+      if (levelCursors.length > 0) {
+        levelCursors.forEach(function (levelCursor) {
+          levelCursor.parentElement.removeChild(levelCursor);
+        });
       }
     }
   }, {
@@ -6079,7 +6256,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ CheckIcon)
 /* harmony export */ });
 function CheckIcon(className) {
-  return "<svg viewBox=\"0 0 512 512\" class=\"check-icon ".concat(className ? className : "", "\">\n        <path d=\"M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z\"/>\n    </svg>");
+  return "<svg viewBox=\"0 0 512 512\" class=\"icon check-icon ".concat(className ? className : "", "\">\n        <path d=\"M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z\"/>\n    </svg>");
 }
 
 /***/ }),
@@ -6113,7 +6290,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ DownloadIcon)
 /* harmony export */ });
 function DownloadIcon(className) {
-  return "<svg viewBox=\"0 0 512 512\" class=\"download-icon ".concat(className ? className : "", "\">\n    <path d=\"M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z\"/>\n</svg>");
+  return "<svg viewBox=\"0 0 512 512\" class=\"icon download-icon ".concat(className ? className : "", "\">\n    <path d=\"M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z\"/>\n</svg>");
 }
 
 /***/ }),
@@ -6163,8 +6340,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SaveIcon)
 /* harmony export */ });
-function SaveIcon() {
-  return "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\" class=\"save-icon\">\n    <path d=\"M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM272 80v80H144V80h128zm122 352H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h42v104c0 13.255 10.745 24 24 24h176c13.255 0 24-10.745 24-24V83.882l78.243 78.243a6 6 0 0 1 1.757 4.243V426a6 6 0 0 1-6 6zM224 232c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88zm0 128c-22.056 0-40-17.944-40-40s17.944-40 40-40 40 17.944 40 40-17.944 40-40 40z\"/>\n    </svg>";
+function SaveIcon(className) {
+  return "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\" class=\"icon save-icon ".concat(className ? className : "", "\">\n    <path d=\"M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM272 80v80H144V80h128zm122 352H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h42v104c0 13.255 10.745 24 24 24h176c13.255 0 24-10.745 24-24V83.882l78.243 78.243a6 6 0 0 1 1.757 4.243V426a6 6 0 0 1-6 6zM224 232c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88zm0 128c-22.056 0-40-17.944-40-40s17.944-40 40-40 40 17.944 40 40-17.944 40-40 40z\"/>\n    </svg>");
 }
 
 /***/ }),

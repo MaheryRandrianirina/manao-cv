@@ -22,6 +22,8 @@ Route::middleware("auth")->group(function(){
     Route::post('/password/edit', [UserController::class, "update"])->name('password.edit');
 
     Route::get("/cv/{id}", [CvController::class, "index"]);
+
+    Route::post("/cv/save", [CvController::class, "save"]);
 });
 
 require __DIR__.'/auth.php';
