@@ -387,6 +387,12 @@ li.nav-item a.text-white:hover {
                 box-shadow: 0 0 4px $primary !important;
             }
         }
+        
+        .contact-list {
+            small.text-danger {
+                margin-left: 5px;
+            }
+        }
 
         .left {
             width: 40%;
@@ -412,12 +418,6 @@ li.nav-item a.text-white:hover {
 
             input {
                 width: 100%;
-            }
-        }
-
-        .contact-list {
-            small.text-danger {
-                margin-left: 5px;
             }
         }
     }
