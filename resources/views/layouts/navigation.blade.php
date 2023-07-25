@@ -15,9 +15,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link text-white" aria-current="page" href='/'>Enregistrements</a>
-                </li>
+                @if(!isset($hideSaving) || (isset($hideSaving) && !$hideSaving))
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" href='/cvs'>Enregistrements</a>
+                    </li>
+                @endif
                 <li class="nav-item" style="width: 220px">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">

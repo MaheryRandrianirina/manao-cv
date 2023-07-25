@@ -24,9 +24,12 @@ Route::middleware("auth")->group(function(){
     Route::get("/cv/{id}", [CvController::class, "index"]);
 
     Route::get("/test/download", [CvController::class, "test"]);
+
     Route::post("/cv/save", [CvController::class, "save"]);
 
     Route::post("/cv/download", [CvController::class, "download"]);
+
+    Route::get("/cvs", [AppController::class, "cvs"]);
 });
 
 require __DIR__.'/auth.php';
