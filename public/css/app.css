@@ -10814,6 +10814,9 @@ li.nav-item a.text-white:hover {
   transform: scale(1.1);
   box-shadow: 0 0 4px #0d6efd !important;
 }
+.cv-form .cv .contact-list small.text-danger, .cv-form .cv .contact-list .text-danger.small {
+  margin-left: 5px;
+}
 .cv-form .cv .left {
   width: 40%;
 }
@@ -10832,9 +10835,6 @@ li.nav-item a.text-white:hover {
 }
 .cv-form .cv.cv-1 .skills input {
   width: 100%;
-}
-.cv-form .cv.cv-1 .contact-list small.text-danger, .cv-form .cv.cv-1 .contact-list .text-danger.small {
-  margin-left: 5px;
 }
 .cv-form .cv.cv-2 {
   margin-left: auto !important;

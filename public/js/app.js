@@ -6188,66 +6188,88 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleConsoleButtonClick",
     value: function handleConsoleButtonClick(e) {
-      var _this7 = this;
-
       e.preventDefault();
       var button = e.currentTarget;
 
       if (button.classList.contains("save-icon") && this.inputsValuesLength > 0) {
-        var formData = new FormData();
+        this.handleSaveCV();
+      } else if (button.classList.contains("download-icon") && this.inputsValuesLength > 0) {
+        this.handleDownloadCV();
+      }
+    }
+  }, {
+    key: "handleSaveCV",
+    value: function handleSaveCV() {
+      var _this7 = this;
 
-        for (var name in this.inputsValues) {
-          formData.append(name, this.inputsValues[name]);
-        }
+      var download = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      var formData = new FormData();
 
-        axios__WEBPACK_IMPORTED_MODULE_11___default().post("/cv/save", formData).then(function (res) {
-          if (res.data.success) {
-            _this7.dom.createModal("alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", "Votre CV a été enregistré !", false);
+      for (var name in this.inputsValues) {
+        formData.append(name, this.inputsValues[name]);
+      }
 
-            setTimeout(function () {
-              _this7.dom.closeModal();
-            }, 3000);
+      axios__WEBPACK_IMPORTED_MODULE_11___default().post("/cv/save", formData).then(function (res) {
+        if (res.data.success) {
+          _this7.dom.createModal("alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", "Votre CV a été enregistré !", false);
 
-            var finishButton = _this7.console.querySelector('.check-icon');
+          setTimeout(function () {
+            _this7.dom.closeModal();
+          }, 3000);
 
-            finishButton.classList.add('active');
-            finishButton.addEventListener('click', _this7.handleFinishCVModeling.bind(_this7));
+          var finishButton = _this7.console.querySelector('.check-icon');
+
+          finishButton.classList.add('active');
+          finishButton.addEventListener('click', _this7.handleFinishCVModeling.bind(_this7));
+
+          if (download) {
+            axios__WEBPACK_IMPORTED_MODULE_11___default().post("/cv/download", _this7.inputsValues).then(function (res) {// if(res.data){
+              //     this.handleSaveCV();
+              // }
+            })["catch"](function (err) {
+              console.log(err.response);
+            });
           }
-        })["catch"](function (err) {
-          var errorData = err.response.data;
+        }
+      })["catch"](function (err) {
+        var errorData = err.response.data;
 
-          if ("errors" in errorData) {
-            _this7.createCVForm();
+        if ("errors" in errorData) {
+          _this7.createCVForm();
 
-            _this7.removeConsole();
+          _this7.removeConsole();
 
-            _this7.removeCloseButton();
+          _this7.removeCloseButton();
 
-            for (var _name in errorData.errors) {
-              var input = _this7.form.querySelector("input[name=\"".concat(_name, "\"]"));
+          for (var _name in errorData.errors) {
+            var input = _this7.form.querySelector("input[name=\"".concat(_name, "\"]"));
 
-              if (input) {
-                var error = _this7.dom.createElement('small', "text text-danger fs-6");
+            if (input) {
+              var error = _this7.dom.createElement('small', "text text-danger fs-6");
 
-                error.innerText = errorData.errors[_name];
+              error.innerText = errorData.errors[_name];
 
-                if (!input.classList.contains('man') || !input.classList.contains('woman')) {
-                  input.after(error);
-                } else {
-                  input.nextElementSibling.after(error);
-                }
+              if (!input.classList.contains('man') || !input.classList.contains('woman')) {
+                input.after(error);
               } else {
-                var textarea = _this7.form.querySelector("textarea[name=\"".concat(_name, "\"]"));
-
-                var _error = _this7.dom.createElement('small', "text text-danger fs-6");
-
-                _error.innerText = errorData.errors[_name];
-                textarea.after(_error);
+                input.nextElementSibling.after(error);
               }
+            } else {
+              var textarea = _this7.form.querySelector("textarea[name=\"".concat(_name, "\"]"));
+
+              var _error = _this7.dom.createElement('small', "text text-danger fs-6");
+
+              _error.innerText = errorData.errors[_name];
+              textarea.after(_error);
             }
           }
-        });
-      }
+        }
+      });
+    }
+  }, {
+    key: "handleDownloadCV",
+    value: function handleDownloadCV() {
+      this.handleSaveCV(true);
     }
   }, {
     key: "handleFinishCVModeling",

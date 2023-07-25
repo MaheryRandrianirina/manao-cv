@@ -19,5 +19,6 @@ class Contact extends Model
 
     public function cv() {
         $this->belongsTo(CV::class);
+        
     }
 }

@@ -12,9 +12,11 @@ use App\Models\Skill;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CvController extends Controller
 {
+    private $echo;
     /*
      * Règles de validation
     */
@@ -65,9 +67,10 @@ class CvController extends Controller
         ]);
     }
 
-    public function save(Request $request) {
+    public function save(Request $request, bool $echo = true) {
         $model = $request->model;
         $dataLength = count($request->request);
+        $this->echo = $echo;
 
         foreach($request->request as $name => $value){
             if(strchr($name, "graduation")){
@@ -129,6 +132,11 @@ class CvController extends Controller
         $path = "";
 
         try {
+
+            if($request->profile_photo){
+                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
+            }
+
             $contact = $this->saveContact($request);
             
             $cv = $this->saveCV($request, $path, $contact->id);
@@ -140,6 +148,10 @@ class CvController extends Controller
             $this->saveLanguages($request, $cv->id);
 
             $this->saveSkills($request, $cv->id);
+
+            if($this->echo === false){
+                return;
+            }
 
             echo json_encode([
                 "success" => true,
@@ -181,7 +193,7 @@ class CvController extends Controller
             $task = "";
             $tasks = [];
 
-            if(!$multitask){
+            if($multitask){
                 $countTasks = 0;
                 foreach($request->request as $name => $value){
                     $countTasks++;
@@ -259,6 +271,10 @@ class CvController extends Controller
         $path = "";
         
         try {
+            if($request->profile_photo){
+                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
+            }
+
             $contact = $this->saveContact($request);
             
             $cv = $this->saveCV($request, $path, $contact->id);
@@ -270,6 +286,10 @@ class CvController extends Controller
             $this->saveLanguages($request, $cv->id, false);
 
             $this->saveSkills($request, $cv->id);
+
+            if($this->echo === false){
+                return;
+            }
 
             echo json_encode([
                 "success" => true,
@@ -287,6 +307,10 @@ class CvController extends Controller
         $path = "";
         
         try {
+            if($request->profile_photo){
+                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
+            }
+
             $contact = $this->saveContact($request);
             
             $cv = $this->saveCV($request, $path, $contact->id);
@@ -298,6 +322,10 @@ class CvController extends Controller
             $this->saveLanguages($request, $cv->id, false);
 
             $this->saveSkills($request, $cv->id);
+
+            if($this->echo === false){
+                return;
+            }
 
             echo json_encode([
                 "success" => true,
@@ -315,6 +343,10 @@ class CvController extends Controller
         $path = "";
         
         try {
+            if($request->profile_photo){
+                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
+            }
+
             $contact = $this->saveContact($request);
             
             $cv = $this->saveCV($request, $path, $contact->id);
@@ -327,11 +359,37 @@ class CvController extends Controller
 
             $this->saveSkills($request, $cv->id);
 
+            if($this->echo === false){
+                return;
+            }
+
             echo json_encode([
                 "success" => true,
             ]);
         }catch(Exception $e){
             throw $e;
         }
+    }
+
+    public function download(Request $request) {
+        try {
+            $contact = Contact::where('email', $request->email)->get();
+            
+            $cv = CV::where("contact_id", $contact[0]->id)->get();
+            
+            $pdf = Pdf::loadView('components.cvs.'. $cv[0]->model, ["cv" => $cv[0]]);
+            
+            return $pdf->download("cv.pdf");
+
+            echo json_encode(['success' => true]);
+        }catch(Exception $e){
+            throw $e;
+        }
+    }
+
+    public function test(){
+        $pdf = Pdf::loadView('components.cvs.cv-1', ["content" => "dzf"]);
+            
+        return $pdf->download("cv.pdf");
     }
 }

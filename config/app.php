@@ -239,3 +239,6 @@ return [
     ],
 
 ];
+
+$app->register(ServiceProvider::class);
+$app->configPath('dompdf');

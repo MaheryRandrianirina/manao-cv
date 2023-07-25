@@ -23,9 +23,10 @@ Route::middleware("auth")->group(function(){
 
     Route::get("/cv/{id}", [CvController::class, "index"]);
 
+    Route::get("/test/download", [CvController::class, "test"]);
     Route::post("/cv/save", [CvController::class, "save"]);
 
-    Route::post("/cv/profile-photo", [CvController::class, "saveProfilePhoto"]);
+    Route::post("/cv/download", [CvController::class, "download"]);
 });
 
 require __DIR__.'/auth.php';

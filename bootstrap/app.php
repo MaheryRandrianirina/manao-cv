@@ -11,6 +11,8 @@
 |
 */
 
+use Barryvdh\DomPDF\ServiceProvider;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -40,6 +42,10 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
+
+//$app->register(ServiceProvider::class);
+
+//$app->configPath('dompdf');
 
 /*
 |--------------------------------------------------------------------------

@@ -1154,8 +1154,20 @@ export default class CVModels {
         e.preventDefault();
         
         const button = e.currentTarget;
-        if(button.classList.contains("save-icon") && this.inputsValuesLength > 0){
-            const formData = new FormData();
+        if(button.classList.contains("save-icon") 
+            && this.inputsValuesLength > 0
+        ){
+            this.handleSaveCV();
+        }else if(button.classList.contains("download-icon") 
+            && this.inputsValuesLength > 0
+        ) {
+            this.handleDownloadCV();
+        }
+    }
+
+    handleSaveCV(download = false)
+    {
+        const formData = new FormData();
             for(const name in this.inputsValues){
                 formData.append(name, this.inputsValues[name]);
             }
@@ -1176,6 +1188,17 @@ export default class CVModels {
                     finishButton.classList.add('active');
 
                     finishButton.addEventListener('click', this.handleFinishCVModeling.bind(this));
+
+                    if(download){
+                        axios.post("/cv/download", this.inputsValues).then(res => {
+            
+                            // if(res.data){
+                            //     this.handleSaveCV();
+                            // }
+                        }).catch(err => {
+                            console.log(err.response)
+                        })
+                    }
                 }
             }).catch(err => {
                 const errorData = err.response.data;
@@ -1208,8 +1231,11 @@ export default class CVModels {
                     }
                 }
             });
+    }
 
-        }
+    handleDownloadCV()
+    {
+        this.handleSaveCV(true);
     }
 
     handleFinishCVModeling(e)
