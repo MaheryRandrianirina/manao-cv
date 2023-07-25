@@ -1,7 +1,7 @@
 
 <div class="cv cv-4 col ms-4 p-2" aria-link="/cv/4">
     @csrf
-    <div class="cv-top anout bg-white w-100 text-center position-relative pt-4" style="height: 150px">
+    <div class="cv-top about bg-white w-100 text-center position-relative pt-4">
         <h2 aria-input-number="2" class="name mt-2">
             <span id="input" aria-name="firstname">PRENOM</span> <span id="input" aria-name="name">NOM</span>
         </h2>
@@ -134,7 +134,7 @@
                                     <span id="input" aria-name="year_debut_one" aria-type="number">20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_end_one" aria-type="number">20XX</span>
                                 </span> 
                                 <span id="separator">|</span> 
-                                <span id="input" aria-name="etablissement_one">Université ou école</span>
+                                <span class="etablissement" id="input" aria-name="etablissement_one">Université ou école</span>
                             </p>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                                     <span id="input" aria-name="year_debut_two" aria-type="number">20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_end_two" aria-type="number">20XX</span>
                                 </span> 
                                 <span id="separator">|</span> 
-                                <span id="input" aria-name="etablissement_one">Université ou école</span>
+                                <span class="etablissement" id="input" aria-name="etablissement_one">Université ou école</span>
                             </p>
                         </div>
                     </div>

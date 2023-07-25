@@ -16,7 +16,8 @@ class CreateLanguageTable extends Migration
         Schema::create('language', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('stage');
+            $table->string('string_level')->nullable();
+            $table->integer('level')->unsigned()->nullable();
             $table->foreignId('cv_id')->constrained()->onDelete('cascade');;
         });
     }

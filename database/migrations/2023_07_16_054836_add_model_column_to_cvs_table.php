@@ -14,9 +14,8 @@ class AddModelColumnToCvsTable extends Migration
     public function up()
     {
         Schema::table('cvs', function (Blueprint $table) {
-            $table->addColumn("integer", "model", [
-                "length" => 4,
-                "unsigned" => true
+            $table->addColumn("string", "model", [
+                "length" => 4
             ]);
         });
     }

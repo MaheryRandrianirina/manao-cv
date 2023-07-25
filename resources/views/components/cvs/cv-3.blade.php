@@ -143,7 +143,9 @@
                     <div class="graduation">
                         <h4 id="input" aria-name="graduation_one">DIPLOME XXXXXXXXX</h4>
                         <p aria-input-number='3' class="college">
-                            <span id="input" aria-name="etablissement_one" class="etablissement">Université ou école</span> <span id="separator"> : </span> <span aria-input-number="2" class="date"><span id="input" aria-name="year_debut_one">20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_end_one">20XX</span></span>
+                            <span id="input" aria-name="etablissement_one" class="etablissement">Université ou école</span> <span id="separator"> : </span> <span aria-input-number="2" class="date">
+                                <span id="input" aria-type="number" aria-name="year_debut_one">20XX</span> <span id="separator">-</span> <span id="input" aria-type="number" aria-name="year_end_one">20XX</span>
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -151,7 +153,9 @@
                     <div class="graduation">
                         <h4 id="input" aria-name="graduation_two">DIPLOME XXXXXXXXX</h4>
                         <p aria-input-number='3' class="college">
-                            <span id="input" aria-name="etablissement_two" class="etablissement">Université ou école</span> <span id="separator"> : </span> <span aria-input-number="2" class="date"><span id="input" aria-name="year_debut_two">20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_end_two">20XX</span></span>
+                            <span id="input" aria-name="etablissement_two" class="etablissement">Université ou école</span> <span id="separator"> : </span> <span aria-input-number="2" class="date">
+                                <span id="input" aria-type="number" aria-name="year_debut_two">20XX</span> <span id="separator">-</span> <span id="input" aria-type="number" aria-name="year_end_two">20XX</span>
+                            </span>
                         </p>
                     </div>
                 </div>

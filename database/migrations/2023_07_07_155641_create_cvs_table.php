@@ -19,7 +19,7 @@ class CreateCvsTable extends Migration
             $table->string('firstname');
             $table->string('sex', 5);
             $table->string('current_work')->nullable();
-            $table->mediumText('profil');
+            $table->mediumText('profile')->nullable();
             $table->string('image')->nullable()->unique();
             $table->boolean('is_recorded')->default(false);
             $table->timestamps();

@@ -10541,6 +10541,11 @@ li.nav-item a.text-white:hover {
 .modal-container .main-modal.alert.alert-success.notification {
   height: 85px;
 }
+.modal-container .main-modal.alert-success-cv-saving {
+  height: 85px;
+  top: 45px;
+  z-index: 20;
+}
 .modal-container .close-btn-container .close-btn {
   width: 25px;
   cursor: pointer;
@@ -10716,6 +10721,9 @@ li.nav-item a.text-white:hover {
 .cv.cv-4 .left {
   width: calc(40% + 2px);
 }
+.cv.cv-4 .cv-top {
+  height: 150px;
+}
 .cv.cv-4 .cv-top .name {
   color: #7ec4a3;
 }
@@ -10825,6 +10833,9 @@ li.nav-item a.text-white:hover {
 .cv-form .cv.cv-1 .skills input {
   width: 100%;
 }
+.cv-form .cv.cv-1 .contact-list small.text-danger, .cv-form .cv.cv-1 .contact-list .text-danger.small {
+  margin-left: 5px;
+}
 .cv-form .cv.cv-2 {
   margin-left: auto !important;
 }
@@ -10925,6 +10936,10 @@ li.nav-item a.text-white:hover {
 .cv-form div.cv.cv-3 .level.bar-level, .cv-form div.cv.cv-2 .level.bar-level {
   margin-top: 5px;
 }
+.cv-form .cv.cv-4 .cv-top {
+  padding-bottom: 20px;
+  height: auto;
+}
 .cv-form .cv.cv-4 .left div.profile-photo label {
   color: #000;
 }
@@ -10958,6 +10973,9 @@ li.nav-item a.text-white:hover {
   width: 45%;
   margin-left: auto;
   margin-right: auto;
+}
+.cv-form form.cv.cv-4 .graduation .date-and-college .etablissement {
+  margin-left: 10px;
 }
 .cv-form div.cv-4 .cv-top .name {
   display: block !important;

@@ -24,6 +24,8 @@ Route::middleware("auth")->group(function(){
     Route::get("/cv/{id}", [CvController::class, "index"]);
 
     Route::post("/cv/save", [CvController::class, "save"]);
+
+    Route::post("/cv/profile-photo", [CvController::class, "saveProfilePhoto"]);
 });
 
 require __DIR__.'/auth.php';

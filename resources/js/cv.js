@@ -31,6 +31,7 @@ export default class CVModels {
         this.modelName = "";
         this.formInputs;
         this.formTextareas;
+        this.formErrors;
         this.divFromForm;
         this.seeButtonContainer;
         this.console;
@@ -101,6 +102,7 @@ export default class CVModels {
         const form = this.dom.createElement('form');
         form.action = cv.getAttribute('aria-link');
         form.method = "POST";
+        form.setAttribute('enctype', "multipart/form-data");
 
         const arrayClassList = Array.from(cv.classList);
         form.className = arrayClassList.join(' ');
@@ -155,7 +157,6 @@ export default class CVModels {
                 input.setAttribute('required', "true");
 
                 if(this.modelName === "cv-2" || this.modelName === "cv-3"){
-                    console.log("model : ", this.modelName)
                     this.addLevelCursorWithIndicatorIfThereIsValue(element);
                 }
             }else if(inputName.includes('year_month_debut')){
@@ -225,7 +226,6 @@ export default class CVModels {
                                 !man.getAttribute('selected') ||
                                 !woman.getAttribute('selected')
                             ){
-                                console.log("click")
                                 woman.setAttribute('selected', "false")
                                 man.setAttribute('selected', "true");
                             }
@@ -280,6 +280,11 @@ export default class CVModels {
             textarea.placeholder = "Ecrire quelque chose";
             textarea.setAttribute('aria-nodename', element.nodeName)
 
+            if(this.inputsValuesLength > 0 && this.inputsValues[textarea.name]){
+                textarea.setAttribute('value', this.inputsValues[textarea.name])
+                textarea.innerHTML = this.inputsValues[textarea.name];
+            }
+
             element.replaceWith(textarea);
 
             const textareaParent = textarea.parentElement;
@@ -332,27 +337,31 @@ export default class CVModels {
                 addIntoListButton.innerText = "En ajouter une autre";
 
                 const lastChild = listChildren[childrenLength - 1];
-                if(lastChild.className.includes('task')){
-                    addIntoListButton.innerText = "Ajouter une autre tâche";
-                }else if(lastChild.className.includes('experience')){
-                    addIntoListButton.innerText = "Ajouter une autre expérience";
-                }else if(lastChild.className.includes('skill')){
-                    addIntoListButton.innerText = "Ajouter une autre compétence";
-                }else if(lastChild.className.includes('langua')){
-                    addIntoListButton.innerText = "Ajouter une autre langue";
-                }else if(lastChild.className.includes('formation')){
-                    addIntoListButton.innerText = "Ajouter une autre formation";
-                }else if(lastChild.className.includes('hobb')){
-                    addIntoListButton.innerText = "Ajouter un autre intérêt";
+                if(lastChild){
+                    if(lastChild.className.includes('task')){
+                        addIntoListButton.innerText = "Ajouter une autre tâche";
+                    }else if(lastChild.className.includes('experience')){
+                        addIntoListButton.innerText = "Ajouter une autre expérience";
+                    }else if(lastChild.className.includes('skill')){
+                        addIntoListButton.innerText = "Ajouter une autre compétence";
+                    }else if(lastChild.className.includes('langua')){
+                        addIntoListButton.innerText = "Ajouter une autre langue";
+                    }else if(lastChild.className.includes('formation')){
+                        addIntoListButton.innerText = "Ajouter une autre formation";
+                    }else if(lastChild.className.includes('hobb')){
+                        addIntoListButton.innerText = "Ajouter un autre intérêt";
+                    }
+                    
+                    if(isNull(levelValueInput)){
+                        listChildren[0].after(addIntoListButton);
+                    }else {
+                        lastChild.after(addIntoListButton);
+                    }
+                    
+                    addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
                 }
                 
-                if(isNull(levelValueInput)){
-                    listChildren[0].after(addIntoListButton);
-                }else {
-                    lastChild.after(addIntoListButton);
-                }
                 
-                addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
             }
         })
 
@@ -886,7 +895,6 @@ export default class CVModels {
     {
         if(this.formInputs){
             this.formInputs.forEach(formInput => {
-                console.log(formInput)
                 const formInputIsHidden = formInput.type === "hidden" ;
                 if(!formInputIsHidden
                     && !formInput.classList.contains('profile-photo')
@@ -969,6 +977,13 @@ export default class CVModels {
                         elementToReplaceInput.setAttribute('aria-type', formInput.type);
                     }
 
+                    const formInputNextElement = formInput.nextElementSibling;
+                    if(formInputNextElement 
+                        && formInputNextElement.classList.contains('text-danger')
+                    ){
+                        formInput.parentElement.removeChild(formInputNextElement);
+                    }
+
                     formInput.replaceWith(elementToReplaceInput);
                 }else if(!formInputIsHidden && !formInput.classList.contains('profile-photo')
                     && !formInput.classList.contains('man')
@@ -998,6 +1013,9 @@ export default class CVModels {
                 ){
                     if(formInput.getAttribute('selected') === "true"){
                         this.saveInputsValues(formInput.name, formInput.value);
+                    }
+                    
+                    if(this.form.querySelector('.sex')){
                         const formInputGrandParent = formInput.parentElement.parentElement;
                         formInputGrandParent.parentElement.removeChild(formInputGrandParent);
                     }
@@ -1079,6 +1097,12 @@ export default class CVModels {
             elementToReplaceTextarea.setAttribute('id', "textarea");
             elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
 
+            const formTextareaNextElement = formTextarea.nextElementSibling;
+            if(formTextareaNextElement 
+                && formTextareaNextElement.classList.contains('text-danger')
+            ){
+                formTextarea.parentElement.removeChild(formTextareaNextElement);
+            }
             formTextarea.replaceWith(elementToReplaceTextarea);
         })
     }
@@ -1128,13 +1152,69 @@ export default class CVModels {
     handleConsoleButtonClick(e)
     {
         e.preventDefault();
-
-        const button = e.target;
-        console.log("console click")
+        
+        const button = e.currentTarget;
         if(button.classList.contains("save-icon") && this.inputsValuesLength > 0){
-            axios.post("/cv/save", this.inputsValues);
-        }
+            const formData = new FormData();
+            for(const name in this.inputsValues){
+                formData.append(name, this.inputsValues[name]);
+            }
+            
+            axios.post("/cv/save", formData).then(res => {
+                if(res.data.success){
+                    this.dom.createModal(
+                        "alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", 
+                        "Votre CV a été enregistré !",
+                        false
+                    );
+                    
+                    setTimeout(()=>{
+                        this.dom.closeModal();
+                    }, 3000);
 
+                    const finishButton = this.console.querySelector('.check-icon');
+                    finishButton.classList.add('active');
+
+                    finishButton.addEventListener('click', this.handleFinishCVModeling.bind(this));
+                }
+            }).catch(err => {
+                const errorData = err.response.data;
+                if("errors" in errorData){
+                    this.createCVForm();
+
+                    this.removeConsole();
+
+                    this.removeCloseButton();
+
+                    for(const name in errorData.errors){
+                        const input = this.form.querySelector(`input[name="${name}"]`);
+                        if(input){
+                            const error = this.dom.createElement('small', "text text-danger fs-6");
+                            error.innerText = errorData.errors[name];
+
+                            if(!input.classList.contains('man') || !input.classList.contains('woman')){
+                                input.after(error)
+                            }else {
+                                input.nextElementSibling.after(error);
+                            }
+                            
+                        }else {
+                            const textarea = this.form.querySelector(`textarea[name="${name}"]`); 
+                            const error = this.dom.createElement('small', "text text-danger fs-6");
+                            error.innerText = errorData.errors[name];
+
+                            textarea.after(error)
+                        }
+                    }
+                }
+            });
+
+        }
+    }
+
+    handleFinishCVModeling(e)
+    {
+        document.location.href = "/";
     }
 
     removeLevelCursorsIfExist()

@@ -53,10 +53,15 @@ export default class DOMInteractions {
         }
 
         this.animateElementFromClassname(this.modal, 'active-modal');
+
         this.innerElementContentHTML(this.modal,  content);
+
         this.fetchModalInputs();
+
         this.initialModalHeight = this.modal.offsetHeight;
+
         this.modalContainer.addEventListener('click', this.closeModalThenRemoveHisEventListener.bind(this));
+        
         this.avoidCloseModalOnClickIn();
 
         return this.modal;

@@ -5118,6 +5118,7 @@ var CVModels = /*#__PURE__*/function () {
     this.modelName = "";
     this.formInputs;
     this.formTextareas;
+    this.formErrors;
     this.divFromForm;
     this.seeButtonContainer;
     this.console;
@@ -5188,6 +5189,7 @@ var CVModels = /*#__PURE__*/function () {
       var form = this.dom.createElement('form');
       form.action = cv.getAttribute('aria-link');
       form.method = "POST";
+      form.setAttribute('enctype', "multipart/form-data");
       var arrayClassList = Array.from(cv.classList);
       form.className = arrayClassList.join(' ');
       form.innerHTML = cv.innerHTML;
@@ -5243,8 +5245,6 @@ var CVModels = /*#__PURE__*/function () {
           input.setAttribute('required', "true");
 
           if (_this.modelName === "cv-2" || _this.modelName === "cv-3") {
-            console.log("model : ", _this.modelName);
-
             _this.addLevelCursorWithIndicatorIfThereIsValue(element);
           }
         } else if (inputName.includes('year_month_debut')) {
@@ -5300,7 +5300,6 @@ var CVModels = /*#__PURE__*/function () {
               womanContainer.appendChild(womanLabel);
               man.addEventListener('click', function (e) {
                 if (woman.getAttribute('selected') === "true" || !man.getAttribute('selected') || !woman.getAttribute('selected')) {
-                  console.log("click");
                   woman.setAttribute('selected', "false");
                   man.setAttribute('selected', "true");
                 }
@@ -5352,6 +5351,12 @@ var CVModels = /*#__PURE__*/function () {
         textarea.name = textareaName ? textareaName : "";
         textarea.placeholder = "Ecrire quelque chose";
         textarea.setAttribute('aria-nodename', element.nodeName);
+
+        if (_this.inputsValuesLength > 0 && _this.inputsValues[textarea.name]) {
+          textarea.setAttribute('value', _this.inputsValues[textarea.name]);
+          textarea.innerHTML = _this.inputsValues[textarea.name];
+        }
+
         element.replaceWith(textarea);
         var textareaParent = textarea.parentElement;
         var textareaParentInnerHTML = textareaParent.innerHTML;
@@ -5399,27 +5404,29 @@ var CVModels = /*#__PURE__*/function () {
           addIntoListButton.innerText = "En ajouter une autre";
           var lastChild = listChildren[childrenLength - 1];
 
-          if (lastChild.className.includes('task')) {
-            addIntoListButton.innerText = "Ajouter une autre tâche";
-          } else if (lastChild.className.includes('experience')) {
-            addIntoListButton.innerText = "Ajouter une autre expérience";
-          } else if (lastChild.className.includes('skill')) {
-            addIntoListButton.innerText = "Ajouter une autre compétence";
-          } else if (lastChild.className.includes('langua')) {
-            addIntoListButton.innerText = "Ajouter une autre langue";
-          } else if (lastChild.className.includes('formation')) {
-            addIntoListButton.innerText = "Ajouter une autre formation";
-          } else if (lastChild.className.includes('hobb')) {
-            addIntoListButton.innerText = "Ajouter un autre intérêt";
-          }
+          if (lastChild) {
+            if (lastChild.className.includes('task')) {
+              addIntoListButton.innerText = "Ajouter une autre tâche";
+            } else if (lastChild.className.includes('experience')) {
+              addIntoListButton.innerText = "Ajouter une autre expérience";
+            } else if (lastChild.className.includes('skill')) {
+              addIntoListButton.innerText = "Ajouter une autre compétence";
+            } else if (lastChild.className.includes('langua')) {
+              addIntoListButton.innerText = "Ajouter une autre langue";
+            } else if (lastChild.className.includes('formation')) {
+              addIntoListButton.innerText = "Ajouter une autre formation";
+            } else if (lastChild.className.includes('hobb')) {
+              addIntoListButton.innerText = "Ajouter un autre intérêt";
+            }
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
-            listChildren[0].after(addIntoListButton);
-          } else {
-            lastChild.after(addIntoListButton);
-          }
+            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
+              listChildren[0].after(addIntoListButton);
+            } else {
+              lastChild.after(addIntoListButton);
+            }
 
-          addIntoListButton.addEventListener('click', _this.handleAddNewList.bind(_this));
+            addIntoListButton.addEventListener('click', _this.handleAddNewList.bind(_this));
+          }
         }
       });
       this.addListenersToEveryBarLevels();
@@ -5964,7 +5971,6 @@ var CVModels = /*#__PURE__*/function () {
 
       if (this.formInputs) {
         this.formInputs.forEach(function (formInput) {
-          console.log(formInput);
           var formInputIsHidden = formInput.type === "hidden";
 
           if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
@@ -6028,6 +6034,12 @@ var CVModels = /*#__PURE__*/function () {
               elementToReplaceInput.setAttribute('aria-type', formInput.type);
             }
 
+            var formInputNextElement = formInput.nextElementSibling;
+
+            if (formInputNextElement && formInputNextElement.classList.contains('text-danger')) {
+              formInput.parentElement.removeChild(formInputNextElement);
+            }
+
             formInput.replaceWith(elementToReplaceInput);
           } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             if (formInput.name.includes('level')) {
@@ -6051,7 +6063,9 @@ var CVModels = /*#__PURE__*/function () {
           } else if (formInput.classList.contains('man') || formInput.classList.contains('woman')) {
             if (formInput.getAttribute('selected') === "true") {
               _this4.saveInputsValues(formInput.name, formInput.value);
+            }
 
+            if (_this4.form.querySelector('.sex')) {
               var formInputGrandParent = formInput.parentElement.parentElement;
               formInputGrandParent.parentElement.removeChild(formInputGrandParent);
             }
@@ -6127,6 +6141,12 @@ var CVModels = /*#__PURE__*/function () {
         elementToReplaceTextarea.innerHTML = elementInnerText;
         elementToReplaceTextarea.setAttribute('id', "textarea");
         elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
+        var formTextareaNextElement = formTextarea.nextElementSibling;
+
+        if (formTextareaNextElement && formTextareaNextElement.classList.contains('text-danger')) {
+          formTextarea.parentElement.removeChild(formTextareaNextElement);
+        }
+
         formTextarea.replaceWith(elementToReplaceTextarea);
       });
     }
@@ -6168,13 +6188,71 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleConsoleButtonClick",
     value: function handleConsoleButtonClick(e) {
+      var _this7 = this;
+
       e.preventDefault();
-      var button = e.target;
-      console.log("console click");
+      var button = e.currentTarget;
 
       if (button.classList.contains("save-icon") && this.inputsValuesLength > 0) {
-        axios__WEBPACK_IMPORTED_MODULE_11___default().post("/cv/save", this.inputsValues);
+        var formData = new FormData();
+
+        for (var name in this.inputsValues) {
+          formData.append(name, this.inputsValues[name]);
+        }
+
+        axios__WEBPACK_IMPORTED_MODULE_11___default().post("/cv/save", formData).then(function (res) {
+          if (res.data.success) {
+            _this7.dom.createModal("alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", "Votre CV a été enregistré !", false);
+
+            setTimeout(function () {
+              _this7.dom.closeModal();
+            }, 3000);
+
+            var finishButton = _this7.console.querySelector('.check-icon');
+
+            finishButton.classList.add('active');
+            finishButton.addEventListener('click', _this7.handleFinishCVModeling.bind(_this7));
+          }
+        })["catch"](function (err) {
+          var errorData = err.response.data;
+
+          if ("errors" in errorData) {
+            _this7.createCVForm();
+
+            _this7.removeConsole();
+
+            _this7.removeCloseButton();
+
+            for (var _name in errorData.errors) {
+              var input = _this7.form.querySelector("input[name=\"".concat(_name, "\"]"));
+
+              if (input) {
+                var error = _this7.dom.createElement('small', "text text-danger fs-6");
+
+                error.innerText = errorData.errors[_name];
+
+                if (!input.classList.contains('man') || !input.classList.contains('woman')) {
+                  input.after(error);
+                } else {
+                  input.nextElementSibling.after(error);
+                }
+              } else {
+                var textarea = _this7.form.querySelector("textarea[name=\"".concat(_name, "\"]"));
+
+                var _error = _this7.dom.createElement('small', "text text-danger fs-6");
+
+                _error.innerText = errorData.errors[_name];
+                textarea.after(_error);
+              }
+            }
+          }
+        });
       }
+    }
+  }, {
+    key: "handleFinishCVModeling",
+    value: function handleFinishCVModeling(e) {
+      document.location.href = "/";
     }
   }, {
     key: "removeLevelCursorsIfExist",
