@@ -48,6 +48,10 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
+            "dump" => [
+                'dump_binary_path' => "C:\\laragon\\bin\\mysql\\mysql-8.0.30-winx64\\bin",
+                'timeout' => 60 * 5
+            ],
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
