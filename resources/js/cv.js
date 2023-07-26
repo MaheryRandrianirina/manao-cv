@@ -1,6 +1,5 @@
 import { find, includes, isNull, isNumber, isUndefined, replace } from "lodash";
 import DOMInteractions from "./modules/DOMInteractions";
-import CameraIcon from "./icons/camera-icon";
 import EyeIcon from "./icons/eye-icon";
 import DownloadIcon from "./icons/download-icon";
 import CheckIcon from "./icons/check-icon";
@@ -33,6 +32,8 @@ export default class CVModels {
         this.modelName = "";
         this.formInputs;
         this.formTextareas;
+        this.elementsToBeInputs;
+        this.elementsToBeTextareas;
         this.formErrors;
         this.divFromForm;
         this.seeButtonContainer;
@@ -40,6 +41,7 @@ export default class CVModels {
         this.closeIconContainer;
         this.shownProfilePhoto = false;
         this.pathname;
+        this.editCvClicked = false;
         /**
          * @type {HTMLInputElement | undefined}
          */
@@ -85,17 +87,49 @@ export default class CVModels {
          * @type {{[inputName: string]: string} | {}}
          */
         this.inputsPlaceholders = {};
+
+        /**
+         * @type {{[ariaName: string]: string} | {}}
+         */
+        this.elementsInnerText = {};
+        this.elementsInnerTextLength = 0;
     }
 
     createCVForm()
     {
         const cvForm = document.querySelector('.cv-form .cv');
-
+        
         this.pathname = document.location.pathname;
         if(this.pathname.includes('/cv/show')){
-            this.createConsole("cv-show-console");
+            if(!this.editCvClicked){
+                this.createConsole("cv-show-console");
 
-            this.addClickEventToConsoleButtons();
+                this.fetchElementsToBeInputs();
+                this.saveElementsToBeInputsInnerText();
+    
+                this.fetchElementsToBeTextareas();
+                
+                this.saveElementsToBeTextareasInnerText();
+                
+                const csrfInput = document.querySelector("input[type='hidden']");
+                const cv_id = document.querySelector('.cv-id');
+                this.elementsInnerText[csrfInput.name] = csrfInput.value;
+                this.elementsInnerText[cv_id.name] = parseInt(cv_id.value);
+                
+                this.addClickEventToConsoleButtons();
+
+            }else if(this.editCvClicked && cvForm){
+                if(this.console.classList.contains('cv-show-console')){
+                    this.removeConsole();
+                }
+                
+                this.transformToForm();
+    
+                this.filling();
+    
+                this.addClickableSeeButton();
+            }
+            
 
             return;
         }
@@ -109,6 +143,42 @@ export default class CVModels {
         }
     }
 
+    
+
+    fetchElementsToBeInputs()
+    {
+        this.elementsToBeInputs = Array.from(document.querySelectorAll("#input"));
+    }
+
+    saveElementsToBeInputsInnerText()
+    {
+        this.throwErrorIfUndefined(this.elementsToBeInputs, "this.elementsToBeInputs");
+
+        this.elementsToBeInputs.forEach(element => {
+            this.saveInnerText(element);
+            this.elementsInnerTextLength++;
+        })
+    }
+
+    saveInnerText(element)
+    {
+        this.elementsInnerText[element.getAttribute('aria-name')] = element.innerText
+    }
+
+    fetchElementsToBeTextareas()
+    {
+        this.elementsToBeTextareas = Array.from(document.querySelectorAll("#textarea"));
+    }
+
+    saveElementsToBeTextareasInnerText()
+    {
+        this.throwErrorIfUndefined(this.elementsToBeTextareas, "this.elementsToBeTextareas");
+
+        this.elementsToBeTextareas.forEach(element => {
+            this.saveInnerText(element);
+        })
+    }
+
     createConsole(className)
     {
         this.console = this.dom.createElement('div', 
@@ -117,8 +187,8 @@ export default class CVModels {
 
         this.console.innerHTML = `
         ${DownloadIcon()}
-        ${this.pathname && this.pathname.includes('show') ? DeleteIcon() : ""}
-        ${this.pathname && this.pathname.includes('show') ? EditIcon() : SaveIcon()}
+        ${this.pathname && this.pathname.includes('show') && !this.editCvClicked ? DeleteIcon() : ""}
+        ${this.pathname && this.pathname.includes('show') && !this.editCvClicked ? EditIcon() : SaveIcon()}
         ${CheckIcon()}
         `;
 
@@ -167,8 +237,8 @@ export default class CVModels {
             input.name = inputName ? inputName : "";
             input.type = inputType ? inputType : "text";
             input.setAttribute('aria-nodename', element.nodeName);
-            input.setAttribute('autocomplete', "false");
-            
+            input.setAttribute('autocomplete', "off");
+
             if(inputName.includes("level")){
                 input.placeholder = "Niveau";
                 input.setAttribute('required', "true");
@@ -207,7 +277,7 @@ export default class CVModels {
                     && this.inputsPlaceholders[input.name]
                 ){
                     input.placeholder = this.inputsPlaceholders[input.name];
-                }else {
+                }else if(!this.pathname.includes('/cv/show')) {
                     input.placeholder = element.innerText;
                 }
 
@@ -277,6 +347,19 @@ export default class CVModels {
                 input.setAttribute('value', this.inputsValues[input.name]);
             }
 
+            if(this.pathname.includes('/cv/show')){
+                input.setAttribute('value', element.innerText);
+
+                if(input.hasAttribute('required')){
+                    input.setAttribute('required', "false");
+                }
+                
+                if(element.getAttribute('aria-name') === "phone_number"){
+                    console.log(element, element.innerText, element.innerText.split(' ').join(''))
+                    input.setAttribute('value', element.innerText.split(' ').join(''));
+                }
+            }
+
             const inputNumber = parentElement.getAttribute('aria-input-number');
             if(inputNumber){
                 parentElement.classList.add('d-flex', 'justify-content-between');
@@ -314,12 +397,18 @@ export default class CVModels {
                 textarea.innerHTML = this.inputsValues[textarea.name];
             }
 
+            if(this.pathname.includes('/cv/show')){
+                textarea.setAttribute('value', element.innerText);
+                textarea.innerText = element.innerText;
+            }
+
             element.replaceWith(textarea);
 
             const textareaParent = textarea.parentElement;
             const textareaParentInnerHTML = textareaParent.innerHTML;
             if(textareaParent.nodeName === "UL"){
                 const divToRempaceTextareaParent = this.dom.createElement('div', getClassFrom(textareaParent));
+                
                 textareaParent.replaceWith(divToRempaceTextareaParent);
 
                 divToRempaceTextareaParent.innerHTML = textareaParentInnerHTML;
@@ -559,6 +648,22 @@ export default class CVModels {
                 barLevel.appendChild(levelCursor);   
             }
 
+            if(this.pathname.includes('/cv/show')){
+                this.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
+                if(isNull(this.levelIndicator)){
+                    this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+                    barLevel.appendChild(this.levelIndicator);
+                }
+
+                levelCursor.style.left = barLevel.getAttribute('aria-level') + "px";
+
+                const levelCursorPosition = levelCursor.getBoundingClientRect();
+                const barLevelPosition = barLevel.getBoundingClientRect()
+                const levelIndicatorWidth = levelCursorPosition.x - barLevelPosition.x;
+
+                this.levelIndicator.style.width = levelIndicatorWidth + "px";
+            }
+
             levelCursor.addEventListener('mousedown', this.handleLevelCursorMouseDown.bind(this));
             levelCursor.addEventListener('mouseup', this.handleLevelCursorMouseUp.bind(this));
             barLevel.addEventListener('click', this.handleBarLevelClick.bind(this));
@@ -627,6 +732,7 @@ export default class CVModels {
                 
                 const levelIndicatorWidth = this.levelCursorPosition.x - this.barLevelPosition.x;
                 this.levelIndicator.style.width = levelIndicatorWidth + "px";
+
                 const barLevelInputWithLevelValue = this.barLevel.querySelector('.level-value');
                 if(isNull(barLevelInputWithLevelValue)){
                     this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
@@ -903,6 +1009,7 @@ export default class CVModels {
     removeConsole()
     {
         if(this.console){
+            console.log("console : ", this.console)
             this.console.parentElement.removeChild(this.console);
         }
     }
@@ -1181,13 +1288,13 @@ export default class CVModels {
         ){
             this.handleSaveCV();
         }else if(hasClass(button, "download-icon") 
-            && this.inputsValuesLength > 0
+            && (this.inputsValuesLength > 0 || this.elementsInnerTextLength > 0)
         ) {
             this.handleDownloadCV();
         }else if(hasClass(button, "delete-icon")){
             this.handleDeleteCV();
         }else if(hasClass(button, "edit-icon")){
-            
+            this.handleEditCV();
         }
     }
 
@@ -1197,71 +1304,124 @@ export default class CVModels {
             for(const name in this.inputsValues){
                 formData.append(name, this.inputsValues[name]);
             }
+
+            if(this.pathname.includes('/cv/show')){
+                const cv_id_input = document.querySelector('.cv-id');
+                formData.append(cv_id_input.name, cv_id_input.value);
+
+                axios.post('/cv/edit', formData).then(res => {
+                    this.processCvPostingRes(res, download);
+                }).catch(err => {
+                    this.processCvPostingError(err);
+                })
+
+                return;
+            }
             
             axios.post("/cv/save", formData).then(res => {
-                if(res.data.success){
-                    this.dom.createModal(
-                        "alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", 
-                        "Votre CV a été enregistré !",
-                        false
-                    );
-                    
-                    setTimeout(()=>{
-                        this.dom.closeModal();
-                    }, 3000);
-
-                    const finishButton = this.console.querySelector('.check-icon');
-                    finishButton.classList.add('active');
-
-                    finishButton.addEventListener('click', this.handleFinishCVModeling.bind(this));
-
-                    if(download){
-                        axios.post("/cv/download", this.inputsValues).then(res => {
-            
-                            // if(res.data){
-                            //     this.handleSaveCV();
-                            // }
-                        }).catch(err => {
-                            console.log(err.response)
-                        })
-                    }
-                }
+                this.processCvPostingRes(res, download);
             }).catch(err => {
-                const errorData = err.response.data;
-                if("errors" in errorData){
-                    this.createCVForm();
-
-                    this.removeConsole();
-
-                    this.removeCloseButton();
-
-                    for(const name in errorData.errors){
-                        const input = this.form.querySelector(`input[name="${name}"]`);
-                        if(input){
-                            const error = this.dom.createElement('small', "text text-danger fs-6");
-                            error.innerText = errorData.errors[name];
-
-                            if(!input.classList.contains('man') || !input.classList.contains('woman')){
-                                input.after(error)
-                            }else {
-                                input.nextElementSibling.after(error);
-                            }
-                            
-                        }else {
-                            const textarea = this.form.querySelector(`textarea[name="${name}"]`); 
-                            const error = this.dom.createElement('small', "text text-danger fs-6");
-                            error.innerText = errorData.errors[name];
-
-                            textarea.after(error)
-                        }
-                    }
-                }
+                this.processCvPostingError(err);
             });
+    }
+
+    /**
+     * prend en charge les choses à faire après l'envoi de la requête d'enregistrement ou
+     * de modification du CV
+     * 
+     * @param {import("axios").AxiosResponse<any>} response 
+     * @param {boolean} download 
+     */
+    processCvPostingRes(response, download)
+    {
+        if(response.data.success){
+            this.showNotificationAndActivateFinishButton();
+
+            if(download){
+                this.launchDownload();
+            }
+        }
+    }
+
+    /**
+     * prend en charge les choses à faire après une erreur d'envoi de la requête d'enregistrement ou
+     * de modification du CV
+     * @param {import("axios").AxiosResponse<any>} response 
+     */
+    processCvPostingError(err)
+    {
+        const errorData = err.response.data;
+        if("errors" in errorData){
+            this.createCVForm();
+
+            this.removeConsole();
+
+            this.removeCloseButton();
+
+            for(const name in errorData.errors){
+                const input = this.form.querySelector(`input[name="${name}"]`);
+                if(input){
+                    const error = this.dom.createElement('small', "text text-danger fs-6");
+                    error.innerText = errorData.errors[name];
+
+                    if(!input.classList.contains('man') || !input.classList.contains('woman')){
+                        input.after(error)
+                    }else {
+                        input.nextElementSibling.after(error);
+                    }
+                    
+                }else {
+                    const textarea = this.form.querySelector(`textarea[name="${name}"]`); 
+                    const error = this.dom.createElement('small', "text text-danger fs-6");
+                    error.innerText = errorData.errors[name];
+
+                    textarea.after(error)
+                }
+            }
+        }
+    }
+
+    showNotificationAndActivateFinishButton()
+    {
+        this.dom.createModal(
+            "alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", 
+            "Votre CV a été enregistré !",
+            false
+        );
+        
+        setTimeout(()=>{
+            this.dom.closeModal();
+        }, 3000);
+
+        const finishButton = this.console.querySelector('.check-icon');
+        finishButton.classList.add('active');
+
+        finishButton.addEventListener('click', this.handleFinishCVModeling.bind(this));
     }
 
     handleDownloadCV()
     {
-        this.handleSaveCV(true);
+        if(this.pathname.includes('/cv/show')){
+            this.launchDownload(false);
+        }else {
+            this.handleSaveCV(true);
+        }
+        
+    }
+
+    launchDownload(withInputsValues = true)
+    {
+        axios.post("/cv/download", withInputsValues ? this.inputsValues : this.elementsInnerText).then(res => {
+            this.showNotificationAndActivateFinishButton();
+            // if(res.data){
+            //     this.handleSaveCV();
+            // }
+        }).catch(err => {
+            const errorString = err.toString();
+            if(errorString.toLowerCase().includes('network error')){
+                this.showNotificationAndActivateFinishButton();
+            }
+        })
     }
 
     handleDeleteCV(){
@@ -1300,6 +1460,12 @@ export default class CVModels {
             this.dom.handleActionsInModalForm();
         }
         
+    }
+
+    handleEditCV()
+    {
+        this.editCvClicked = true;
+        this.createCVForm();
     }
 
     handleFinishCVModeling(e)

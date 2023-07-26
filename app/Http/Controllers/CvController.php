@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
-use App\Models\CV;
+use App\Models\Cv;
 use App\Models\Experience;
 use App\Models\Formation;
 use App\Models\Hobby;
@@ -29,8 +29,8 @@ class CvController extends Controller
         "work" => ['string', 'min:3'],
         "phone_number" => ['string', 'min:10', 'max:10', 'required'],
         "adress" => ['string', 'min:2', 'required'],
-        "email" => ['string', 'required', "email"],
-        "sex" => ['string', 'required', "min:3", "max:5"]
+        "email" => ['string', "email", 'required'],
+        "sex" => ['string', "min:3", "max:5", 'required']
     ];
 
     private $formations = 0;
@@ -43,7 +43,12 @@ class CvController extends Controller
 
     private $experiences = 0;
 
-    private $tasks;
+    private $update = false;
+
+    /**
+     * @var Cv
+     */
+    private $cv;
 
     private $stringNumber = [
         1 => "one",
@@ -72,7 +77,7 @@ class CvController extends Controller
 
     public function save(Request $request, bool $echo = true) {
         $model = $request->model;
-        $dataLength = count($request->request);
+        
         $this->echo = $echo;
 
         foreach($request->request as $name => $value){
@@ -131,6 +136,10 @@ class CvController extends Controller
         $this->rules["url_linkedin"] = ['url'];
         $this->rules["profile_description"] = ['string', 'min:10', 'required'];
 
+        if($this->update){
+            $this->removeRequiredFromRules();
+        }
+
         $request->validate($this->rules);
         $path = "";
 
@@ -142,15 +151,15 @@ class CvController extends Controller
 
             $cv = $this->saveCV($request, $path);
             
-            $this->saveContact($request, $cv->id);
+            $this->saveContact($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveExperiences($request, $cv->id);
+            $this->saveExperiences($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveFormations($request, $cv->id);
+            $this->saveFormations($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveLanguages($request, $cv->id);
+            $this->saveLanguages($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveSkills($request, $cv->id);
+            $this->saveSkills($request, $this->cv ? $this->cv->id : $cv->id);
 
             if($this->echo === false){
                 return;
@@ -164,18 +173,37 @@ class CvController extends Controller
         }
     }
 
+    private function removeRequiredFromRules() {
+        $this->rules = array_map(function($rule){
+            return array_filter($rule, function($rule_element){
+                return $rule_element !== "required";
+            });
+        }, $this->rules);
+    }
+
     private function saveContact(Request $request, int $cv_id) {
-        return Contact::create([
+        $arrayValues = [
             "phone_number" => (int)$request->phone_number,
             "adress" => $request->adress,
             "email" => $request->email,
             "linkedin_url" => $request->url_linkedin ? $request->url_linkedin : null,
             "cv_id" => $cv_id
-        ]);
+        ];
+        
+        if(!$this->update){
+            return Contact::create($arrayValues);
+        }else {
+            $contacts = Contact::where('cv_id', $this->cv->id)->get();
+            
+            $contacts[0]->update(array_filter($arrayValues, function($key){
+                return $key !== "cv_id";
+            }, ARRAY_FILTER_USE_KEY));
+        }
+        
     }
 
     private function saveCV(Request $request, $path) {
-        return Cv::create([
+        $arrayValues = [
             "name" => $request->name,
             "firstname" => $request->firstname,
             "sex" => $request->sex,
@@ -184,7 +212,20 @@ class CvController extends Controller
             "image" => $path !== "" ? $path : null,
             "model" => $request->model,
             "is_recorded" => true
-        ]);
+        ];
+
+        if(!$this->update){
+            return Cv::create($arrayValues);
+        }else {
+            if(!isset($request->sex)){
+                $arrayValues =array_filter($arrayValues, function($key){
+                    return $key !== "sex";
+                }, ARRAY_FILTER_USE_KEY);
+            }
+            
+            $this->cv->update($arrayValues);
+        }
+        
     }
 
     private function saveExperiences(Request $request, int $cv_id, bool $multitask = false) {
@@ -209,14 +250,27 @@ class CvController extends Controller
                 $task = "experience_" . $this->stringNumber[$i+1] . "_task_one";
             }
             
-            
-            Experience::create([
+            $arrayValues = [
                 "entreprise_name" => $request->$company_name,
                 "work" => $request->$work,
                 "date" => $request->$year_month_debut . " - " . $request->$year_month_end,
                 "task" => $task ? $request->$task : join("\n", $tasks),
                 "cv_id" => $cv_id
-            ]);
+            ];
+
+            if(!$this->update){
+                Experience::create($arrayValues);
+            }else {
+                $experiences = Experience::where('cv_id', $this->cv->id)->get();
+
+                if($i < count($experiences)){
+                    $experiences[$i]->update(array_filter($arrayValues, function($key){
+                        return $key !== "cv_id";
+                    }, ARRAY_FILTER_USE_KEY));
+                }else {
+                    Experience::create($arrayValues);
+                }
+            }
         }
     }
 
@@ -228,12 +282,26 @@ class CvController extends Controller
             $year_end = "year_end_" . $this->stringNumber[$i+1];
             $graduation = "graduation_" . $this->stringNumber[$i+1];
             
-            Formation::create([
+            $arrayValues = [
                 "etablissement" => $request->$etablissement,
                 "date" => $request->$year_debut . " - " . $request->$year_end,
                 "graduation" => $request->$graduation,
                 "cv_id" => $cv_id
-            ]);
+            ];
+
+            if(!$this->update){
+                Formation::create($arrayValues);
+            }else {
+                $formations = Formation::where('cv_id', $this->cv->id)->get();
+                if($i < count($formations)){
+                    $formations[$i]->update(array_filter($arrayValues, function($key){
+                        return $key !== "cv_id";
+                    }, ARRAY_FILTER_USE_KEY));
+                }else {
+                    Formation::create($arrayValues);
+                }
+                
+            }
         }
     }
 
@@ -253,7 +321,19 @@ class CvController extends Controller
                 $arrayValues["level"] = (int) $request->$level;
             }
 
-            Language::create($arrayValues);
+            if(!$this->update){
+                Language::create($arrayValues);
+            }else {
+                $languages = Language::where('cv_id', $this->cv->id)->get();
+                
+                if($i < count($languages)){
+                    $languages[$i]->update(array_filter($arrayValues, function($key){
+                        return $key !== "cv_id";
+                    }, ARRAY_FILTER_USE_KEY));
+                }else {
+                    Language::create($arrayValues);
+                }
+            }
         }
     }
 
@@ -261,16 +341,37 @@ class CvController extends Controller
         for($i = 0; $i < $this->skills; $i++){
             $name = "skill_" . $this->stringNumber[$i+1];
             $level = "skill_level_" . $this->stringNumber[$i+1];
+            if(!$this->update){
+                Skill::create([
+                    "name" => $request->$name,
+                    "level" => $request->$level ? (int) $request->$level : null,
+                    "cv_id" => $cv_id
+                ]);
+            }else {
+                $skills = Skill::where('cv_id', $this->cv->id)->get();
+                
+                $arrayValues = [
+                    "name" => $request->$name,
+                    "level" => $request->$level ? (int) $request->$level : null,
+                    "cv_id" => $cv_id
+                ];
 
-            Skill::create([
-                "name" => $request->$name,
-                "level" => $request->$level ? (int) $request->$level : null,
-                "cv_id" => $cv_id
-            ]);
+                if($i < count($skills)){
+                    $skills[$i]->update(array_filter($arrayValues, function($key){
+                        return $key !== "cv_id";
+                    }, ARRAY_FILTER_USE_KEY));
+                }else {
+                    Skill::create($arrayValues);
+                }
+            }
         }
     }
 
     private function saveModelTwo(Request $request) {
+        if($this->update){
+            $this->removeRequiredFromRules();
+        }
+
         $request->validate($this->rules);
         $path = "";
         
@@ -282,17 +383,17 @@ class CvController extends Controller
             
             $cv = $this->saveCV($request, $path);
 
-            $this->saveContact($request, $cv->id);
+            $this->saveContact($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveExperiences($request, $cv->id, true);
+            $this->saveExperiences($request, $this->cv ? $this->cv->id : $cv->id, true);
 
-            $this->saveFormations($request, $cv->id);
+            $this->saveFormations($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveLanguages($request, $cv->id, false);
+            $this->saveLanguages($request, $this->cv ? $this->cv->id : $cv->id, false);
 
-            $this->saveSkills($request, $cv->id);
+            $this->saveSkills($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveHobbies($request, $cv->id);
+            $this->saveHobbies($request, $this->cv ? $this->cv->id : $cv->id);
 
             if($this->echo === false){
                 return;
@@ -310,16 +411,35 @@ class CvController extends Controller
         for($i = 0; $i < $this->hobbies; $i++){
             $hobby = "hobby_" . $this->stringNumber[$i+1];
             
-            Hobby::create([
+            $arrayValues = [
                 "name" => $request->$hobby,
                 "cv_id" => $cv_id
-            ]);
+            ];
+
+            if(!$this->update){
+                Hobby::create();
+            }else {
+                $hobbies = Hobby::where('cv_id', $this->cv->id)->get();
+
+                if($i < count($hobbies)){
+                    $hobbies[$i]->update(array_filter($arrayValues, function($key){
+                        return $key !== "cv_id";
+                    }, ARRAY_FILTER_USE_KEY));
+                }else {
+                    Hobby::create($arrayValues);
+                }
+            }
+            
         }
     }
 
     private function saveModelThree(Request $request) {
         $this->rules['url_linkedin'] = ['url'];
         $this->rules["profile_description"] = ['string', 'min:10', 'required'];
+
+        if($this->update){
+            $this->removeRequiredFromRules();
+        }
 
         $request->validate($this->rules);
         $path = "";
@@ -331,17 +451,17 @@ class CvController extends Controller
 
             $cv = $this->saveCV($request, $path);
 
-            $this->saveContact($request, $cv->id);
+            $this->saveContact($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveExperiences($request, $cv->id, true);
+            $this->saveExperiences($request, $this->cv ? $this->cv->id : $cv->id, true);
 
-            $this->saveFormations($request, $cv->id);
+            $this->saveFormations($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveLanguages($request, $cv->id, false);
+            $this->saveLanguages($request, $this->cv ? $this->cv->id : $cv->id, false);
 
-            $this->saveSkills($request, $cv->id);
+            $this->saveSkills($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveHobbies($request, $cv->id);
+            $this->saveHobbies($request, $this->cv ? $this->cv->id : $cv->id);
 
             if($this->echo === false){
                 return;
@@ -359,6 +479,10 @@ class CvController extends Controller
         $this->rules['url_linkedin'] = ['url'];
         $this->rules["profile_description"] = ['string', 'min:10', 'required'];
         
+        if($this->update){
+            $this->removeRequiredFromRules();
+        }
+
         $request->validate($this->rules);
         $path = "";
         
@@ -370,15 +494,15 @@ class CvController extends Controller
             
             $cv = $this->saveCV($request, $path);
             
-            $this->saveContact($request, $cv->id);
+            $this->saveContact($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveExperiences($request, $cv->id, true);
+            $this->saveExperiences($request, $this->cv ? $this->cv->id : $cv->id, true);
 
-            $this->saveFormations($request, $cv->id);
+            $this->saveFormations($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveLanguages($request, $cv->id);
+            $this->saveLanguages($request, $this->cv ? $this->cv->id : $cv->id);
 
-            $this->saveSkills($request, $cv->id);
+            $this->saveSkills($request, $this->cv ? $this->cv->id : $cv->id);
 
             if($this->echo === false){
                 return;
@@ -394,11 +518,16 @@ class CvController extends Controller
 
     public function download(Request $request) {
         try {
-            $contact = Contact::where('email', $request->email)->get();
+            $cv = null;
+            if($request->cv_id){
+                $cv = Cv::find($request->cv_id);
+            }else {
+                $contact = Contact::where('email', $request->email)->get();
+
+                $cv = Cv::find($contact[0]->cv_id);
+            }
             
-            $cv = Cv::where("contact_id", $contact[0]->id)->get();
-            
-            $pdf = Pdf::loadView('components.cvs.'. $cv[0]->model, ["cv" => $cv[0]]);
+            $pdf = Pdf::loadView('components.cvs.'. $cv->model, ["cv" => $cv, "stringNumber" => $this->stringNumber]);
             
             return $pdf->download("cv.pdf");
 
@@ -436,6 +565,21 @@ class CvController extends Controller
             echo json_encode(["success" => true]);
         }else {
             throw new Exception(json_encode(['success' => false, "message" => "Ce Cv n'existe pas"]));
+        }
+    }
+
+    public function edit(Request $request) {
+        try {
+            $cv = Cv::find((int)$request->cv_id);
+            if($cv){
+                $this->cv = $cv;
+                
+                $this->update = true;
+
+                $this->save($request);
+            }
+        }catch(Exception $e){
+            throw $e;
         }
         
     }

@@ -29,6 +29,8 @@ Route::middleware("auth")->group(function(){
 
     Route::post("/cv/save", [CvController::class, "save"]);
 
+    Route::post("/cv/edit", [CvController::class, "edit"]);
+
     Route::post("/cv/download", [CvController::class, "download"]);
 
     Route::get("/cvs", [AppController::class, "cvs"]);
