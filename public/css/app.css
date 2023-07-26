@@ -10518,7 +10518,7 @@ li.nav-item a.text-white:hover {
   height: 265px;
   transform: translateY(-25px);
 }
-.modal-container .main-modal.logout-modal {
+.modal-container .main-modal.logout-modal, .modal-container .main-modal.delete-cv-modal {
   top: 45px;
   height: 165px;
   z-index: 20;
@@ -10669,6 +10669,9 @@ li.nav-item a.text-white:hover {
 .cv.cv-3 .right {
   position: relative;
 }
+.cv.cv-3 .right .profil {
+  margin-top: 100px !important;
+}
 .cv.cv-3 .right::before {
   content: "";
   position: absolute;
@@ -10777,8 +10780,8 @@ li.nav-item a.text-white:hover {
   position: relative;
 }
 .cv-form .cv {
-  margin: 0 auto;
-  margin-top: 120px;
+  margin: 0 auto !important;
+  margin-top: 120px !important;
   width: 85%;
 }
 .cv-form .cv input::-moz-placeholder, .cv-form .cv textarea::-moz-placeholder {
@@ -11004,7 +11007,11 @@ li.nav-item a.text-white:hover {
   background-color: #2c2c2c;
   color: #0d6efd;
 }
-.see-button-container .eye-icon, .see-button-container .save-icon, .see-button-container .download-icon, .see-button-container .check-icon, .console-container .eye-icon, .console-container .save-icon, .console-container .download-icon, .console-container .check-icon {
+.see-button-container .eye-icon, .see-button-container .save-icon,
+.see-button-container .download-icon, .see-button-container .check-icon,
+.see-button-container .edit-icon, .see-button-container .delete-icon, .console-container .eye-icon, .console-container .save-icon,
+.console-container .download-icon, .console-container .check-icon,
+.console-container .edit-icon, .console-container .delete-icon {
   fill: #fff;
   width: 25px;
   transition: fill 0.3s ease;
@@ -11015,8 +11022,19 @@ li.nav-item a.text-white:hover {
 .see-button-container .check-icon.active, .console-container .check-icon.active {
   fill: #fff;
 }
-.see-button-container:hover .eye-icon, .see-button-container .save-icon:hover, .see-button-container .download-icon:hover, .see-button-container .check-icon.active:hover, .console-container:hover .eye-icon, .console-container .save-icon:hover, .console-container .download-icon:hover, .console-container .check-icon.active:hover {
+.see-button-container:hover .eye-icon, .see-button-container .save-icon:hover,
+.see-button-container .download-icon:hover, .see-button-container .check-icon.active:hover,
+.see-button-container .edit-icon:hover, .console-container:hover .eye-icon, .console-container .save-icon:hover,
+.console-container .download-icon:hover, .console-container .check-icon.active:hover,
+.console-container .edit-icon:hover {
   fill: #0d6efd;
+}
+.see-button-container .delete-icon:hover, .console-container .delete-icon:hover {
+  fill: #dc3545;
+}
+
+.console-container.cv-show-console {
+  width: 175px;
 }
 
 .close-icon-container {

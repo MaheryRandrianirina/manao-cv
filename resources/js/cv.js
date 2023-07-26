@@ -5,11 +5,13 @@ import EyeIcon from "./icons/eye-icon";
 import DownloadIcon from "./icons/download-icon";
 import CheckIcon from "./icons/check-icon";
 import innerUserIcon from "./icons/inner-user-icon";
-import { formatString, getClassFrom } from "./utils/simplifiers";
+import { formatString, getClassFrom, hasClass } from "./utils/simplifiers";
 import SaveIcon from "./icons/save-icon";
 import CloseIcon from "./icons/close-icon";
 import UserIcon from "./icons/user-icon";
 import axios from "axios";
+import EditIcon from "./icons/edit-icon";
+import DeleteIcon from "./icons/delete-icon";
 
 export default class CVModels {
 
@@ -37,6 +39,7 @@ export default class CVModels {
         this.console;
         this.closeIconContainer;
         this.shownProfilePhoto = false;
+        this.pathname;
         /**
          * @type {HTMLInputElement | undefined}
          */
@@ -87,6 +90,16 @@ export default class CVModels {
     createCVForm()
     {
         const cvForm = document.querySelector('.cv-form .cv');
+
+        this.pathname = document.location.pathname;
+        if(this.pathname.includes('/cv/show')){
+            this.createConsole("cv-show-console");
+
+            this.addClickEventToConsoleButtons();
+
+            return;
+        }
+
         if(cvForm){
             this.transformToForm();
 
@@ -94,6 +107,22 @@ export default class CVModels {
 
             this.addClickableSeeButton();
         }
+    }
+
+    createConsole(className)
+    {
+        this.console = this.dom.createElement('div', 
+            `console-container ${className ? className : ""} position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto`
+        );
+
+        this.console.innerHTML = `
+        ${DownloadIcon()}
+        ${this.pathname && this.pathname.includes('show') ? DeleteIcon() : ""}
+        ${this.pathname && this.pathname.includes('show') ? EditIcon() : SaveIcon()}
+        ${CheckIcon()}
+        `;
+
+        document.body.appendChild(this.console);
     }
 
     transformToForm()
@@ -1126,15 +1155,8 @@ export default class CVModels {
     replaceSeeButtonContainerToConsole()
     {
         if(this.seeButtonContainer){
-            this.console = this.dom.createElement('div', 
-                'console-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto'
-            );
+            this.createConsole();
 
-            this.console.innerHTML = `
-            ${DownloadIcon()}
-            ${SaveIcon()}
-            ${CheckIcon()}
-            `
             this.seeButtonContainer.replaceWith(this.console);
         }
     }
@@ -1142,7 +1164,7 @@ export default class CVModels {
     addClickEventToConsoleButtons()
     {
         this.throwErrorIfUndefined(this.console, "this.console");
-
+        
         const consoleButtons = this.console.querySelectorAll('.icon');
         consoleButtons.forEach(consoleButton => {
             consoleButton.addEventListener('click', this.handleConsoleButtonClick.bind(this));
@@ -1154,14 +1176,18 @@ export default class CVModels {
         e.preventDefault();
         
         const button = e.currentTarget;
-        if(button.classList.contains("save-icon") 
+        if(hasClass(button, "save-icon") 
             && this.inputsValuesLength > 0
         ){
             this.handleSaveCV();
-        }else if(button.classList.contains("download-icon") 
+        }else if(hasClass(button, "download-icon") 
             && this.inputsValuesLength > 0
         ) {
             this.handleDownloadCV();
+        }else if(hasClass(button, "delete-icon")){
+            this.handleDeleteCV();
+        }else if(hasClass(button, "edit-icon")){
+            
         }
     }
 
@@ -1236,6 +1262,44 @@ export default class CVModels {
     handleDownloadCV()
     {
         this.handleSaveCV(true);
+    }
+
+    handleDeleteCV(){
+        
+        const cv_id_input = document.querySelector('input.cv-id');
+        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+        
+        let crsfInput;
+        hiddenInputs.forEach(hiddenInput => {
+            if(hiddenInput.name === "_token"){
+                crsfInput = hiddenInput;
+            }
+        })
+
+        if(cv_id_input && isNumber(parseInt(cv_id_input.value)) && crsfInput){
+
+            this.dom.createModal('delete-cv-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', `
+                <form action="/cv/delete" method="post">
+                    <p class='text-center'>Êtes-vous sûr de vouloir supprimer ce CV ?</p>
+                    <div class='buttons position-absolute end-0'>
+                        <a class='btn btn-secondary no'>Annuler</a>
+                        <button class='btn btn-danger sure' type='submit'>Oui, supprimer</button>
+                    </div>
+                </form>
+            `);
+
+            this.dom.modal.appendChild(cv_id_input);
+            this.dom.modal.appendChild(crsfInput);
+
+            this.dom.setFormAction("/cv/delete");
+
+            this.dom.setUrlForRedirection('/cvs');
+
+            this.dom.setNotificationContent("Le CV a été supprimé avec succès");
+
+            this.dom.handleActionsInModalForm();
+        }
+        
     }
 
     handleFinishCVModeling(e)

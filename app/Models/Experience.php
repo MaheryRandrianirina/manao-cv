@@ -18,6 +18,6 @@ class Experience extends Model
     protected $table = "experience";
 
     public function cv() {
-        $this->belongsTo(CV::class);
+        return $this->belongsTo(Cv::class);
     }
 }

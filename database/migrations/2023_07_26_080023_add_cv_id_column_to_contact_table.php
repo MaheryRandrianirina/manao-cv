@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddContactIdColumnToCvsTable extends Migration
+class AddCvIdColumnToContactTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddContactIdColumnToCvsTable extends Migration
      */
     public function up()
     {
-        Schema::table('cvs', function (Blueprint $table) {
-            $table->foreign('contact_id')->references("id")->on("contact")->constrained()->onDelete("cascade");
+        Schema::table('contact', function (Blueprint $table) {
+            $table->foreignId("cv_id")->constrained()->onDelete('cascade');
         });
     }
 
@@ -25,7 +25,7 @@ class AddContactIdColumnToCvsTable extends Migration
      */
     public function down()
     {
-        Schema::table('cvs', function (Blueprint $table) {
+        Schema::table('contact', function (Blueprint $table) {
             //
         });
     }

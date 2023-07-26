@@ -1,4 +1,4 @@
-import { isEmpty, isUndefined } from "lodash"
+import { isEmpty, isNull, isUndefined } from "lodash"
 import CloseIcon from "../icons/close-icon"
 import axios from "axios"
 
@@ -104,9 +104,8 @@ export default class DOMInteractions {
 
     fetchModalInputs()
     {
-        this.modalInputs
         if(this.modal){
-            this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'))
+            this.modalInputs = Array.from(this.modal.querySelectorAll('input'));
         }
     }
 
@@ -157,6 +156,8 @@ export default class DOMInteractions {
 
     handleActionsInModalContent()
     {
+        console.log(this.isModalAForm(), this.isModalConfirmation())
+        debugger
         if(this.isModalAForm()){
             this.handleActionsInModalForm()
         }else if(this.isModalConfirmation()){
@@ -182,8 +183,14 @@ export default class DOMInteractions {
     handleActionsInModalForm()
     {
         this.keyboardTouches();
-        this.primaryButton = this.modal.querySelector('.btn.btn-primary')
-        this.primaryButton.addEventListener('click', this.handleModalPirmaryButtonClick.bind(this))
+        
+        this.actionButton = this.modal.querySelector('.btn.btn-primary');
+        if(isNull(this.actionButton)){
+            this.actionButton = this.modal.querySelector('.btn.btn-danger');
+        }
+        
+        this.actionButton.addEventListener('click', this.handleModalActionButtonClick.bind(this));
+
         this.ClickOnCloseModalButton()
     }
 
@@ -196,15 +203,12 @@ export default class DOMInteractions {
             this.removeModalFromDOMWithAnimation()
         })
 
-        if(this.modal.querySelector('form')){
+        if(this.modal.querySelector('form') && this.modalInputs.length > 0){
             this.handleActionsInModalForm();
-        }else {
-            validateButton.addEventListener('click', (e)=>{
-                e.preventDefault();
-            })
+        }else if(this.modal.querySelector('form') && this.modalInputs.length === 0) {
+            validateButton.addEventListener('click', this.handleModalActionButtonClick.bind(this));
         }
         
-
         this.ClickOnCloseModalButton()
     }
 
@@ -240,11 +244,12 @@ export default class DOMInteractions {
      * 
      * @param {MouseEvent} e 
      */
-    handleModalPirmaryButtonClick(e)
+    handleModalActionButtonClick(e)
     {
         e.preventDefault();
         
         this.createDataToPostObj();
+        
         this.handleDataPosting();
     }
 
@@ -254,7 +259,8 @@ export default class DOMInteractions {
      */
     closeModalThenRemoveHisEventListener(e)
     {
-        this.closeModal()
+        this.closeModal();
+
         e.target.removeEventListener('click', this.closeModalThenRemoveHisEventListener)
     }
     
@@ -264,10 +270,10 @@ export default class DOMInteractions {
      */
     createDataToPostObj()
     {
-        if(isUndefined(this.modalInputs)){
-            this.inputs = [].slice.call(document.querySelectorAll('input'))
+        if(this.modalInputs.length === 0){
+            this.inputs = Array.from(document.querySelectorAll('input'))
         }
-
+        
         if(this.currentClickedBtn){
             this.hiddenInputsWithDataForTheActionFromClickedBtn = [].slice.call(
                 this.currentClickedBtn.parentElement
@@ -277,7 +283,7 @@ export default class DOMInteractions {
         
         this.dataToPostObj = {}
         
-        if(this.modalInputs && !isEmpty(this.modalInputs)){
+        if(!isEmpty(this.modalInputs)){
             if(this.hiddenInputsWithDataForTheActionFromClickedBtn){
                 this.modalInputs = [...this.modalInputs, ...this.hiddenInputsWithDataForTheActionFromClickedBtn]
             }
@@ -312,10 +318,10 @@ export default class DOMInteractions {
         }
     }
 
-    handleDataPosting(urlForRedirection = null)
+    handleDataPosting()
     {
         if(this.isDataPostValid()){
-            this.postForm(urlForRedirection)
+            this.postForm()
         }else{
             this.alertEmptyInputs()
         }
@@ -341,12 +347,12 @@ export default class DOMInteractions {
         return isInputEmpty
     }
 
-    postForm(urlForRedirection = null)
+    postForm()
     {
         if(this.showNotification){
-            this.postContentWithNotification(urlForRedirection)
+            this.postContentWithNotification()
         }else{
-            this.submitDirectyly()
+            this.submitDirectyly();
         }
     }
     
@@ -427,6 +433,7 @@ export default class DOMInteractions {
             input.after(failParagraph)
             if(this.modal){
                 this.modalHeightToAdd += failParagraph.offsetHeight;
+
                 this.growModalHeigth();
             }
         }
@@ -437,10 +444,7 @@ export default class DOMInteractions {
         this.modal.style.height = this.initialModalHeight + this.modalHeightToAdd + 20 + 'px'
     }
 
-    /**
-     * @param {string | null} urlForRedirection url de rédirection après la soumission de la requête
-     */
-    postContentWithNotification(urlForRedirection)
+    postContentWithNotification()
     {
         axios.post(this.formAction, this.dataToPostObj)
             .then(response => {
@@ -449,7 +453,7 @@ export default class DOMInteractions {
                 }
 
                 if(this.modal){
-                    this.closeModal()
+                    this.closeModal();
                 }
                 
                 if(this.showNotification) {
@@ -461,9 +465,9 @@ export default class DOMInteractions {
                         className: this.notificationClassName, 
                         content: this.notificationContent
                     }, 2000)
-
-                    if(urlForRedirection){
-                        document.location.href = urlForRedirection
+                    
+                    if(this.urlForRedirection){
+                        document.location.href = this.urlForRedirection
                     } 
                 }
             }).catch(error => {
@@ -534,6 +538,10 @@ export default class DOMInteractions {
      */
     setCurrentClickedBtn(currentClickedBtn){
         this.currentClickedBtn = currentClickedBtn
+    }
+
+    setUrlForRedirection(urlForRedirection){
+        this.urlForRedirection = urlForRedirection;
     }
 
     reloadPage()

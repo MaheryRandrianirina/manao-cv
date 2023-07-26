@@ -5,6 +5,7 @@ const domInteractions = new DOMInteractions();
 
 export default function InteractionsWithNavbar(){
     LogoutButtonInteraction();
+
     EditPasswordInteraction();
 }
 
@@ -28,8 +29,10 @@ function LogoutButtonInteraction(){
                     </form>
                 `);
     ;
-                domInteractions.setFormAction("/logout")
+                domInteractions.setFormAction("/logout");
+
                 domInteractions.setShowNotification(false);
+
                 domInteractions.handleActionsInModalConfirmation();
             }
             
@@ -64,9 +67,13 @@ function EditPasswordInteraction(){
                 `);
     
                 domInteractions.setFormAction('/password/edit');
+
                 domInteractions.setCurrentClickedBtn(e.target);
+
                 domInteractions.autofocusToInput(1);
+
                 domInteractions.setNotificationContent("Votre mot de passe a été mis à jour avec succès !");
+                
                 domInteractions.handleActionsInModalConfirmation();
             }
         }

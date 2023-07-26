@@ -18,6 +18,6 @@ class Formation extends Model
     protected $table = "formation";
 
     public function cv() {
-        $this->belongsTo(CV::class);
+        return $this->belongsTo(Cv::class);
     }
 }

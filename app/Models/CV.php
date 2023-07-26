@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CV extends Model
+class Cv extends Model
 {
     use HasFactory;
 
@@ -14,33 +14,32 @@ class CV extends Model
         "sex", "current_work", 
         "profile", "image", 
         "is_recorded", "created_at",
-        "updated_at", "contact_id",
-        "model"
+        "updated_at", "model"
     ];
 
     protected $table = "cvs";
 
     public function contact() {
-        $this->hasOne(Contact::class);
+        return $this->hasOne(Contact::class);
     }
 
     public function experiences() {
-        $this->hasMany(Experience::class);
+        return $this->hasMany(Experience::class);
     }
 
     public function formations() {
-        $this->hasMany(Formation::class);
+        return $this->hasMany(Formation::class);
     }
 
     public function hobbies() {
-        $this->hasMany(Hobby::class);
+        return $this->hasMany(Hobby::class);
     }
 
     public function languages() {
-        $this->hasMany(Language::class);
+        return $this->hasMany(Language::class);
     }
 
     public function skills() {
-        $this->hasMany(Skill::class);
+        return $this->hasMany(Skill::class);
     }
 }

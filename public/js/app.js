@@ -5076,11 +5076,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icons_user_icon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./icons/user-icon */ "./resources/js/icons/user-icon.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _icons_edit_icon__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./icons/edit-icon */ "./resources/js/icons/edit-icon.js");
+/* harmony import */ var _icons_delete_icon__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./icons/delete-icon */ "./resources/js/icons/delete-icon.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+
 
 
 
@@ -5124,6 +5128,7 @@ var CVModels = /*#__PURE__*/function () {
     this.console;
     this.closeIconContainer;
     this.shownProfilePhoto = false;
+    this.pathname;
     /**
      * @type {HTMLInputElement | undefined}
      */
@@ -5175,12 +5180,26 @@ var CVModels = /*#__PURE__*/function () {
     key: "createCVForm",
     value: function createCVForm() {
       var cvForm = document.querySelector('.cv-form .cv');
+      this.pathname = document.location.pathname;
+
+      if (this.pathname.includes('/cv/show')) {
+        this.createConsole("cv-show-console");
+        this.addClickEventToConsoleButtons();
+        return;
+      }
 
       if (cvForm) {
         this.transformToForm();
         this.filling();
         this.addClickableSeeButton();
       }
+    }
+  }, {
+    key: "createConsole",
+    value: function createConsole(className) {
+      this.console = this.dom.createElement('div', "console-container ".concat(className ? className : "", " position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto"));
+      this.console.innerHTML = "\n        ".concat((0,_icons_download_icon__WEBPACK_IMPORTED_MODULE_4__["default"])(), "\n        ").concat(this.pathname && this.pathname.includes('show') ? (0,_icons_delete_icon__WEBPACK_IMPORTED_MODULE_13__["default"])() : "", "\n        ").concat(this.pathname && this.pathname.includes('show') ? (0,_icons_edit_icon__WEBPACK_IMPORTED_MODULE_12__["default"])() : (0,_icons_save_icon__WEBPACK_IMPORTED_MODULE_8__["default"])(), "\n        ").concat((0,_icons_check_icon__WEBPACK_IMPORTED_MODULE_5__["default"])(), "\n        ");
+      document.body.appendChild(this.console);
     }
   }, {
     key: "transformToForm",
@@ -6169,8 +6188,7 @@ var CVModels = /*#__PURE__*/function () {
     key: "replaceSeeButtonContainerToConsole",
     value: function replaceSeeButtonContainerToConsole() {
       if (this.seeButtonContainer) {
-        this.console = this.dom.createElement('div', 'console-container position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto');
-        this.console.innerHTML = "\n            ".concat((0,_icons_download_icon__WEBPACK_IMPORTED_MODULE_4__["default"])(), "\n            ").concat((0,_icons_save_icon__WEBPACK_IMPORTED_MODULE_8__["default"])(), "\n            ").concat((0,_icons_check_icon__WEBPACK_IMPORTED_MODULE_5__["default"])(), "\n            ");
+        this.createConsole();
         this.seeButtonContainer.replaceWith(this.console);
       }
     }
@@ -6191,11 +6209,13 @@ var CVModels = /*#__PURE__*/function () {
       e.preventDefault();
       var button = e.currentTarget;
 
-      if (button.classList.contains("save-icon") && this.inputsValuesLength > 0) {
+      if ((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.hasClass)(button, "save-icon") && this.inputsValuesLength > 0) {
         this.handleSaveCV();
-      } else if (button.classList.contains("download-icon") && this.inputsValuesLength > 0) {
+      } else if ((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.hasClass)(button, "download-icon") && this.inputsValuesLength > 0) {
         this.handleDownloadCV();
-      }
+      } else if ((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.hasClass)(button, "delete-icon")) {
+        this.handleDeleteCV();
+      } else if ((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_7__.hasClass)(button, "edit-icon")) {}
     }
   }, {
     key: "handleSaveCV",
@@ -6270,6 +6290,28 @@ var CVModels = /*#__PURE__*/function () {
     key: "handleDownloadCV",
     value: function handleDownloadCV() {
       this.handleSaveCV(true);
+    }
+  }, {
+    key: "handleDeleteCV",
+    value: function handleDeleteCV() {
+      var cv_id_input = document.querySelector('input.cv-id');
+      var hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+      var crsfInput;
+      hiddenInputs.forEach(function (hiddenInput) {
+        if (hiddenInput.name === "_token") {
+          crsfInput = hiddenInput;
+        }
+      });
+
+      if (cv_id_input && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parseInt(cv_id_input.value)) && crsfInput) {
+        this.dom.createModal('delete-cv-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', "\n                <form action=\"/cv/delete\" method=\"post\">\n                    <p class='text-center'>\xCAtes-vous s\xFBr de vouloir supprimer ce CV ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-danger sure' type='submit'>Oui, supprimer</button>\n                    </div>\n                </form>\n            ");
+        this.dom.modal.appendChild(cv_id_input);
+        this.dom.modal.appendChild(crsfInput);
+        this.dom.setFormAction("/cv/delete");
+        this.dom.setUrlForRedirection('/cvs');
+        this.dom.setNotificationContent("Le CV a été supprimé avec succès");
+        this.dom.handleActionsInModalForm();
+      }
     }
   }, {
     key: "handleFinishCVModeling",
@@ -6378,6 +6420,23 @@ function CloseIcon(className) {
 
 /***/ }),
 
+/***/ "./resources/js/icons/delete-icon.js":
+/*!*******************************************!*\
+  !*** ./resources/js/icons/delete-icon.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ DeleteIcon)
+/* harmony export */ });
+function DeleteIcon(className) {
+  return "\n    <svg viewBox=\"0 0 448 512\" class='icon delete-icon ".concat(className ? className : "", "'>\n    <path d=\"M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z\"/>\n    </svg>\n    ");
+}
+
+/***/ }),
+
 /***/ "./resources/js/icons/download-icon.js":
 /*!*********************************************!*\
   !*** ./resources/js/icons/download-icon.js ***!
@@ -6391,6 +6450,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function DownloadIcon(className) {
   return "<svg viewBox=\"0 0 512 512\" class=\"icon download-icon ".concat(className ? className : "", "\">\n    <path d=\"M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z\"/>\n</svg>");
+}
+
+/***/ }),
+
+/***/ "./resources/js/icons/edit-icon.js":
+/*!*****************************************!*\
+  !*** ./resources/js/icons/edit-icon.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ EditIcon)
+/* harmony export */ });
+function EditIcon(className) {
+  return "\n    <svg viewBox=\"0 0 576 512\" class=\"icon edit-icon ".concat(className ? className : "", "\">\n        <path d=\"M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h273.5c7.1 0 10.7 8.6 5.7 13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 2.3H48v352h352V350.5c0-2.1.8-4.1 2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 17.1c22.9-22.9 59.9-22.9 82.7 0l43.2 43.2c22.9 22.9 22.9 60 .1 82.8zM460.1 174L402 115.9 216.2 301.8l-7.3 65.3 65.3-7.3L460.1 174zm64.8-79.7l-43.2-43.2c-4.1-4.1-10.8-4.1-14.8 0L436 82l58.1 58.1 30.9-30.9c4-4.2 4-10.8-.1-14.9z\"/>\n    </svg>\n    ");
 }
 
 /***/ }),
@@ -6664,10 +6740,8 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "fetchModalInputs",
     value: function fetchModalInputs() {
-      this.modalInputs;
-
       if (this.modal) {
-        this.modalInputs = [].slice.call(this.modal.querySelectorAll('input'));
+        this.modalInputs = Array.from(this.modal.querySelectorAll('input'));
       }
     }
   }, {
@@ -6718,6 +6792,9 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "handleActionsInModalContent",
     value: function handleActionsInModalContent() {
+      console.log(this.isModalAForm(), this.isModalConfirmation());
+      debugger;
+
       if (this.isModalAForm()) {
         this.handleActionsInModalForm();
       } else if (this.isModalConfirmation()) {
@@ -6742,8 +6819,13 @@ var DOMInteractions = /*#__PURE__*/function () {
     key: "handleActionsInModalForm",
     value: function handleActionsInModalForm() {
       this.keyboardTouches();
-      this.primaryButton = this.modal.querySelector('.btn.btn-primary');
-      this.primaryButton.addEventListener('click', this.handleModalPirmaryButtonClick.bind(this));
+      this.actionButton = this.modal.querySelector('.btn.btn-primary');
+
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.actionButton)) {
+        this.actionButton = this.modal.querySelector('.btn.btn-danger');
+      }
+
+      this.actionButton.addEventListener('click', this.handleModalActionButtonClick.bind(this));
       this.ClickOnCloseModalButton();
     }
   }, {
@@ -6757,12 +6839,10 @@ var DOMInteractions = /*#__PURE__*/function () {
         _this2.removeModalFromDOMWithAnimation();
       });
 
-      if (this.modal.querySelector('form')) {
+      if (this.modal.querySelector('form') && this.modalInputs.length > 0) {
         this.handleActionsInModalForm();
-      } else {
-        validateButton.addEventListener('click', function (e) {
-          e.preventDefault();
-        });
+      } else if (this.modal.querySelector('form') && this.modalInputs.length === 0) {
+        validateButton.addEventListener('click', this.handleModalActionButtonClick.bind(this));
       }
 
       this.ClickOnCloseModalButton();
@@ -6804,8 +6884,8 @@ var DOMInteractions = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "handleModalPirmaryButtonClick",
-    value: function handleModalPirmaryButtonClick(e) {
+    key: "handleModalActionButtonClick",
+    value: function handleModalActionButtonClick(e) {
       e.preventDefault();
       this.createDataToPostObj();
       this.handleDataPosting();
@@ -6831,8 +6911,8 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function createDataToPostObj() {
       var _this3 = this;
 
-      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.modalInputs)) {
-        this.inputs = [].slice.call(document.querySelectorAll('input'));
+      if (this.modalInputs.length === 0) {
+        this.inputs = Array.from(document.querySelectorAll('input'));
       }
 
       if (this.currentClickedBtn) {
@@ -6841,7 +6921,7 @@ var DOMInteractions = /*#__PURE__*/function () {
 
       this.dataToPostObj = {};
 
-      if (this.modalInputs && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.modalInputs)) {
+      if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.modalInputs)) {
         if (this.hiddenInputsWithDataForTheActionFromClickedBtn) {
           this.modalInputs = [].concat(_toConsumableArray(this.modalInputs), _toConsumableArray(this.hiddenInputsWithDataForTheActionFromClickedBtn));
         }
@@ -6871,10 +6951,8 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "handleDataPosting",
     value: function handleDataPosting() {
-      var urlForRedirection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
       if (this.isDataPostValid()) {
-        this.postForm(urlForRedirection);
+        this.postForm();
       } else {
         this.alertEmptyInputs();
       }
@@ -6900,10 +6978,8 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "postForm",
     value: function postForm() {
-      var urlForRedirection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
       if (this.showNotification) {
-        this.postContentWithNotification(urlForRedirection);
+        this.postContentWithNotification();
       } else {
         this.submitDirectyly();
       }
@@ -6998,13 +7074,9 @@ var DOMInteractions = /*#__PURE__*/function () {
     value: function growModalHeigth() {
       this.modal.style.height = this.initialModalHeight + this.modalHeightToAdd + 20 + 'px';
     }
-    /**
-     * @param {string | null} urlForRedirection url de rédirection après la soumission de la requête
-     */
-
   }, {
     key: "postContentWithNotification",
-    value: function postContentWithNotification(urlForRedirection) {
+    value: function postContentWithNotification() {
       var _this5 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_2___default().post(this.formAction, this.dataToPostObj).then(function (response) {
@@ -7026,8 +7098,8 @@ var DOMInteractions = /*#__PURE__*/function () {
             content: _this5.notificationContent
           }, 2000);
 
-          if (urlForRedirection) {
-            document.location.href = urlForRedirection;
+          if (_this5.urlForRedirection) {
+            document.location.href = _this5.urlForRedirection;
           }
         }
       })["catch"](function (error) {
@@ -7095,6 +7167,11 @@ var DOMInteractions = /*#__PURE__*/function () {
     key: "setCurrentClickedBtn",
     value: function setCurrentClickedBtn(currentClickedBtn) {
       this.currentClickedBtn = currentClickedBtn;
+    }
+  }, {
+    key: "setUrlForRedirection",
+    value: function setUrlForRedirection(urlForRedirection) {
+      this.urlForRedirection = urlForRedirection;
     }
   }, {
     key: "reloadPage",

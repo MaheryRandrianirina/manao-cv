@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CV;
 use Illuminate\Http\Request;
 
+
 class AppController extends Controller
 {
     public function index(Request $request) {

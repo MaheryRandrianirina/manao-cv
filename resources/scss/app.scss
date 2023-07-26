@@ -52,7 +52,7 @@ li.nav-item a.text-white:hover {
         transform: translateY(-25px);
     }
 
-    .main-modal.logout-modal {
+    .main-modal.logout-modal, .main-modal.delete-cv-modal {
         top: 45px;
         height: 165px;
         z-index: 20;
@@ -226,6 +226,9 @@ li.nav-item a.text-white:hover {
 
         .right {
             position: relative;
+            .profil {
+                margin-top: 100px !important;
+            }
         }
 
         .right::before {
@@ -349,8 +352,8 @@ li.nav-item a.text-white:hover {
 .cv-form {
     position: relative;
     .cv {
-        margin: 0 auto;
-        margin-top: 120px;
+        margin: 0 auto !important;
+        margin-top: 120px !important;
         width: 85%;
         input::placeholder, textarea::placeholder {
             color: $gray;
@@ -661,7 +664,9 @@ li.nav-item a.text-white:hover {
         color: $primary;
     }
 
-    .eye-icon, .save-icon, .download-icon, .check-icon {
+    .eye-icon, .save-icon, 
+    .download-icon, .check-icon,
+    .edit-icon, .delete-icon {
         fill: $white;
         width: 25px;
         transition: fill .3s ease;
@@ -676,9 +681,19 @@ li.nav-item a.text-white:hover {
         fill: $white;
     }
 
-    &:hover .eye-icon, .save-icon:hover, .download-icon:hover, .check-icon.active:hover {
+    &:hover .eye-icon, .save-icon:hover, 
+    .download-icon:hover, .check-icon.active:hover,
+    .edit-icon:hover {
         fill: $primary;
     }
+
+    .delete-icon:hover {
+        fill: $danger;
+    }
+}
+
+.console-container.cv-show-console {
+    width: 175px;
 }
 
 .close-icon-container {

@@ -21,7 +21,9 @@ Route::middleware("auth")->group(function(){
 
     Route::post('/password/edit', [UserController::class, "update"])->name('password.edit');
 
-    Route::get("/cv/{id}", [CvController::class, "index"]);
+    Route::get("/cv/{id}", [CvController::class, "index"])->where([
+        'id' => '[0-9]+'
+    ]);
 
     Route::get("/test/download", [CvController::class, "test"]);
 
@@ -30,6 +32,13 @@ Route::middleware("auth")->group(function(){
     Route::post("/cv/download", [CvController::class, "download"]);
 
     Route::get("/cvs", [AppController::class, "cvs"]);
+
+    Route::get("/cv/show/{name}-{id}", [CvController::class, "show"])->where([
+        "name" => '[a-zA-Z]+',
+        "id" => '[0-9]+'
+    ]);
+
+    Route::post("/cv/delete", [CvController::class, "delete"]);
 });
 
 require __DIR__.'/auth.php';

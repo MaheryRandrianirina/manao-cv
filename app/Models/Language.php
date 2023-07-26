@@ -18,6 +18,6 @@ class Language extends Model
     protected $table = "language";
 
     public function cv() {
-        $this->belongsTo(CV::class);
+        return $this->belongsTo(Cv::class);
     }
 }

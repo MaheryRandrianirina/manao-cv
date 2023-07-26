@@ -14,11 +14,11 @@ class Contact extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        "phone_number", "adress", "email", "linkedin_url"
+        "phone_number", "adress", "email", "linkedin_url", "cv_id"
     ];
 
     public function cv() {
-        $this->belongsTo(CV::class);
+        return $this->belongsTo(Cv::class);
         
     }
 }

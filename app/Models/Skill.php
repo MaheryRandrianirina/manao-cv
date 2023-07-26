@@ -18,6 +18,6 @@ class Skill extends Model
     protected $table = "skill";
     
     public function cv() {
-        $this->belongsTo(CV::class);
+        return $this->belongsTo(Cv::class);
     }
 }

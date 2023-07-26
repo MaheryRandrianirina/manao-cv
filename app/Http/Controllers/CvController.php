@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CvController extends Controller
 {
@@ -41,6 +42,8 @@ class CvController extends Controller
     private $skills = 0;
 
     private $experiences = 0;
+
+    private $tasks;
 
     private $stringNumber = [
         1 => "one",
@@ -137,9 +140,9 @@ class CvController extends Controller
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
 
-            $contact = $this->saveContact($request);
+            $cv = $this->saveCV($request, $path);
             
-            $cv = $this->saveCV($request, $path, $contact->id);
+            $this->saveContact($request, $cv->id);
 
             $this->saveExperiences($request, $cv->id);
 
@@ -161,17 +164,18 @@ class CvController extends Controller
         }
     }
 
-    private function saveContact(Request $request) {
+    private function saveContact(Request $request, int $cv_id) {
         return Contact::create([
             "phone_number" => (int)$request->phone_number,
             "adress" => $request->adress,
             "email" => $request->email,
-            "linkedin_url" => $request->url_linkedin ? $request->url_linkedin : null
+            "linkedin_url" => $request->url_linkedin ? $request->url_linkedin : null,
+            "cv_id" => $cv_id
         ]);
     }
 
-    private function saveCV(Request $request, $path, int $contact_id) {
-        return CV::create([
+    private function saveCV(Request $request, $path) {
+        return Cv::create([
             "name" => $request->name,
             "firstname" => $request->firstname,
             "sex" => $request->sex,
@@ -179,8 +183,7 @@ class CvController extends Controller
             "profile" => $request->profile_description,
             "image" => $path !== "" ? $path : null,
             "model" => $request->model,
-            "is_recorded" => true,
-            "contact_id" => $contact_id
+            "is_recorded" => true
         ]);
     }
 
@@ -196,8 +199,8 @@ class CvController extends Controller
             if($multitask){
                 $countTasks = 0;
                 foreach($request->request as $name => $value){
-                    $countTasks++;
                     if(strchr($name, "experience_" . $this->stringNumber[$i+1])){
+                        $countTasks++;
                         $taskVar = "experience_" . $this->stringNumber[$i+1] . "_task_" . $this->stringNumber[$countTasks];
                         array_push($tasks, $request->$taskVar) ;
                     }
@@ -218,6 +221,7 @@ class CvController extends Controller
     }
 
     private function saveFormations(Request $request, int $cv_id) {
+        
         for($i = 0; $i < $this->formations; $i++){
             $etablissement = "etablissement_" . $this->stringNumber[$i+1];
             $year_debut = "year_debut_" . $this->stringNumber[$i+1];
@@ -275,9 +279,10 @@ class CvController extends Controller
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
 
-            $contact = $this->saveContact($request);
             
-            $cv = $this->saveCV($request, $path, $contact->id);
+            $cv = $this->saveCV($request, $path);
+
+            $this->saveContact($request, $cv->id);
 
             $this->saveExperiences($request, $cv->id, true);
 
@@ -286,6 +291,8 @@ class CvController extends Controller
             $this->saveLanguages($request, $cv->id, false);
 
             $this->saveSkills($request, $cv->id);
+
+            $this->saveHobbies($request, $cv->id);
 
             if($this->echo === false){
                 return;
@@ -296,6 +303,17 @@ class CvController extends Controller
             ]);
         }catch(Exception $e){
             throw $e;
+        }
+    }
+
+    private function saveHobbies(Request $request, int $cv_id){
+        for($i = 0; $i < $this->hobbies; $i++){
+            $hobby = "hobby_" . $this->stringNumber[$i+1];
+            
+            Hobby::create([
+                "name" => $request->$hobby,
+                "cv_id" => $cv_id
+            ]);
         }
     }
 
@@ -311,9 +329,9 @@ class CvController extends Controller
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
 
-            $contact = $this->saveContact($request);
-            
-            $cv = $this->saveCV($request, $path, $contact->id);
+            $cv = $this->saveCV($request, $path);
+
+            $this->saveContact($request, $cv->id);
 
             $this->saveExperiences($request, $cv->id, true);
 
@@ -322,6 +340,8 @@ class CvController extends Controller
             $this->saveLanguages($request, $cv->id, false);
 
             $this->saveSkills($request, $cv->id);
+
+            $this->saveHobbies($request, $cv->id);
 
             if($this->echo === false){
                 return;
@@ -347,9 +367,10 @@ class CvController extends Controller
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
 
-            $contact = $this->saveContact($request);
             
-            $cv = $this->saveCV($request, $path, $contact->id);
+            $cv = $this->saveCV($request, $path);
+            
+            $this->saveContact($request, $cv->id);
 
             $this->saveExperiences($request, $cv->id, true);
 
@@ -375,7 +396,7 @@ class CvController extends Controller
         try {
             $contact = Contact::where('email', $request->email)->get();
             
-            $cv = CV::where("contact_id", $contact[0]->id)->get();
+            $cv = Cv::where("contact_id", $contact[0]->id)->get();
             
             $pdf = Pdf::loadView('components.cvs.'. $cv[0]->model, ["cv" => $cv[0]]);
             
@@ -391,5 +412,31 @@ class CvController extends Controller
         $pdf = Pdf::loadView('components.cvs.cv-1', ["content" => "dzf"]);
             
         return $pdf->download("cv.pdf");
+    }
+
+    public function show(Request $request, string $name, int $id){
+        $cv = Cv::find($id);
+        if($cv === null || ($cv->name !== $name)){
+            throw new NotFoundHttpException("Cet url n'existe pas");
+        }
+
+        return view('cv.show', [
+            'cv' => $cv,
+            'title' => $cv->name . " " . $cv->firstname,
+            "token" => csrf_token(),
+            "stringNumber" => $this->stringNumber
+        ]);
+    }
+
+    public function delete(Request $request) {
+        $cv = Cv::find($request->cv_id);
+        
+        if($cv !== null){
+            $cv->delete();
+            echo json_encode(["success" => true]);
+        }else {
+            throw new Exception(json_encode(['success' => false, "message" => "Ce Cv n'existe pas"]));
+        }
+        
     }
 }

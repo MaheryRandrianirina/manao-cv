@@ -18,6 +18,6 @@ class Hobby extends Model
     protected $table = "hobby";
     
     public function cv() {
-        $this->belongsTo(CV::class);
+        return $this->belongsTo(Cv::class);
     }
 }
