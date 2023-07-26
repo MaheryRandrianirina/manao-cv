@@ -222,7 +222,7 @@ class CvController extends Controller
                     return $key !== "sex";
                 }, ARRAY_FILTER_USE_KEY);
             }
-            
+
             $this->cv->update($arrayValues);
         }
         
@@ -376,7 +376,7 @@ class CvController extends Controller
         $path = "";
         
         try {
-            if($request->profile_photo){
+            if($request->profile_photo && !stringValue($request->profile_photo)){
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
 

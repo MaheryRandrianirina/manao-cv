@@ -5200,6 +5200,7 @@ var CVModels = /*#__PURE__*/function () {
           var cv_id = document.querySelector('.cv-id');
           this.elementsInnerText[csrfInput.name] = csrfInput.value;
           this.elementsInnerText[cv_id.name] = parseInt(cv_id.value);
+          this.addLevelIndicators();
           this.addClickEventToConsoleButtons();
         } else if (this.editCvClicked && cvForm) {
           if (this.console.classList.contains('cv-show-console')) {
@@ -5258,6 +5259,25 @@ var CVModels = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "addLevelIndicators",
+    value: function addLevelIndicators() {
+      var _this3 = this;
+
+      var barLevels = document.querySelectorAll('.bar-level');
+      barLevels.forEach(function (barLevel) {
+        _this3.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
+
+        if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(_this3.levelIndicator)) {
+          _this3.levelIndicator = _this3.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+          barLevel.appendChild(_this3.levelIndicator);
+        }
+
+        var barLevelRect = barLevel.getBoundingClientRect();
+        var levelIndicatorWidth = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100;
+        _this3.levelIndicator.style.width = levelIndicatorWidth + "px";
+      });
+    }
+  }, {
     key: "createConsole",
     value: function createConsole(className) {
       this.console = this.dom.createElement('div', "console-container ".concat(className ? className : "", " position-fixed d-flex justify-content-between p-3 rounded start-0 end-0 m-auto"));
@@ -5286,7 +5306,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "filling",
     value: function filling() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.throwErrorIfFormUndefined();
       this.createHiddenInputForCvModel();
@@ -5303,7 +5323,7 @@ var CVModels = /*#__PURE__*/function () {
          * @type {HTMLInputElement}
          */
 
-        var input = _this3.dom.createElement('input', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(element) + " form-control mb-2");
+        var input = _this4.dom.createElement('input', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(element) + " form-control mb-2");
 
         input.name = inputName ? inputName : "";
         input.type = inputType ? inputType : "text";
@@ -5326,8 +5346,8 @@ var CVModels = /*#__PURE__*/function () {
           input.placeholder = "Langue";
           input.setAttribute('required', "true");
 
-          if (_this3.modelName === "cv-2" || _this3.modelName === "cv-3") {
-            _this3.addLevelCursorWithIndicatorIfThereIsValue(element);
+          if (_this4.modelName === "cv-2" || _this4.modelName === "cv-3") {
+            _this4.addLevelCursorWithIndicatorIfThereIsValue(element);
           }
         } else if (inputName.includes('year_month_debut')) {
           input.placeholder = "Mois et année de début";
@@ -5335,15 +5355,15 @@ var CVModels = /*#__PURE__*/function () {
         } else if (inputName.includes('year_month_end')) {
           input.placeholder = "Mois et année de fin";
           input.setAttribute('required', "true");
-        } else if (inputName.includes('skill') && _this3.modelName !== "cv-3" || _this3.modelName === "cv-2" && inputName.includes('lang')) {
+        } else if (inputName.includes('skill') && _this4.modelName !== "cv-3" || _this4.modelName === "cv-2" && inputName.includes('lang')) {
           input.placeholder = "Compétence";
           input.setAttribute('required', "true");
 
-          _this3.addLevelCursorWithIndicatorIfThereIsValue(element);
+          _this4.addLevelCursorWithIndicatorIfThereIsValue(element);
         } else {
-          if (_this3.inputsPlaceholders && _this3.inputsPlaceholders[input.name]) {
-            input.placeholder = _this3.inputsPlaceholders[input.name];
-          } else if (!_this3.pathname.includes('/cv/show')) {
+          if (_this4.inputsPlaceholders && _this4.inputsPlaceholders[input.name]) {
+            input.placeholder = _this4.inputsPlaceholders[input.name];
+          } else if (!_this4.pathname.includes('/cv/show')) {
             input.placeholder = element.innerText;
           }
 
@@ -5351,19 +5371,19 @@ var CVModels = /*#__PURE__*/function () {
             input.setAttribute('required', "true");
 
             if (element.parentElement.classList.contains('about') && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(element.parentElement.querySelector('.sex'))) {
-              var sex = _this3.dom.createElement('div', 'sex');
+              var sex = _this4.dom.createElement('div', 'sex');
 
-              var manContainer = _this3.dom.createElement('div', 'man-container');
+              var manContainer = _this4.dom.createElement('div', 'man-container');
 
-              var womanContainer = _this3.dom.createElement('div', 'woman-container');
+              var womanContainer = _this4.dom.createElement('div', 'woman-container');
 
-              var manLabel = _this3.dom.createElement('label', 'man-label ms-1');
+              var manLabel = _this4.dom.createElement('label', 'man-label ms-1');
 
-              var womanLabel = _this3.dom.createElement('label', 'woman-label ms-1');
+              var womanLabel = _this4.dom.createElement('label', 'woman-label ms-1');
 
-              var man = _this3.dom.createElement('input', 'man');
+              var man = _this4.dom.createElement('input', 'man');
 
-              var woman = _this3.dom.createElement('input', 'woman');
+              var woman = _this4.dom.createElement('input', 'woman');
 
               manLabel.innerText = "Homme";
               man.type = "radio";
@@ -5396,11 +5416,11 @@ var CVModels = /*#__PURE__*/function () {
           }
         }
 
-        if (_this3.inputsValuesLength > 0 && _this3.inputsValues[input.name]) {
-          input.setAttribute('value', _this3.inputsValues[input.name]);
+        if (_this4.inputsValuesLength > 0 && _this4.inputsValues[input.name]) {
+          input.setAttribute('value', _this4.inputsValues[input.name]);
         }
 
-        if (_this3.pathname.includes('/cv/show')) {
+        if (_this4.pathname.includes('/cv/show')) {
           input.setAttribute('value', element.innerText);
 
           if (input.hasAttribute('required')) {
@@ -5408,7 +5428,6 @@ var CVModels = /*#__PURE__*/function () {
           }
 
           if (element.getAttribute('aria-name') === "phone_number") {
-            console.log(element, element.innerText, element.innerText.split(' ').join(''));
             input.setAttribute('value', element.innerText.split(' ').join(''));
           }
         }
@@ -5426,7 +5445,7 @@ var CVModels = /*#__PURE__*/function () {
         }
 
         if (element.classList.contains('profile-photo')) {
-          var label = _this3.dom.createElement('label', 'mb-1');
+          var label = _this4.dom.createElement('label', 'mb-1');
 
           element.before(label);
           label.innerText = "Choisir une photo : ";
@@ -5441,18 +5460,18 @@ var CVModels = /*#__PURE__*/function () {
          * @type {HTMLTextAreaElement}
          */
 
-        var textarea = _this3.dom.createElement('textarea', Array.from(element.classList).join(' ') + " form-control");
+        var textarea = _this4.dom.createElement('textarea', Array.from(element.classList).join(' ') + " form-control");
 
         textarea.name = textareaName ? textareaName : "";
         textarea.placeholder = "Ecrire quelque chose";
         textarea.setAttribute('aria-nodename', element.nodeName);
 
-        if (_this3.inputsValuesLength > 0 && _this3.inputsValues[textarea.name]) {
-          textarea.setAttribute('value', _this3.inputsValues[textarea.name]);
-          textarea.innerHTML = _this3.inputsValues[textarea.name];
+        if (_this4.inputsValuesLength > 0 && _this4.inputsValues[textarea.name]) {
+          textarea.setAttribute('value', _this4.inputsValues[textarea.name]);
+          textarea.innerHTML = _this4.inputsValues[textarea.name];
         }
 
-        if (_this3.pathname.includes('/cv/show')) {
+        if (_this4.pathname.includes('/cv/show')) {
           textarea.setAttribute('value', element.innerText);
           textarea.innerText = element.innerText;
         }
@@ -5462,13 +5481,13 @@ var CVModels = /*#__PURE__*/function () {
         var textareaParentInnerHTML = textareaParent.innerHTML;
 
         if (textareaParent.nodeName === "UL") {
-          var divToRempaceTextareaParent = _this3.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(textareaParent));
+          var divToRempaceTextareaParent = _this4.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(textareaParent));
 
           textareaParent.replaceWith(divToRempaceTextareaParent);
           divToRempaceTextareaParent.innerHTML = textareaParentInnerHTML;
 
-          if (_this3.modelName === "cv-2" || _this3.modelName === "cv-3") {
-            var label = _this3.dom.createElement('p', 'mb-1');
+          if (_this4.modelName === "cv-2" || _this4.modelName === "cv-3") {
+            var label = _this4.dom.createElement('p', 'mb-1');
 
             label.innerText = "Tâches réalisées :";
             divToRempaceTextareaParent.before(label);
@@ -5488,17 +5507,17 @@ var CVModels = /*#__PURE__*/function () {
           }
         }
 
-        if (list.classList.contains('skills-list-right') && _this3.inputsValuesLength === 0) {
+        if (list.classList.contains('skills-list-right') && _this4.inputsValuesLength === 0) {
           list.innerHTML = "";
         } else {
           var addIntoListButton = list.querySelector('.add-into-list');
 
           if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(addIntoListButton)) {
-            if (_this3.inputsValuesLength > 0 && list.classList.contains('skills-list-left') && list.nextElementSibling.children.length > 0) {
+            if (_this4.inputsValuesLength > 0 && list.classList.contains('skills-list-left') && list.nextElementSibling.children.length > 0) {
               return;
             }
 
-            addIntoListButton = _this3.dom.createElement('button', 'btn btn-secondary add-into-list');
+            addIntoListButton = _this4.dom.createElement('button', 'btn btn-secondary add-into-list');
           }
 
           addIntoListButton.innerText = "En ajouter une autre";
@@ -5525,7 +5544,7 @@ var CVModels = /*#__PURE__*/function () {
               lastChild.after(addIntoListButton);
             }
 
-            addIntoListButton.addEventListener('click', _this3.handleAddNewList.bind(_this3));
+            addIntoListButton.addEventListener('click', _this4.handleAddNewList.bind(_this4));
           }
         }
       });
@@ -5696,37 +5715,37 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "addListenersToEveryBarLevels",
     value: function addListenersToEveryBarLevels() {
-      var _this4 = this;
+      var _this5 = this;
 
       var barLevels = document.querySelectorAll('.level.bar-level');
       barLevels.forEach(function (barLevel) {
         var levelCursor = barLevel.querySelector('.level-cursor');
 
         if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelCursor)) {
-          levelCursor = _this4.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+          levelCursor = _this5.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
           barLevel.appendChild(levelCursor);
         }
 
-        if (_this4.pathname.includes('/cv/show')) {
-          _this4.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
+        if (_this5.pathname.includes('/cv/show')) {
+          _this5.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(_this4.levelIndicator)) {
-            _this4.levelIndicator = _this4.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
-            barLevel.appendChild(_this4.levelIndicator);
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(_this5.levelIndicator)) {
+            _this5.levelIndicator = _this5.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+            barLevel.appendChild(_this5.levelIndicator);
           }
 
-          levelCursor.style.left = barLevel.getAttribute('aria-level') + "px";
-          var levelCursorPosition = levelCursor.getBoundingClientRect();
-          var barLevelPosition = barLevel.getBoundingClientRect();
-          var levelIndicatorWidth = levelCursorPosition.x - barLevelPosition.x;
-          _this4.levelIndicator.style.width = levelIndicatorWidth + "px";
+          var barLevelRect = barLevel.getBoundingClientRect();
+          levelCursor.style.left = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100 + "px";
+          var levelCursorRect = levelCursor.getBoundingClientRect();
+          var levelIndicatorWidth = levelCursorRect.x - barLevelRect.x;
+          _this5.levelIndicator.style.width = levelIndicatorWidth + "px";
         }
 
-        levelCursor.addEventListener('mousedown', _this4.handleLevelCursorMouseDown.bind(_this4));
-        levelCursor.addEventListener('mouseup', _this4.handleLevelCursorMouseUp.bind(_this4));
-        barLevel.addEventListener('click', _this4.handleBarLevelClick.bind(_this4));
-        barLevel.addEventListener('mousemove', _this4.handleLevelCursorMove.bind(_this4));
-        barLevel.addEventListener('mouseleave', _this4.handleBarLevelMouseleave.bind(_this4));
+        levelCursor.addEventListener('mousedown', _this5.handleLevelCursorMouseDown.bind(_this5));
+        levelCursor.addEventListener('mouseup', _this5.handleLevelCursorMouseUp.bind(_this5));
+        barLevel.addEventListener('click', _this5.handleBarLevelClick.bind(_this5));
+        barLevel.addEventListener('mousemove', _this5.handleLevelCursorMove.bind(_this5));
+        barLevel.addEventListener('mouseleave', _this5.handleBarLevelMouseleave.bind(_this5));
       });
     }
     /**
@@ -5943,20 +5962,20 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleBarLevelMouseleave",
     value: function handleBarLevelMouseleave(e) {
-      var _this5 = this;
+      var _this6 = this;
 
       e.preventDefault();
 
       if (this.levelCursorOrigin) {
         document.body.addEventListener('mousemove', function (e) {
           e.preventDefault();
-          _this5.moveFromBody = true;
+          _this6.moveFromBody = true;
 
-          _this5.handleLevelCursorMove(e);
+          _this6.handleLevelCursorMove(e);
         });
         document.body.addEventListener('click', function (e) {
           e.preventDefault();
-          _this5.levelCursorOrigin = undefined;
+          _this6.levelCursorOrigin = undefined;
         });
       }
     }
@@ -6083,7 +6102,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "transformEachInputToText",
     value: function transformEachInputToText() {
-      var _this6 = this;
+      var _this7 = this;
 
       if (this.formInputs) {
         this.formInputs.forEach(function (formInput) {
@@ -6092,24 +6111,24 @@ var CVModels = /*#__PURE__*/function () {
           if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInput);
 
-            var elementToReplaceInput = _this6.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+            var elementToReplaceInput = _this7.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
 
             var inputValue = formInput.value;
 
             if (inputValue && inputValue.length > 0) {
-              _this6.saveInputsValues(formInput.name, inputValue);
+              _this7.saveInputsValues(formInput.name, inputValue);
             } else {
-              _this6.savePlaceholder(formInput.name, formInput.getAttribute('placeholder'));
+              _this7.savePlaceholder(formInput.name, formInput.getAttribute('placeholder'));
             }
 
             var elementInnerText;
 
             if (formInput.name === "name") {
-              elementInnerText = _this6.textStylePerModel[_this6.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+              elementInnerText = _this7.textStylePerModel[_this7.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "firstname") {
-              elementInnerText = _this6.textStylePerModel[_this6.modelName].firstname === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+              elementInnerText = _this7.textStylePerModel[_this7.modelName].firstname === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "work") {
-              elementInnerText = _this6.textStylePerModel[_this6.modelName].work === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+              elementInnerText = _this7.textStylePerModel[_this7.modelName].work === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "email" || formInput.name === 'url_linkedin') {
               elementInnerText = inputValue;
             } else {
@@ -6134,7 +6153,7 @@ var CVModels = /*#__PURE__*/function () {
             if (formInputParent.classList.contains('justify-content-between') && separator && formInputParentChildren.length > 1 && !formInputParent.querySelector('#separator')) {
               formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
 
-              var separatorSpan = _this6.dom.createElement('span');
+              var separatorSpan = _this7.dom.createElement('span');
 
               separatorSpan.innerText = separator;
               separatorSpan.style.marginLeft = "5px";
@@ -6159,7 +6178,7 @@ var CVModels = /*#__PURE__*/function () {
             formInput.replaceWith(elementToReplaceInput);
           } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             if (formInput.name.includes('level')) {
-              _this6.saveInputsValues(formInput.name, formInput.value);
+              _this7.saveInputsValues(formInput.name, formInput.value);
 
               var inputParentElement = formInput.parentElement;
               var levelCursor = inputParentElement.querySelector('.level-cursor');
@@ -6169,19 +6188,19 @@ var CVModels = /*#__PURE__*/function () {
               }
             }
           } else if (formInput.classList.contains('profile-photo')) {
-            if (!_this6.shownProfilePhoto) {
+            if (!_this7.shownProfilePhoto) {
               formInput.innerHTML = (0,_icons_user_icon__WEBPACK_IMPORTED_MODULE_9__["default"])((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInput));
               var userIcon = formInput.querySelector('.profile-photo');
               formInput.replaceWith(userIcon);
             }
           } else if (formInputIsHidden) {
-            _this6.saveInputsValues(formInput.name, formInput.value);
+            _this7.saveInputsValues(formInput.name, formInput.value);
           } else if (formInput.classList.contains('man') || formInput.classList.contains('woman')) {
             if (formInput.getAttribute('selected') === "true") {
-              _this6.saveInputsValues(formInput.name, formInput.value);
+              _this7.saveInputsValues(formInput.name, formInput.value);
             }
 
-            if (_this6.form.querySelector('.sex')) {
+            if (_this7.form.querySelector('.sex')) {
               var formInputGrandParent = formInput.parentElement.parentElement;
               formInputGrandParent.parentElement.removeChild(formInputGrandParent);
             }
@@ -6234,22 +6253,22 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "transformEachTextareaToText",
     value: function transformEachTextareaToText() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.throwErrorIfUndefined(this.formTextareas, "this.formTextareas");
       this.formTextareas.forEach(function (formTextarea) {
         var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formTextarea);
 
-        var elementToReplaceTextarea = _this7.dom.createElement(formTextarea.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+        var elementToReplaceTextarea = _this8.dom.createElement(formTextarea.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
 
         var inputValue = formTextarea.value;
 
-        _this7.saveInputsValues(formTextarea.name, inputValue);
+        _this8.saveInputsValues(formTextarea.name, inputValue);
 
         var elementInnerText;
 
         if (formTextarea.name === "name") {
-          elementInnerText = _this7.textStylePerModel[_this7.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+          elementInnerText = _this8.textStylePerModel[_this8.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
         } else {
           elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
         }
@@ -6292,12 +6311,12 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "addClickEventToConsoleButtons",
     value: function addClickEventToConsoleButtons() {
-      var _this8 = this;
+      var _this9 = this;
 
       this.throwErrorIfUndefined(this.console, "this.console");
       var consoleButtons = this.console.querySelectorAll('.icon');
       consoleButtons.forEach(function (consoleButton) {
-        consoleButton.addEventListener('click', _this8.handleConsoleButtonClick.bind(_this8));
+        consoleButton.addEventListener('click', _this9.handleConsoleButtonClick.bind(_this9));
       });
     }
   }, {
@@ -6319,7 +6338,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleSaveCV",
     value: function handleSaveCV() {
-      var _this9 = this;
+      var _this10 = this;
 
       var download = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var formData = new FormData();
@@ -6332,17 +6351,17 @@ var CVModels = /*#__PURE__*/function () {
         var cv_id_input = document.querySelector('.cv-id');
         formData.append(cv_id_input.name, cv_id_input.value);
         axios__WEBPACK_IMPORTED_MODULE_10___default().post('/cv/edit', formData).then(function (res) {
-          _this9.processCvPostingRes(res, download);
+          _this10.processCvPostingRes(res, download);
         })["catch"](function (err) {
-          _this9.processCvPostingError(err);
+          _this10.processCvPostingError(err);
         });
         return;
       }
 
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/save", formData).then(function (res) {
-        _this9.processCvPostingRes(res, download);
+        _this10.processCvPostingRes(res, download);
       })["catch"](function (err) {
-        _this9.processCvPostingError(err);
+        _this10.processCvPostingError(err);
       });
     }
     /**
@@ -6406,11 +6425,11 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "showNotificationAndActivateFinishButton",
     value: function showNotificationAndActivateFinishButton() {
-      var _this10 = this;
+      var _this11 = this;
 
       this.dom.createModal("alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", "Votre CV a été enregistré !", false);
       setTimeout(function () {
-        _this10.dom.closeModal();
+        _this11.dom.closeModal();
       }, 3000);
       var finishButton = this.console.querySelector('.check-icon');
       finishButton.classList.add('active');
@@ -6428,11 +6447,11 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "launchDownload",
     value: function launchDownload() {
-      var _this11 = this;
+      var _this12 = this;
 
       var withInputsValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/download", withInputsValues ? this.inputsValues : this.elementsInnerText).then(function (res) {
-        _this11.showNotificationAndActivateFinishButton(); // if(res.data){
+        _this12.showNotificationAndActivateFinishButton(); // if(res.data){
         //     this.handleSaveCV();
         // }
 
@@ -6440,7 +6459,7 @@ var CVModels = /*#__PURE__*/function () {
         var errorString = err.toString();
 
         if (errorString.toLowerCase().includes('network error')) {
-          _this11.showNotificationAndActivateFinishButton();
+          _this12.showNotificationAndActivateFinishButton();
         }
       });
     }
@@ -7003,7 +7022,11 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "keyboardTouches",
     value: function keyboardTouches() {
-      this.modal.addEventListener('keyup', this.handleKeyUp.bind(this));
+      var form = this.modal.querySelector('form');
+
+      if (form) {
+        form.addEventListener('keypress', this.handleKeyPress.bind(this));
+      }
     }
     /**
      * 
@@ -7011,13 +7034,18 @@ var DOMInteractions = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "handleKeyUp",
-    value: function handleKeyUp(e) {
-      e.preventDefault();
-
+    key: "handleKeyPress",
+    value: function handleKeyPress(e) {
       if (e.key.toLocaleLowerCase() === "enter") {
+        e.preventDefault();
         this.currentInputToFocusNumber++;
-        this.modalInputs[this.currentInputToFocusNumber];
+
+        if (this.currentInputToFocusNumber < this.modalInputs.length) {
+          this.modalInputs[this.currentInputToFocusNumber].focus();
+        } else {
+          this.currentInputToFocusNumber = 0;
+          this.modalInputs[this.currentInputToFocusNumber].focus();
+        }
       }
     }
     /**

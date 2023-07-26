@@ -224,19 +224,28 @@ export default class DOMInteractions {
     }
 
     keyboardTouches(){
-        this.modal.addEventListener('keyup', this.handleKeyUp.bind(this))
+        const form = this.modal.querySelector('form');
+        if(form){
+            form.addEventListener('keypress', this.handleKeyPress.bind(this))
+        }
     }
 
     /**
      * 
      * @param {KeyboardEvent} e 
      */
-    handleKeyUp(e){
-        e.preventDefault();
-        
+    handleKeyPress(e){
         if(e.key.toLocaleLowerCase() === "enter"){
+            e.preventDefault();
+
             this.currentInputToFocusNumber++;
-            this.modalInputs[this.currentInputToFocusNumber];
+            if(this.currentInputToFocusNumber < this.modalInputs.length){
+                this.modalInputs[this.currentInputToFocusNumber].focus();
+            }else {
+                this.currentInputToFocusNumber = 0;
+                this.modalInputs[this.currentInputToFocusNumber].focus();
+            }
+            
         }
     }
     

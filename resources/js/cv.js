@@ -116,6 +116,8 @@ export default class CVModels {
                 this.elementsInnerText[csrfInput.name] = csrfInput.value;
                 this.elementsInnerText[cv_id.name] = parseInt(cv_id.value);
                 
+                this.addLevelIndicators();
+
                 this.addClickEventToConsoleButtons();
 
             }else if(this.editCvClicked && cvForm){
@@ -177,6 +179,23 @@ export default class CVModels {
         this.elementsToBeTextareas.forEach(element => {
             this.saveInnerText(element);
         })
+    }
+
+    addLevelIndicators(){
+        const barLevels = document.querySelectorAll('.bar-level');
+        barLevels.forEach(barLevel => {
+            this.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
+            if(isNull(this.levelIndicator)){
+                this.levelIndicator = this.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+                barLevel.appendChild(this.levelIndicator);
+            }
+        
+            const barLevelRect = barLevel.getBoundingClientRect();
+            const levelIndicatorWidth = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100;
+            
+            this.levelIndicator.style.width = levelIndicatorWidth + "px";
+        })
+        
     }
 
     createConsole(className)
@@ -355,7 +374,6 @@ export default class CVModels {
                 }
                 
                 if(element.getAttribute('aria-name') === "phone_number"){
-                    console.log(element, element.innerText, element.innerText.split(' ').join(''))
                     input.setAttribute('value', element.innerText.split(' ').join(''));
                 }
             }
@@ -655,11 +673,12 @@ export default class CVModels {
                     barLevel.appendChild(this.levelIndicator);
                 }
 
-                levelCursor.style.left = barLevel.getAttribute('aria-level') + "px";
+                const barLevelRect = barLevel.getBoundingClientRect();
+                levelCursor.style.left = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100 + "px";
 
-                const levelCursorPosition = levelCursor.getBoundingClientRect();
-                const barLevelPosition = barLevel.getBoundingClientRect()
-                const levelIndicatorWidth = levelCursorPosition.x - barLevelPosition.x;
+                const levelCursorRect = levelCursor.getBoundingClientRect();
+                
+                const levelIndicatorWidth = levelCursorRect.x - barLevelRect.x;
 
                 this.levelIndicator.style.width = levelIndicatorWidth + "px";
             }
