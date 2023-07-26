@@ -17,7 +17,9 @@ class AppController extends Controller
             'token' => csrf_token(), 
             'title' => "Enregistrements",
             "hideSaving" => true,
-            "cvs" => CV::all()
+            "men" => CV::where('sex', 'man')->get(),
+            "women" => CV::where('sex', 'woman')->get(),
+            "route" => "cvs"
         ]);
     }
 }

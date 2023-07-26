@@ -6478,11 +6478,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _utils_interactions_with_cv_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/interactions-with-cv-models */ "./resources/js/utils/interactions-with-cv-models.js");
 /* harmony import */ var _utils_interactions_with_navbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/interactions-with-navbar */ "./resources/js/utils/interactions-with-navbar.js");
+/* harmony import */ var _utils_interactions_with_savings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/interactions-with-savings */ "./resources/js/utils/interactions-with-savings.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
 
 
 
@@ -6493,6 +6495,7 @@ var Interactions = /*#__PURE__*/function () {
 
     this.withNavbar();
     this.withCVModels();
+    this.withSavings();
   }
 
   _createClass(Interactions, [{
@@ -6504,6 +6507,11 @@ var Interactions = /*#__PURE__*/function () {
     key: "withCVModels",
     value: function withCVModels() {
       (0,_utils_interactions_with_cv_models__WEBPACK_IMPORTED_MODULE_0__["default"])();
+    }
+  }, {
+    key: "withSavings",
+    value: function withSavings() {
+      (0,_utils_interactions_with_savings__WEBPACK_IMPORTED_MODULE_2__["default"])();
     }
   }]);
 
@@ -7493,6 +7501,163 @@ function EditPasswordInteraction() {
     };
 
     editPasswordMenu.addEventListener('click', handleEditPassword);
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/utils/interactions-with-savings.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/utils/interactions-with-savings.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InteractionsWithSavings)
+/* harmony export */ });
+function InteractionsWithSavings() {
+  var barsChevron = document.querySelectorAll('.bar .chevron');
+
+  if (barsChevron.length > 0) {
+    barsChevron.forEach(function (barChevron) {
+      barChevron.addEventListener('click', handleBarChevronClick);
+    });
+  }
+
+  function handleBarChevronClick(e) {
+    e.preventDefault();
+    var chevron = e.currentTarget;
+    toggleCvListBy(chevron);
+  }
+  /**
+   * 
+   * @param {SVGElement} chevron 
+   */
+
+
+  function toggleCvListBy(chevron) {
+    toggleElementClass(chevron, "active");
+    var cvsElement = chevron.parentElement.nextElementSibling;
+
+    if (!cvsElement.classList.contains('active')) {
+      cvsElement.classList.add('active');
+      setTimeout(function () {
+        var countLinks = 1;
+        var links = Array.from(cvsElement.querySelectorAll('a'));
+        links.forEach(function (link) {
+          if (countLinks < 11) {
+            countLinks++;
+            link.classList.add('block');
+          }
+        });
+        var watchMore = cvsElement.querySelector('.btn.btn-primary');
+        watchMore.style.opacity = 1;
+        watchMore.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          if (countLinks === 11) {
+            var watchLess = document.createElement('button');
+            watchLess.className = "btn btn-secondary mt-3 ms-2";
+            watchLess.innerText = "Voir moins";
+            watchMore.after(watchLess);
+            watchLess.addEventListener('click', function (e) {
+              e.preventDefault();
+              var less = countLinks - 10;
+              var reversedLinks = links.reverse();
+              reversedLinks.forEach(function (link) {
+                if (link.classList.contains('block') && countLinks > less) {
+                  countLinks--;
+                  link.classList.remove('block');
+                }
+              });
+              console.log(countLinks, links.length);
+
+              if (countLinks <= 11) {
+                watchLess.parentElement.removeChild(watchLess);
+              } else if (countLinks >= links.length - 10) {
+                watchMore.style.display = "inline-block";
+                watchMore.style.opacity = 1;
+              }
+            });
+          }
+
+          var more = countLinks + 10;
+          links.forEach(function (link) {
+            if (!link.classList.contains("block") && countLinks < more) {
+              countLinks++;
+              link.classList.add('block');
+            }
+          });
+
+          if (countLinks === links.length + 1) {
+            watchMore.style.opacity = 0;
+            watchMore.style.display = "none";
+          }
+        });
+      }, 300);
+    } else {
+      cvsElement.classList.remove('active');
+      var watchMore = cvsElement.querySelector('.btn.btn-primary');
+
+      if (watchMore) {
+        watchMore.style.opacity = 0;
+      }
+
+      setTimeout(function () {
+        var links = cvsElement.querySelectorAll('a');
+        links.forEach(function (link) {
+          link.classList.remove('block');
+        });
+      }, 300);
+    }
+  }
+
+  function toggleElementClass(element, className) {
+    if (!element.classList.contains(className)) {
+      element.classList.add(className);
+    } else {
+      element.classList.remove(className);
+    }
+  }
+
+  var searchButton = document.querySelector('.search-button');
+
+  if (searchButton) {
+    searchButton.addEventListener('click', function (e) {
+      e.preventDefault();
+      searchForCvByInput(e.currentTarget.previousElementSibling);
+    });
+  }
+
+  function searchForCvByInput(input) {
+    if (input) {
+      var links = document.querySelectorAll('.cvs-list a');
+      links.forEach(function (link) {
+        if (link.innerHTML.toLowerCase().includes(input.value.toLowerCase())) {
+          console.log(link);
+          showLink(link);
+        }
+      });
+    }
+  }
+
+  function showLink(link) {
+    var bar = link.parentElement.previousElementSibling;
+    var chevron = bar.querySelector('.chevron');
+
+    if (!chevron.classList.contains('active')) {
+      chevron.classList.add('active');
+    }
+
+    var cvsElement = chevron.parentElement.nextElementSibling;
+
+    if (!cvsElement.classList.contains('active')) {
+      cvsElement.classList.add('active');
+    }
+
+    link.classList.add('block');
   }
 }
 
