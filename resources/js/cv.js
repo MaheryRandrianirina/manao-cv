@@ -42,6 +42,7 @@ export default class CVModels {
         this.shownProfilePhoto = false;
         this.pathname;
         this.editCvClicked = false;
+        this.profilePhotoImg;
         /**
          * @type {HTMLInputElement | undefined}
          */
@@ -106,6 +107,8 @@ export default class CVModels {
 
                 this.fetchElementsToBeInputs();
                 this.saveElementsToBeInputsInnerText();
+
+                this.saveProfilePhotoImg();
     
                 this.fetchElementsToBeTextareas();
                 
@@ -164,7 +167,16 @@ export default class CVModels {
 
     saveInnerText(element)
     {
-        this.elementsInnerText[element.getAttribute('aria-name')] = element.innerText
+        if(!element.classList.contains('profile-photo')){
+            this.elementsInnerText[element.getAttribute('aria-name')] = element.innerText;
+        }
+    }
+
+    saveProfilePhotoImg(){
+        const profilePhotoImg = document.querySelector('img.profile-photo');
+        if(profilePhotoImg){
+            this.profilePhotoImg = profilePhotoImg;
+        }
     }
 
     fetchElementsToBeTextareas()
@@ -305,6 +317,7 @@ export default class CVModels {
                     || inputName.includes('phone') || inputName.includes('email')
                     || inputName.includes('adress') || inputName.includes('profile-photo')
                 ){
+
                     input.setAttribute('required', "true");
 
                     if(element.parentElement.classList.contains('about')
@@ -399,7 +412,6 @@ export default class CVModels {
         })
 
         const elementsToBeTextarea = document.querySelectorAll('#textarea');
-        
         elementsToBeTextarea.forEach(element => {
             const textareaName = element.getAttribute('aria-name');
             /**
@@ -685,6 +697,7 @@ export default class CVModels {
 
             levelCursor.addEventListener('mousedown', this.handleLevelCursorMouseDown.bind(this));
             levelCursor.addEventListener('mouseup', this.handleLevelCursorMouseUp.bind(this));
+
             barLevel.addEventListener('click', this.handleBarLevelClick.bind(this));
             barLevel.addEventListener('mousemove', this.handleLevelCursorMove.bind(this));
             barLevel.addEventListener('mouseleave', this.handleBarLevelMouseleave.bind(this));
@@ -993,6 +1006,13 @@ export default class CVModels {
         this.replaceSeeButtonContainerToConsole();
 
         this.addClickEventToConsoleButtons();
+
+        if(this.pathname.includes('/cv/show')
+            && this.editCvClicked && this.profilePhotoImg
+        ){
+            const svgProfilePhoto = document.querySelector('svg.profile-photo');
+            svgProfilePhoto.replaceWith(this.profilePhotoImg);
+        }
 
         this.removeLevelCursorsIfExist();
     }

@@ -5130,6 +5130,7 @@ var CVModels = /*#__PURE__*/function () {
     this.shownProfilePhoto = false;
     this.pathname;
     this.editCvClicked = false;
+    this.profilePhotoImg;
     /**
      * @type {HTMLInputElement | undefined}
      */
@@ -5194,6 +5195,7 @@ var CVModels = /*#__PURE__*/function () {
           this.createConsole("cv-show-console");
           this.fetchElementsToBeInputs();
           this.saveElementsToBeInputsInnerText();
+          this.saveProfilePhotoImg();
           this.fetchElementsToBeTextareas();
           this.saveElementsToBeTextareasInnerText();
           var csrfInput = document.querySelector("input[type='hidden']");
@@ -5241,7 +5243,18 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "saveInnerText",
     value: function saveInnerText(element) {
-      this.elementsInnerText[element.getAttribute('aria-name')] = element.innerText;
+      if (!element.classList.contains('profile-photo')) {
+        this.elementsInnerText[element.getAttribute('aria-name')] = element.innerText;
+      }
+    }
+  }, {
+    key: "saveProfilePhotoImg",
+    value: function saveProfilePhotoImg() {
+      var profilePhotoImg = document.querySelector('img.profile-photo');
+
+      if (profilePhotoImg) {
+        this.profilePhotoImg = profilePhotoImg;
+      }
     }
   }, {
     key: "fetchElementsToBeTextareas",
@@ -6054,6 +6067,12 @@ var CVModels = /*#__PURE__*/function () {
       this.divFromForm = this.transformFormToDiv();
       this.replaceSeeButtonContainerToConsole();
       this.addClickEventToConsoleButtons();
+
+      if (this.pathname.includes('/cv/show') && this.editCvClicked && this.profilePhotoImg) {
+        var svgProfilePhoto = document.querySelector('svg.profile-photo');
+        svgProfilePhoto.replaceWith(this.profilePhotoImg);
+      }
+
       this.removeLevelCursorsIfExist();
     }
   }, {
@@ -7800,49 +7819,54 @@ function InteractionsWithSavings() {
           }
         });
         var watchMore = cvsElement.querySelector('.btn.btn-primary');
-        watchMore.style.opacity = 1;
-        watchMore.addEventListener('click', function (e) {
-          e.preventDefault();
 
-          if (countLinks === 11) {
-            var watchLess = document.createElement('button');
-            watchLess.className = "btn btn-secondary mt-3 ms-2";
-            watchLess.innerText = "Voir moins";
-            watchMore.after(watchLess);
-            watchLess.addEventListener('click', function (e) {
-              e.preventDefault();
-              var less = countLinks - 10;
-              var reversedLinks = links.reverse();
-              reversedLinks.forEach(function (link) {
-                if (link.classList.contains('block') && countLinks > less) {
-                  countLinks--;
-                  link.classList.remove('block');
+        if (countLinks > 10) {
+          watchMore.style.opacity = 1;
+          watchMore.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (countLinks === 11) {
+              var watchLess = document.createElement('button');
+              watchLess.className = "btn btn-secondary mt-3 ms-2";
+              watchLess.innerText = "Voir moins";
+              watchMore.after(watchLess);
+              watchLess.addEventListener('click', function (e) {
+                e.preventDefault();
+                var less = countLinks - 10;
+                var reversedLinks = links.reverse();
+                reversedLinks.forEach(function (link) {
+                  if (link.classList.contains('block') && countLinks > less) {
+                    countLinks--;
+                    link.classList.remove('block');
+                  }
+                });
+                console.log(countLinks, links.length);
+
+                if (countLinks <= 11) {
+                  watchLess.parentElement.removeChild(watchLess);
+                } else if (countLinks >= links.length - 10) {
+                  watchMore.style.display = "inline-block";
+                  watchMore.style.opacity = 1;
                 }
               });
-              console.log(countLinks, links.length);
+            }
 
-              if (countLinks <= 11) {
-                watchLess.parentElement.removeChild(watchLess);
-              } else if (countLinks >= links.length - 10) {
-                watchMore.style.display = "inline-block";
-                watchMore.style.opacity = 1;
+            var more = countLinks + 10;
+            links.forEach(function (link) {
+              if (!link.classList.contains("block") && countLinks < more) {
+                countLinks++;
+                link.classList.add('block');
               }
             });
-          }
 
-          var more = countLinks + 10;
-          links.forEach(function (link) {
-            if (!link.classList.contains("block") && countLinks < more) {
-              countLinks++;
-              link.classList.add('block');
+            if (countLinks === links.length + 1) {
+              watchMore.style.opacity = 0;
+              watchMore.style.display = "none";
             }
           });
-
-          if (countLinks === links.length + 1) {
-            watchMore.style.opacity = 0;
-            watchMore.style.display = "none";
-          }
-        });
+        } else {
+          watchMore.style.display = "none";
+        }
       }, 300);
     } else {
       cvsElement.classList.remove('active');

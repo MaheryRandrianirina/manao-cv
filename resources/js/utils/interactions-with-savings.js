@@ -37,52 +37,57 @@ export default function InteractionsWithSavings(){
                 })
 
                 const watchMore = cvsElement.querySelector('.btn.btn-primary');
-                watchMore.style.opacity = 1;
-                watchMore.addEventListener('click', (e)=>{
-                    e.preventDefault();
 
-                    if(countLinks === 11){
-                        const watchLess = document.createElement('button');
-                        watchLess.className = "btn btn-secondary mt-3 ms-2";
-                        watchLess.innerText = "Voir moins";
+                if(countLinks > 10){
+                    watchMore.style.opacity = 1;
+                    watchMore.addEventListener('click', (e)=>{
+                        e.preventDefault();
 
-                        watchMore.after(watchLess);
+                        if(countLinks === 11){
+                            const watchLess = document.createElement('button');
+                            watchLess.className = "btn btn-secondary mt-3 ms-2";
+                            watchLess.innerText = "Voir moins";
 
-                        watchLess.addEventListener('click', e => {
-                            e.preventDefault();
-    
-                            let less = countLinks - 10;
-                            const reversedLinks = links.reverse();
-                            reversedLinks.forEach(link => {
-                                if(link.classList.contains('block') && countLinks > less){
-                                    countLinks--;
-                                    link.classList.remove('block');
+                            watchMore.after(watchLess);
+
+                            watchLess.addEventListener('click', e => {
+                                e.preventDefault();
+        
+                                let less = countLinks - 10;
+                                const reversedLinks = links.reverse();
+                                reversedLinks.forEach(link => {
+                                    if(link.classList.contains('block') && countLinks > less){
+                                        countLinks--;
+                                        link.classList.remove('block');
+                                    }
+                                })
+                                console.log(countLinks, links.length)
+                                if(countLinks <= 11){
+                                    watchLess.parentElement.removeChild(watchLess)
+                                }else if(countLinks >= links.length - 10){
+                                    watchMore.style.display = "inline-block";
+                                    watchMore.style.opacity = 1;
                                 }
                             })
-                            console.log(countLinks, links.length)
-                            if(countLinks <= 11){
-                                watchLess.parentElement.removeChild(watchLess)
-                            }else if(countLinks >= links.length - 10){
-                                watchMore.style.display = "inline-block";
-                                watchMore.style.opacity = 1;
+                        }
+
+                        let more = countLinks + 10;
+                        
+                        links.forEach(link => {
+                            if(!link.classList.contains("block") && countLinks < more){
+                                countLinks++;
+                                link.classList.add('block');
                             }
                         })
-                    }
 
-                    let more = countLinks + 10;
-                    
-                    links.forEach(link => {
-                        if(!link.classList.contains("block") && countLinks < more){
-                            countLinks++;
-                            link.classList.add('block');
+                        if(countLinks === links.length + 1){
+                            watchMore.style.opacity = 0;
+                            watchMore.style.display = "none";
                         }
                     })
-
-                    if(countLinks === links.length + 1){
-                        watchMore.style.opacity = 0;
-                        watchMore.style.display = "none";
-                    }
-                })
+                }else{
+                    watchMore.style.display = "none";
+                }
                 
             }, 300)
         }else {
