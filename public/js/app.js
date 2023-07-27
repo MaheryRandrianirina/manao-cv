@@ -5130,7 +5130,8 @@ var CVModels = /*#__PURE__*/function () {
     this.shownProfilePhoto = false;
     this.pathname;
     this.editCvClicked = false;
-    this.profilePhotoImg;
+    this.cv_id_input;
+    this.csrfInput;
     /**
      * @type {HTMLInputElement | undefined}
      */
@@ -6485,19 +6486,23 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleDeleteCV",
     value: function handleDeleteCV() {
-      var cv_id_input = document.querySelector('input.cv-id');
-      var hiddenInputs = document.querySelectorAll('input[type="hidden"]');
-      var crsfInput;
-      hiddenInputs.forEach(function (hiddenInput) {
-        if (hiddenInput.name === "_token") {
-          crsfInput = hiddenInput;
-        }
-      });
+      var _this13 = this;
 
-      if (cv_id_input && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parseInt(cv_id_input.value)) && crsfInput) {
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.cv_id_input) && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.csrfInput)) {
+        this.cv_id_input = document.querySelector('input.cv-id');
+        this.csrfInput;
+        var hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+        hiddenInputs.forEach(function (hiddenInput) {
+          if (hiddenInput.name === "_token") {
+            _this13.csrfInput = hiddenInput;
+          }
+        });
+      }
+
+      if (this.cv_id_input && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNumber)(parseInt(this.cv_id_input.value)) && this.csrfInput) {
         this.dom.createModal('delete-cv-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', "\n                <form action=\"/cv/delete\" method=\"post\">\n                    <p class='text-center'>\xCAtes-vous s\xFBr de vouloir supprimer ce CV ?</p>\n                    <div class='buttons position-absolute end-0'>\n                        <a class='btn btn-secondary no'>Annuler</a>\n                        <button class='btn btn-danger sure' type='submit'>Oui, supprimer</button>\n                    </div>\n                </form>\n            ");
-        this.dom.modal.appendChild(cv_id_input);
-        this.dom.modal.appendChild(crsfInput);
+        this.dom.modal.appendChild(this.cv_id_input);
+        this.dom.modal.appendChild(this.csrfInput);
         this.dom.setFormAction("/cv/delete");
         this.dom.setUrlForRedirection('/cvs');
         this.dom.setNotificationContent("Le CV a été supprimé avec succès");
@@ -7649,16 +7654,30 @@ function InteractionsWithCVModels() {
 
         _modelHoverStyle.appendChild(modelHoverStyleParagraph);
 
-        if (model.classList.contains('cv-1') || model.classList.contains('cv-3')) {
-          _modelHoverStyle.style.left = 0;
-        } else if (model.classList.contains('cv-2') || model.classList.contains('cv-4')) {
-          _modelHoverStyle.style.right = 0;
-        }
+        if (window.innerWidth > 600) {
+          if (model.classList.contains('cv-1') || model.classList.contains('cv-3')) {
+            _modelHoverStyle.style.left = 0;
+          } else if (model.classList.contains('cv-2') || model.classList.contains('cv-4')) {
+            _modelHoverStyle.style.right = 0;
+          }
 
-        if (model.parentElement.classList.contains('row-one')) {
-          _modelHoverStyle.style.top = 0;
-        } else if (model.parentElement.classList.contains('row-two')) {
-          _modelHoverStyle.style.top = 469 + 9 + "px";
+          if (model.parentElement.classList.contains('row-one')) {
+            _modelHoverStyle.style.top = 0;
+          } else if (model.parentElement.classList.contains('row-two')) {
+            _modelHoverStyle.style.top = 469 + 9 + "px";
+          }
+        } else {
+          _modelHoverStyle.style.left = 0;
+
+          if (model.classList.contains('cv-1')) {
+            _modelHoverStyle.style.top = 0;
+          } else if (model.classList.contains('cv-2')) {
+            _modelHoverStyle.style.top = 460 + "px";
+          } else if (model.classList.contains('cv-3')) {
+            _modelHoverStyle.style.top = 460 * 2 + 7 + "px";
+          } else if (model.classList.contains('cv-4')) {
+            _modelHoverStyle.style.top = 469 * 3 + 18 + "px";
+          }
         }
 
         _modelHoverStyle.style.width = modelRect.width + "px";

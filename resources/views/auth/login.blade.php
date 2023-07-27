@@ -11,7 +11,7 @@
 
         <!-- Validation Errors -->
         <x-auth-validation-errors class="ms-auto me-auto rounded mb-4 bg-danger p-2 text-center" style="width:350px" :errors="$errors" />
-        <div class="container bg-white p-3 rounded" style="width: 350px">
+        <div class="container bg-white p-3 rounded login-container" style="width: 350px">
             <form method="POST" action="{{ route('login') }}" class="container">   
                 @csrf
                 <div class="mb-3">   

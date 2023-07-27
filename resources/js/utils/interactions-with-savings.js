@@ -50,26 +50,26 @@ export default function InteractionsWithSavings(){
 
                             watchMore.after(watchLess);
 
-                            watchLess.addEventListener('click', e => {
-                                e.preventDefault();
-        
-                                let less = countLinks - 10;
-                                const reversedLinks = links.reverse();
-                                reversedLinks.forEach(link => {
-                                    if(link.classList.contains('block') && countLinks > less){
-                                        countLinks--;
-                                        link.classList.remove('block');
-                                    }
-                                })
-                                console.log(countLinks, links.length)
-                                if(countLinks <= 11){
-                                    watchLess.parentElement.removeChild(watchLess)
-                                }else if(countLinks >= links.length - 10){
-                                    watchMore.style.display = "inline-block";
-                                    watchMore.style.opacity = 1;
+                        watchLess.addEventListener('click', e => {
+                            e.preventDefault();
+    
+                            let less = countLinks - 10;
+                            const reversedLinks = links.reverse();
+                            reversedLinks.forEach(link => {
+                                if(link.classList.contains('block') && countLinks > less){
+                                    countLinks--;
+                                    link.classList.remove('block');
                                 }
                             })
-                        }
+                            console.log(countLinks, links.length)
+                            if(countLinks <= 11){
+                                watchLess.parentElement.removeChild(watchLess)
+                            }else if(countLinks >= links.length - 10){
+                                watchMore.style.display = "inline-block";
+                                watchMore.style.opacity = 1;
+                            }
+                        })
+                    }
 
                         let more = countLinks + 10;
                         

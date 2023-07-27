@@ -1,0 +1,60 @@
+
+@media only screen and (max-width: 600px) {
+    .cv-models-container {
+        width: 280px;
+        .cv-models .row-one, .cv-models .row-two {
+            display: block;
+            width: 700px;
+            margin: 0 auto;
+            
+            .cv {
+                margin-top: 20px;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+
+        .model-hover-style.active {
+            margin-top: 8px;
+        }
+    }
+
+    nav.navbar.navbar-expand-md .container-fluid .navbar-toggler {
+        left: 90% !important;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .container.login-container,.container.registration-container {
+        width: 240px !important;
+    }
+
+    .cv-models-container {
+        width: 240px;
+        .cv-models .row-one, .cv-models .row-two {
+            display: block;
+            width: 600px;
+            margin: 0 auto;
+            
+            .cv {
+                width: 600px;
+                margin-top: 20px;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+
+            .cv.cv-3 .right::before {
+                border-left: 596px solid transparent;
+            }
+        }
+    }
+
+    nav.navbar.navbar-expand-md .container-fluid .navbar-toggler {
+        left: 85% !important;
+    }
+
+    .cvs-list {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+}
