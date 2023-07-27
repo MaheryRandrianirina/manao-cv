@@ -81,6 +81,7 @@ li.nav-item a.text-white:hover {
 
     .main-modal.alert.alert-success.notification {
         height: 85px;
+        text-align: center;
     }
 
     .main-modal.alert-success-cv-saving {
@@ -138,9 +139,16 @@ li.nav-item a.text-white:hover {
             font-weight: bolder;
         }
 
+        .contact-list .email-adress p {
+            text-transform: lowercase !important;
+        }
         .icon {
             width: 20px;
             fill: $white;
+        }
+
+        p {
+            text-transform: capitalize !important;
         }
 
         cursor: pointer;
@@ -154,6 +162,22 @@ li.nav-item a.text-white:hover {
     }
 
     .cv.cv-1 {
+        .experiences {
+            .company-name span:nth-child(1) {
+                text-transform: uppercase;
+            }
+
+            .date {
+                font-weight: 700;
+            }
+        }
+        
+        .graduation {
+            h4 {
+                text-transform: capitalize !important;
+            }
+        }
+
         .task .task-label {
             font-weight: 600;
         }
@@ -308,6 +332,7 @@ li.nav-item a.text-white:hover {
             height: 150px;
             .name {
                 color: $green-2;
+                text-transform: uppercase;
             }
             .work {
                 font-weight: bold;

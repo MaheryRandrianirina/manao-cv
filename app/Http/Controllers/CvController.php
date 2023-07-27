@@ -533,13 +533,14 @@ class CvController extends Controller
                 $image = "data:image/png;base64,". base64_encode(file_get_contents($imagePath));
             }
 
-            $pdf = Pdf::loadView('components.cvs.'. $cv->model, [
+            $pdf = Pdf::loadView('pdf.cv', [
                 "cv" => $cv, 
                 "stringNumber" => $this->stringNumber,
-                "image" => $image
+                "image" => $image,
+                "download" => true
             ]);
             
-            return $pdf->download("cv.pdf");
+            return $pdf->download("cv-". $cv->name . "-". $cv->id.".pdf");
 
             echo json_encode(['success' => true]);
         }catch(Exception $e){
@@ -550,7 +551,9 @@ class CvController extends Controller
     public function test(){
         $pdf = Pdf::loadView('components.cvs.cv-1', ["content" => "dzf"]);
             
-        return $pdf->download("cv.pdf");
+        return $pdf->download("cv.pdf", [
+            "download" => true
+        ]);
     }
 
     public function show(Request $request, string $name, int $id){

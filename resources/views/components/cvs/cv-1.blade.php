@@ -1,4 +1,5 @@
 <?php use App\Helpers\NumberFormatter; ?>
+
 <div class="cv cv-1 d-flex col" aria-link="/cv/1">
     @csrf
     <div class="left bg-indigo p-4 text-white">
@@ -154,7 +155,7 @@
                             </p>
                             <div class="task">
                                 <p>
-                                    <span >Tâches réalisées : </span>
+                                    <span class="task-label">Tâches réalisées : </span>
                                     <span id="textarea" aria-name="experience_{{ $stringNumber[$i] }}_task_one">{{ $experience->task }}</span> 
                                 </p>
                             </div>

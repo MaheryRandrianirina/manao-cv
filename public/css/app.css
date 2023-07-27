@@ -10550,6 +10550,7 @@ li.nav-item a.text-white:hover {
 }
 .modal-container .main-modal.alert.alert-success.notification {
   height: 85px;
+  text-align: center;
 }
 .modal-container .main-modal.alert-success-cv-saving {
   height: 85px;
@@ -10600,9 +10601,15 @@ li.nav-item a.text-white:hover {
 .cv h2, .cv .h2, .cv h3, .cv .h3 {
   font-weight: bolder;
 }
+.cv .contact-list .email-adress p {
+  text-transform: lowercase !important;
+}
 .cv .icon {
   width: 20px;
   fill: #fff;
+}
+.cv p {
+  text-transform: capitalize !important;
 }
 .cv svg.profile-photo, .cv img.profile-photo {
   display: block;
@@ -10611,6 +10618,15 @@ li.nav-item a.text-white:hover {
   border-radius: 50%;
 }
 
+.cv.cv-1 .experiences .company-name span:nth-child(1) {
+  text-transform: uppercase;
+}
+.cv.cv-1 .experiences .date {
+  font-weight: 700;
+}
+.cv.cv-1 .graduation h4, .cv.cv-1 .graduation .h4 {
+  text-transform: capitalize !important;
+}
 .cv.cv-1 .task .task-label {
   font-weight: 600;
 }
@@ -10742,6 +10758,7 @@ li.nav-item a.text-white:hover {
 }
 .cv.cv-4 .cv-top .name {
   color: #7ec4a3;
+  text-transform: uppercase;
 }
 .cv.cv-4 .cv-top .work {
   font-weight: bold;
