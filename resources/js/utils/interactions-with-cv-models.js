@@ -40,7 +40,18 @@ export default function InteractionsWithCVModels(){
                     if(model.parentElement.classList.contains('row-one')){
                         modelHoverStyle.style.top = 0;
                     }else if(model.parentElement.classList.contains('row-two')){
-                        modelHoverStyle.style.top = 469 + 9 + "px";
+                        modelHoverStyle.style.top = 469 + "px";
+                        if(window.innerWidth >= 792 && window.innerWidth < 890){
+                            console.log(window.innerWidth)
+                            modelHoverStyle.style.top = 469 + 2 + "px";
+                        }else if(window.innerWidth >= 890 && window.innerWidth < 995){
+                            console.log(window.innerWidth)
+                            modelHoverStyle.style.top = 469 + 4 + "px";
+                        }else if(window.innerWidth >= 995 && window.innerWidth < 1095){
+                            modelHoverStyle.style.top = 469 + 6 + "px";
+                        }else if(window.innerWidth >= 1095){
+                            modelHoverStyle.style.top = 469 + 8 + "px";
+                        }
                     }
                 }else {
                     modelHoverStyle.style.left = 0;

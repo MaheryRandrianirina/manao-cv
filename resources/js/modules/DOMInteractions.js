@@ -183,7 +183,13 @@ export default class DOMInteractions {
     handleActionsInModalForm()
     {
         this.keyboardTouches();
-        
+
+        const noBtn = this.modal.querySelector('.no');
+
+        noBtn?.addEventListener('click', ()=>{
+            this.removeModalFromDOMWithAnimation();
+        });
+
         this.actionButton = this.modal.querySelector('.btn.btn-primary');
         if(isNull(this.actionButton)){
             this.actionButton = this.modal.querySelector('.btn.btn-danger');
@@ -191,7 +197,7 @@ export default class DOMInteractions {
         
         this.actionButton.addEventListener('click', this.handleModalActionButtonClick.bind(this));
 
-        this.ClickOnCloseModalButton()
+        this.ClickOnCloseModalButton();
     }
 
     handleActionsInModalConfirmation()

@@ -210,6 +210,10 @@ li.nav-item a.text-white:hover {
                 border-radius: 10px;
             }
         }
+
+        .right {
+            padding-top: 15px !important;
+        }
     }
 
     .cv.cv-3 {
@@ -236,7 +240,7 @@ li.nav-item a.text-white:hover {
         .right {
             position: relative;
             .profil {
-                margin-top: 100px !important;
+                margin-top: 170px !important;
             }
         }
 
@@ -432,6 +436,10 @@ li.nav-item a.text-white:hover {
                 width: 100%;
             }
         }
+
+        .experience {
+            margin-bottom: 30px;
+        }
     }
 
     .cv.cv-2 {
@@ -556,8 +564,11 @@ li.nav-item a.text-white:hover {
     }
 
     form.cv-3 {
-        div.profile-photo {
-            margin-bottom: 60px !important;
+        .left {
+            div.profile-photo {
+                margin-top: 25px !important;
+                margin-bottom: 100px !important;
+            }
         }
     }
 
@@ -655,7 +666,7 @@ li.nav-item a.text-white:hover {
     position: relative;
     top: 120px;
     background: $gray-900;
-    z-index: 5;
+    z-index: 1;
     height: 100px;
     width: 7.5%;
 }
@@ -712,6 +723,7 @@ li.nav-item a.text-white:hover {
     border-radius: 50%;
     padding: 2px;
     cursor: pointer;
+    z-index: 12;
     transition: background .3s ease;
 
     .close-icon {
