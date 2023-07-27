@@ -59,7 +59,7 @@ export default function InteractionsWithSavings(){
                                     link.classList.remove('block');
                                 }
                             })
-                            console.log(countLinks, links.length)
+                            
                             if(countLinks <= 11){
                                 watchLess.parentElement.removeChild(watchLess)
                             }else if(countLinks >= links.length - 10){

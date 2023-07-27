@@ -28,16 +28,32 @@ export default function InteractionsWithCVModels(){
                 modelHoverStyleParagraph.innerText = "Remplir"
                 modelHoverStyle.appendChild(modelHoverStyleParagraph)
 
-                if(model.classList.contains('cv-1') || model.classList.contains('cv-3')){
-                    modelHoverStyle.style.left = 0;
-                }else if(model.classList.contains('cv-2') || model.classList.contains('cv-4')){
-                    modelHoverStyle.style.right = 0;
-                }
+                
 
-                if(model.parentElement.classList.contains('row-one')){
-                    modelHoverStyle.style.top = 0;
-                }else if(model.parentElement.classList.contains('row-two')){
-                    modelHoverStyle.style.top = 469 + 9 + "px";
+                if(window.innerWidth > 600){
+                    if(model.classList.contains('cv-1') || model.classList.contains('cv-3')){
+                        modelHoverStyle.style.left = 0;
+                    }else if(model.classList.contains('cv-2') || model.classList.contains('cv-4')){
+                        modelHoverStyle.style.right = 0;
+                    }
+
+                    if(model.parentElement.classList.contains('row-one')){
+                        modelHoverStyle.style.top = 0;
+                    }else if(model.parentElement.classList.contains('row-two')){
+                        modelHoverStyle.style.top = 469 + 9 + "px";
+                    }
+                }else {
+                    modelHoverStyle.style.left = 0;
+
+                    if(model.classList.contains('cv-1')){
+                        modelHoverStyle.style.top = 0;
+                    }else if(model.classList.contains('cv-2')){
+                        modelHoverStyle.style.top = 460 + "px";
+                    }else if(model.classList.contains('cv-3')){
+                        modelHoverStyle.style.top = 460 * 2 + 7 + "px";
+                    }else if(model.classList.contains('cv-4')){
+                        modelHoverStyle.style.top = 469 * 3 + 18 + "px";
+                    }
                 }
 
                 modelHoverStyle.style.width = modelRect.width  + "px";

@@ -42,6 +42,8 @@ export default class CVModels {
         this.shownProfilePhoto = false;
         this.pathname;
         this.editCvClicked = false;
+        this.cv_id_input;
+        this.csrfInput;
         /**
          * @type {HTMLInputElement | undefined}
          */
@@ -1443,20 +1445,28 @@ export default class CVModels {
         })
     }
 
-    handleDeleteCV(){
+    handleDeleteCV()
+    {
+        if(isUndefined(this.cv_id_input)
+            && isUndefined(this.csrfInput)
+        ){
+            this.cv_id_input = document.querySelector('input.cv-id');
         
-        const cv_id_input = document.querySelector('input.cv-id');
-        const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+            this.csrfInput;
+
+            const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+            hiddenInputs.forEach(hiddenInput => {
+                if(hiddenInput.name === "_token"){
+                    this.csrfInput = hiddenInput;
+                }
+            })
+        }
         
-        let crsfInput;
-        hiddenInputs.forEach(hiddenInput => {
-            if(hiddenInput.name === "_token"){
-                crsfInput = hiddenInput;
-            }
-        })
-
-        if(cv_id_input && isNumber(parseInt(cv_id_input.value)) && crsfInput){
-
+        
+        if(this.cv_id_input 
+            && isNumber(parseInt(this.cv_id_input.value)) 
+            && this.csrfInput
+        ){
             this.dom.createModal('delete-cv-modal shadow bg-white p-3 position-absolute start-0 end-0 m-auto', `
                 <form action="/cv/delete" method="post">
                     <p class='text-center'>Êtes-vous sûr de vouloir supprimer ce CV ?</p>
@@ -1467,8 +1477,8 @@ export default class CVModels {
                 </form>
             `);
 
-            this.dom.modal.appendChild(cv_id_input);
-            this.dom.modal.appendChild(crsfInput);
+            this.dom.modal.appendChild(this.cv_id_input);
+            this.dom.modal.appendChild(this.csrfInput);
 
             this.dom.setFormAction("/cv/delete");
 
