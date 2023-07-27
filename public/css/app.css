@@ -10657,6 +10657,9 @@ li.nav-item a.text-white:hover {
   height: 10px;
   border-radius: 10px;
 }
+.cv.cv-2 .right {
+  padding-top: 15px !important;
+}
 
 .cv.cv-3 .left {
   position: relative;
@@ -10680,7 +10683,7 @@ li.nav-item a.text-white:hover {
   position: relative;
 }
 .cv.cv-3 .right .profil {
-  margin-top: 100px !important;
+  margin-top: 170px !important;
 }
 .cv.cv-3 .right::before {
   content: "";
@@ -10849,6 +10852,9 @@ li.nav-item a.text-white:hover {
 .cv-form .cv.cv-1 .skills input {
   width: 100%;
 }
+.cv-form .cv.cv-1 .experience {
+  margin-bottom: 30px;
+}
 .cv-form .cv.cv-2 {
   margin-left: auto !important;
 }
@@ -10939,8 +10945,9 @@ li.nav-item a.text-white:hover {
   border-left: 1479px solid transparent;
   z-index: 3;
 }
-.cv-form form.cv-3 div.profile-photo {
-  margin-bottom: 60px !important;
+.cv-form form.cv-3 .left div.profile-photo {
+  margin-top: 25px !important;
+  margin-bottom: 100px !important;
 }
 .cv-form div.cv.cv-3 .languages-list .language, .cv-form div.cv.cv-3 .skills-list .skill, .cv-form div.cv.cv-2 .languages-list .language, .cv-form div.cv.cv-2 .skills-list .skill {
   display: grid;
@@ -11000,7 +11007,7 @@ li.nav-item a.text-white:hover {
   position: relative;
   top: 120px;
   background: #212529;
-  z-index: 5;
+  z-index: 1;
   height: 100px;
   width: 7.5%;
 }
@@ -11054,6 +11061,7 @@ li.nav-item a.text-white:hover {
   border-radius: 50%;
   padding: 2px;
   cursor: pointer;
+  z-index: 12;
   transition: background 0.3s ease;
 }
 .close-icon-container .close-icon {
@@ -11105,6 +11113,61 @@ li.nav-item a.text-white:hover {
   opacity: 1;
 }
 
+@media only screen and (max-width: 1330px) {
+  .cv-form .cv.cv-3 .right .about {
+    margin-bottom: 20px !important;
+  }
+}
+@media screen and (max-width: 880px) {
+  .cv-form.cv-3-form div.cv .right .about {
+    width: 200px;
+  }
+}
+@media only screen and (max-width: 760px) {
+  nav.navbar.navbar-expand-md .container-fluid .navbar-toggler, nav.navbar.navbar-expand-md .container-sm .navbar-toggler, nav.navbar.navbar-expand-md .container-md .navbar-toggler, nav.navbar.navbar-expand-md .container-lg .navbar-toggler, nav.navbar.navbar-expand-md .container-xl .navbar-toggler, nav.navbar.navbar-expand-md .container-xxl .navbar-toggler {
+    left: 92% !important;
+  }
+  .cv-form .cv.cv-3 .right::before {
+    border-left: 1159px solid transparent;
+  }
+  .cv-form div.cv.cv-3 .right {
+    padding-top: 30px !important;
+  }
+}
+@media only screen and (max-width: 700px) {
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 21px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 20px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 18px;
+  }
+  .cv-form .cv p, .cv-form .cv li {
+    font-size: 15px;
+  }
+  .cv-form .cv .icon {
+    width: 15px;
+  }
+  .cv-form .cv .d-flex.justify-content-between {
+    flex-direction: column;
+  }
+  .cv-form .cv .d-flex.justify-content-between input {
+    width: 100%;
+  }
+  .cv-form .cv img.profile-photo, .cv-form .cv svg.profile-photo {
+    width: 150px !important;
+    height: 150px !important;
+  }
+  .cv-form .cv.cv-3 .left::before {
+    border-left: 127px solid #0d6efd;
+    border-right: 119px solid transparent;
+  }
+  .cv-form div.cv.cv-3 .right .about {
+    width: 170px;
+  }
+}
 @media only screen and (max-width: 600px) {
   .cv-models-container {
     width: 280px;
@@ -11122,8 +11185,173 @@ li.nav-item a.text-white:hover {
   .cv-models-container .model-hover-style.active {
     margin-top: 8px;
   }
+  .cv-form .cv .icon {
+    width: 12px;
+  }
+  .cv-form .cv.cv-1 .left, .cv-form .cv.cv-1 .right, .cv-form .cv.cv-3 .left, .cv-form .cv.cv-3 .right {
+    padding: 20px !important;
+  }
+  .cv-form .cv.cv-2 .left .about, .cv-form .cv.cv-2 .left .contact, .cv-form .cv.cv-2 .left .hobbies, .cv-form .cv.cv-2 .left .languages {
+    padding: 20px !important;
+  }
+  .cv-form .cv.cv-2 .left .about {
+    margin-bottom: 0 !important;
+  }
+  .cv-form .cv.cv-2 .right {
+    padding: 20px !important;
+  }
+  .cv-form .cv.cv-3 .right::before {
+    border-left: 950px solid transparent;
+  }
+  .cv-form form.cv-3 .left div.profile-photo {
+    margin-top: 5px !important;
+    margin-bottom: 80px !important;
+  }
+}
+@media only screen and (max-width: 560px) {
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 18px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 17px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 15px;
+  }
+  .cv-form .cv p, .cv-form .cv li {
+    font-size: 13px;
+  }
+  .cv-form .cv input::-moz-placeholder, .cv-form .cv textarea::-moz-placeholder {
+    font-size: 14px;
+  }
+  .cv-form .cv input:-ms-input-placeholder, .cv-form .cv textarea:-ms-input-placeholder {
+    font-size: 14px;
+  }
+  .cv-form .cv input::placeholder, .cv-form .cv textarea::placeholder {
+    font-size: 14px;
+  }
+  .cv-form .cv img.profile-photo, .cv-form .cv svg.profile-photo {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  .cv-form .cv .contact-list .icon {
+    display: none;
+  }
+  .cv-form .cv .contact-list p {
+    margin-left: 0 !important;
+  }
+  .cv-form .cv.cv-3 .left::before {
+    border-left: 104px solid #0d6efd;
+    border-right: 99px solid transparent;
+  }
+  .cv-form .cv.cv-1 .level.bar-level, .cv-form .cv.cv-2 .level.bar-level,
+.cv-form .cv.cv-3 .level.bar-level, .cv-form .cv.cv-4 .level.bar-level {
+    width: 100% !important;
+  }
+  .cv-form div.cv.cv-1 .level.bar-level,
+.cv-form div.cv.cv-3 .level.bar-level, .cv-form div.cv.cv-4 .level.bar-level {
+    width: 80% !important;
+  }
+  .cv-form div.cv.cv-2 .languages .language, .cv-form div.cv.cv-2 .skills .skill {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 18px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 17px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 15px;
+  }
+  .cv-form .cv p, .cv-form .cv li {
+    font-size: 12px;
+  }
+  .cv-form .cv input::-moz-placeholder, .cv-form .cv textarea::-moz-placeholder {
+    font-size: 12px;
+  }
+  .cv-form .cv input:-ms-input-placeholder, .cv-form .cv textarea:-ms-input-placeholder {
+    font-size: 12px;
+  }
+  .cv-form .cv input::placeholder, .cv-form .cv textarea::placeholder {
+    font-size: 12px;
+  }
+  .cv-form .cv.cv-4 h3, .cv-form .cv.cv-4 .h3 {
+    font-size: 16px;
+  }
+  .cv-form .cv.cv-3 .right::before {
+    border-left: 881px solid transparent;
+  }
   nav.navbar.navbar-expand-md .container-fluid .navbar-toggler, nav.navbar.navbar-expand-md .container-sm .navbar-toggler, nav.navbar.navbar-expand-md .container-md .navbar-toggler, nav.navbar.navbar-expand-md .container-lg .navbar-toggler, nav.navbar.navbar-expand-md .container-xl .navbar-toggler, nav.navbar.navbar-expand-md .container-xxl .navbar-toggler {
     left: 90% !important;
+  }
+}
+@media only screen and (max-width: 450px) {
+  .btn.btn-secondary.add-into-list {
+    margin-left: 0 !important;
+  }
+  .formation-list.list .btn.btn-secondary.add-into-list {
+    width: 100%;
+    font-size: 12px;
+  }
+  .cv-form .cv img.profile-photo, .cv-form .cv svg.profile-photo {
+    width: 100px !important;
+    height: 100px !important;
+  }
+  .cv-form .cv.cv-1 .skills-list.d-flex.justify-content-between {
+    flex-direction: column !important;
+  }
+  .cv-form .cv.cv-1 .skills-list.d-flex.justify-content-between .list {
+    width: 100%;
+  }
+  .cv-form .cv.cv-1 .left, .cv-form .cv.cv-1 .right, .cv-form .cv.cv-3 .left, .cv-form .cv.cv-3 .right, .cv-form .cv.cv-4 .left, .cv-form .cv.cv-4 .right {
+    padding: 10px !important;
+  }
+  .cv-form .cv.cv-2 .left .about, .cv-form .cv.cv-2 .left .contact, .cv-form .cv.cv-2 .left .hobbies, .cv-form .cv.cv-2 .left .languages, .cv-form .cv.cv-2 .left .skills {
+    padding: 10px !important;
+  }
+  .cv-form .cv.cv-2 .right {
+    padding: 10px !important;
+  }
+  .cv-form .cv.cv-3 .right::before {
+    border-left: 784px solid transparent;
+  }
+  .cv-form .cv.cv-3 .left::before {
+    border-left: 72px solid #0d6efd;
+    border-right: 93px solid transparent;
+    border-bottom: 79px solid transparent;
+  }
+  .cv-form .cv.cv-4 .cv-top {
+    padding-bottom: 5px;
+  }
+  .cv-form .cv.cv-4 h3, .cv-form .cv.cv-4 .h3 {
+    font-size: 14px;
+  }
+  .cv-form .cv.cv-4 h4, .cv-form .cv.cv-4 .h4 {
+    font-size: 13px;
+  }
+  .cv-form div.cv.cv-1 .left, .cv-form div.cv.cv-1 .right, .cv-form div.cv.cv-3 .left, .cv-form div.cv.cv-3 .right {
+    padding-top: 30px !important;
+  }
+  .cv-form div.cv.cv-1 .profil {
+    margin-top: 0 !important;
+  }
+}
+@media only screen and (max-width: 417px) {
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 17px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 16px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 14px;
+  }
+  .cv-form .cv p, .cv-form .cv li {
+    font-size: 11px;
   }
 }
 @media only screen and (max-width: 400px) {
@@ -11148,10 +11376,114 @@ li.nav-item a.text-white:hover {
     border-left: 596px solid transparent;
   }
   nav.navbar.navbar-expand-md .container-fluid .navbar-toggler, nav.navbar.navbar-expand-md .container-sm .navbar-toggler, nav.navbar.navbar-expand-md .container-md .navbar-toggler, nav.navbar.navbar-expand-md .container-lg .navbar-toggler, nav.navbar.navbar-expand-md .container-xl .navbar-toggler, nav.navbar.navbar-expand-md .container-xxl .navbar-toggler {
-    left: 85% !important;
+    left: 88% !important;
   }
   .cvs-list {
     padding-left: 20px !important;
     padding-right: 20px !important;
+  }
+  .main-modal.edit-password-modal, .main-modal.logout-modal, .main-modal.delete-cv-modal {
+    width: 85%;
+  }
+  .cv-form .cv .profil {
+    margin-top: 2px !important;
+  }
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 15px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 14px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 12px;
+  }
+  .cv-form .cv p, .cv-form .cv li {
+    font-size: 10px;
+  }
+  .cv-form .cv.cv-3 .right::before {
+    border-left: 676px solid transparent;
+  }
+  .cv-form .cv.cv-4 h3, .cv-form .cv.cv-4 .h3 {
+    font-size: 12px;
+  }
+  .cv-form .cv.cv-4 h4, .cv-form .cv.cv-4 .h4 {
+    font-size: 11px;
+  }
+}
+@media only screen and (max-width: 350px) {
+  .modal-container .main-modal.delete-cv-modal {
+    height: 215px;
+  }
+  .modal-container .main-modal.delete-cv-modal .content {
+    width: 100%;
+    height: 80%;
+  }
+  .modal-container .main-modal.delete-cv-modal .content form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .modal-container .main-modal.delete-cv-modal .content form .buttons {
+    width: 100%;
+    margin-right: 0 !important;
+  }
+  .modal-container .main-modal.delete-cv-modal .content form .btn {
+    display: block;
+    width: 100%;
+  }
+  .modal-container .main-modal.delete-cv-modal .content form .btn.btn-danger {
+    margin-top: 10px;
+  }
+  .cv-form .cv img.profile-photo, .cv-form .cv svg.profile-photo {
+    width: 75px !important;
+    height: 75px !important;
+  }
+  .cv-form .cv label, .cv-form .cv p {
+    font-size: 13px;
+  }
+  .cv-form .cv .contact-list.list input, .cv-form .cv .languages-list.list input {
+    margin-left: 5px !important;
+  }
+  .cv-form .cv .languages-list.list input {
+    margin-left: 0 !important;
+  }
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 14px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 13px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 11px;
+  }
+  .cv-form .cv.cv-1 h2, .cv-form .cv.cv-1 .h2 {
+    font-size: 13px;
+  }
+  .cv-form .cv.cv-1 h3, .cv-form .cv.cv-1 .h3 {
+    font-size: 12px;
+  }
+  .cv-form .cv.cv-3 .right::before {
+    border-left: 540px solid transparent;
+  }
+  .cv-form form.cv-3 .left div.profile-photo {
+    margin-top: 5px !important;
+    margin-bottom: 95px !important;
+  }
+  .cv-form .cv.cv-4 h3, .cv-form .cv.cv-4 .h3 {
+    font-size: 10px;
+  }
+  .cv-form .cv.cv-4 h4, .cv-form .cv.cv-4 .h4 {
+    font-size: 8px;
+  }
+  nav.navbar.navbar-expand-md .container-fluid .navbar-toggler, nav.navbar.navbar-expand-md .container-sm .navbar-toggler, nav.navbar.navbar-expand-md .container-md .navbar-toggler, nav.navbar.navbar-expand-md .container-lg .navbar-toggler, nav.navbar.navbar-expand-md .container-xl .navbar-toggler, nav.navbar.navbar-expand-md .container-xxl .navbar-toggler {
+    left: 85% !important;
+  }
+}
+@media only screen and (max-width: 312px) {
+  .cv-form .cv.cv-1 h2, .cv-form .cv.cv-1 .h2 {
+    font-size: 12px;
+  }
+  .cv-form .cv.cv-1 h3, .cv-form .cv.cv-1 .h3 {
+    font-size: 11px;
   }
 }

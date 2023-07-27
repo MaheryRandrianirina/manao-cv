@@ -4979,6 +4979,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
 /* harmony import */ var _interactions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./interactions */ "./resources/js/interactions.js");
 /* harmony import */ var _cv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./cv */ "./resources/js/cv.js");
+/* harmony import */ var _responsive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./responsive */ "./resources/js/responsive.js");
+
 
 
 
@@ -4990,6 +4992,7 @@ alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
 new _interactions__WEBPACK_IMPORTED_MODULE_3__["default"]();
 var cvModel = new _cv__WEBPACK_IMPORTED_MODULE_4__["default"]();
 cvModel.createCVForm();
+(0,_responsive__WEBPACK_IMPORTED_MODULE_5__["default"])();
 
 /***/ }),
 
@@ -5288,7 +5291,7 @@ var CVModels = /*#__PURE__*/function () {
 
         var barLevelRect = barLevel.getBoundingClientRect();
         var levelIndicatorWidth = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100;
-        _this3.levelIndicator.style.width = levelIndicatorWidth + "px";
+        _this3.levelIndicator.style.width = 100 * levelIndicatorWidth / barLevelRect.width + "%";
       });
     }
   }, {
@@ -5443,6 +5446,8 @@ var CVModels = /*#__PURE__*/function () {
 
           if (element.getAttribute('aria-name') === "phone_number") {
             input.setAttribute('value', element.innerText.split(' ').join(''));
+          } else if (element.getAttribute('aria-name') === "email") {
+            input.setAttribute('value', element.innerText.replace(' ', ''));
           }
         }
 
@@ -5749,7 +5754,8 @@ var CVModels = /*#__PURE__*/function () {
           }
 
           var barLevelRect = barLevel.getBoundingClientRect();
-          levelCursor.style.left = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100 + "px";
+          var levelCursorPosPx = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100;
+          levelCursor.style.left = 100 * levelCursorPosPx / barLevelRect.width + "%";
           var levelCursorRect = levelCursor.getBoundingClientRect();
           var levelIndicatorWidth = levelCursorRect.x - barLevelRect.x;
           _this5.levelIndicator.style.width = levelIndicatorWidth + "px";
@@ -7003,7 +7009,13 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "handleActionsInModalForm",
     value: function handleActionsInModalForm() {
+      var _this2 = this;
+
       this.keyboardTouches();
+      var noBtn = this.modal.querySelector('.no');
+      noBtn === null || noBtn === void 0 ? void 0 : noBtn.addEventListener('click', function () {
+        _this2.removeModalFromDOMWithAnimation();
+      });
       this.actionButton = this.modal.querySelector('.btn.btn-primary');
 
       if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(this.actionButton)) {
@@ -7016,12 +7028,12 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "handleActionsInModalConfirmation",
     value: function handleActionsInModalConfirmation() {
-      var _this2 = this;
+      var _this3 = this;
 
       var noBtn = this.modal.querySelector('.no');
       var validateButton = this.modal.querySelector('.sure');
       noBtn === null || noBtn === void 0 ? void 0 : noBtn.addEventListener('click', function () {
-        _this2.removeModalFromDOMWithAnimation();
+        _this3.removeModalFromDOMWithAnimation();
       });
 
       if (this.modal.querySelector('form') && this.modalInputs.length > 0) {
@@ -7103,7 +7115,7 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "createDataToPostObj",
     value: function createDataToPostObj() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.modalInputs.length === 0) {
         this.inputs = Array.from(document.querySelectorAll('input'));
@@ -7121,15 +7133,15 @@ var DOMInteractions = /*#__PURE__*/function () {
         }
 
         this.modalInputs.forEach(function (input) {
-          _this3.setIntoDataToPostValueOf(input);
+          _this4.setIntoDataToPostValueOf(input);
         });
       } else if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.hiddenInputsWithDataForTheActionFromClickedBtn)) {
         this.hiddenInputsWithDataForTheActionFromClickedBtn.forEach(function (input) {
-          _this3.setIntoDataToPostValueOf(input);
+          _this4.setIntoDataToPostValueOf(input);
         });
       } else if (this.inputs && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isEmpty)(this.inputs)) {
         this.inputs.forEach(function (input) {
-          _this3.setIntoDataToPostValueOf(input);
+          _this4.setIntoDataToPostValueOf(input);
         });
       }
     }
@@ -7181,18 +7193,18 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "alertEmptyInputs",
     value: function alertEmptyInputs() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.modalInputs) {
         this.modalInputs.forEach(function (input) {
-          if (_this4.isMessageCorrespondsTo(input.name)) {
-            _this4.showErrorMessage(input);
+          if (_this5.isMessageCorrespondsTo(input.name)) {
+            _this5.showErrorMessage(input);
           }
         });
       } else if (this.inputs) {
         this.inputs.forEach(function (input) {
-          if (_this4.isMessageCorrespondsTo(input.name)) {
-            _this4.showErrorMessage(input);
+          if (_this5.isMessageCorrespondsTo(input.name)) {
+            _this5.showErrorMessage(input);
           }
         });
       }
@@ -7271,29 +7283,29 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "postContentWithNotification",
     value: function postContentWithNotification() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_2___default().post(this.formAction, this.dataToPostObj).then(function (response) {
         if ("updated" in response.data && response.data.updated === false) {
           throw new Error(JSON.stringify(response.data));
         }
 
-        if (_this5.modal) {
-          _this5.closeModal();
+        if (_this6.modal) {
+          _this6.closeModal();
         }
 
-        if (_this5.showNotification) {
-          if (_this5.modal) {
-            _this5.modalContainer.parentElement.removeChild(_this5.modalContainer);
+        if (_this6.showNotification) {
+          if (_this6.modal) {
+            _this6.modalContainer.parentElement.removeChild(_this6.modalContainer);
           }
 
-          _this5.showNotificationWithDataInMilliseconds({
-            className: _this5.notificationClassName,
-            content: _this5.notificationContent
+          _this6.showNotificationWithDataInMilliseconds({
+            className: _this6.notificationClassName,
+            content: _this6.notificationContent
           }, 2000);
 
-          if (_this5.urlForRedirection) {
-            document.location.href = _this5.urlForRedirection;
+          if (_this6.urlForRedirection) {
+            document.location.href = _this6.urlForRedirection;
           }
         }
       })["catch"](function (error) {
@@ -7301,14 +7313,14 @@ var DOMInteractions = /*#__PURE__*/function () {
           var errorJSON = JSON.parse(error.message);
 
           if ("updated" in errorJSON && errorJSON.updated === false) {
-            _this5.createErrorAlertAfterElement("#current_password", errorJSON.errors.current_password);
+            _this6.createErrorAlertAfterElement("#current_password", errorJSON.errors.current_password);
           }
 
           return;
         }
 
         if ("response" in error && "message" in error.response.data) {
-          _this5.createErrorAlertAfterElement("#image", errorResponseJSON.message.includes("invalid") ? "Fichier invalide" : errorResponseJSON.message);
+          _this6.createErrorAlertAfterElement("#image", errorResponseJSON.message.includes("invalid") ? "Fichier invalide" : errorResponseJSON.message);
         }
       });
     }
@@ -7383,11 +7395,11 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "showNotificationWithDataInMilliseconds",
     value: function showNotificationWithDataInMilliseconds(data, timeInMilliseconds) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.createModal(data.className, data.content, false);
       setTimeout(function () {
-        _this6.closeModal();
+        _this7.closeModal();
       }, timeInMilliseconds);
     }
     /**
@@ -7447,13 +7459,13 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "hideMenu",
     value: function hideMenu() {
-      var _this7 = this;
+      var _this8 = this;
 
       if (this.menu) {
         this.menu.classList.remove('active-menu');
         this.menu.addEventListener('transitionend', function () {
-          if (_this7.menu.parentElement) {
-            _this7.menu.parentElement.removeChild(_this7.menu);
+          if (_this8.menu.parentElement) {
+            _this8.menu.parentElement.removeChild(_this8.menu);
           }
         });
       }
@@ -7461,10 +7473,10 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "hideMenuWhenBodyClick",
     value: function hideMenuWhenBodyClick() {
-      var _this8 = this;
+      var _this9 = this;
 
       document.body.addEventListener('click', function (e) {
-        _this8.hideMenu();
+        _this9.hideMenu();
       });
     }
   }, {
@@ -7613,6 +7625,46 @@ var DOMInteractions = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./resources/js/responsive.js":
+/*!************************************!*\
+  !*** ./resources/js/responsive.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Responsive)
+/* harmony export */ });
+function Responsive() {
+  handleResponsive();
+  window.addEventListener('resize', function (e) {
+    handleResponsive();
+  });
+
+  function handleResponsive() {
+    var emailAdress = document.querySelector('.email-adress p');
+    var windowWidth = window.innerWidth;
+
+    if (emailAdress) {
+      if (windowWidth <= 360) {
+        var innerText = '';
+        var arrayInnerText = emailAdress.innerHTML.split('');
+        arrayInnerText.forEach(function (_char) {
+          if (_char === "@") {
+            innerText += "\n";
+          }
+
+          innerText += _char;
+        });
+        emailAdress.innerHTML = innerText;
+      }
+    }
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/utils/interactions-with-cv-models.js":
 /*!***********************************************************!*\
   !*** ./resources/js/utils/interactions-with-cv-models.js ***!
@@ -7664,7 +7716,19 @@ function InteractionsWithCVModels() {
           if (model.parentElement.classList.contains('row-one')) {
             _modelHoverStyle.style.top = 0;
           } else if (model.parentElement.classList.contains('row-two')) {
-            _modelHoverStyle.style.top = 469 + 9 + "px";
+            _modelHoverStyle.style.top = 469 + "px";
+
+            if (window.innerWidth >= 792 && window.innerWidth < 890) {
+              console.log(window.innerWidth);
+              _modelHoverStyle.style.top = 469 + 2 + "px";
+            } else if (window.innerWidth >= 890 && window.innerWidth < 995) {
+              console.log(window.innerWidth);
+              _modelHoverStyle.style.top = 469 + 4 + "px";
+            } else if (window.innerWidth >= 995 && window.innerWidth < 1095) {
+              _modelHoverStyle.style.top = 469 + 6 + "px";
+            } else if (window.innerWidth >= 1095) {
+              _modelHoverStyle.style.top = 469 + 8 + "px";
+            }
           }
         } else {
           _modelHoverStyle.style.left = 0;

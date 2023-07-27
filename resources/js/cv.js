@@ -205,8 +205,8 @@ export default class CVModels {
         
             const barLevelRect = barLevel.getBoundingClientRect();
             const levelIndicatorWidth = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100;
-            
-            this.levelIndicator.style.width = levelIndicatorWidth + "px";
+
+            this.levelIndicator.style.width = 100 * levelIndicatorWidth / barLevelRect.width + "%";
         })
         
     }
@@ -389,6 +389,8 @@ export default class CVModels {
                 
                 if(element.getAttribute('aria-name') === "phone_number"){
                     input.setAttribute('value', element.innerText.split(' ').join(''));
+                }else if(element.getAttribute('aria-name') === "email"){
+                    input.setAttribute('value', element.innerText.replace(' ', ''));
                 }
             }
 
@@ -687,7 +689,8 @@ export default class CVModels {
                 }
 
                 const barLevelRect = barLevel.getBoundingClientRect();
-                levelCursor.style.left = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100 + "px";
+                const levelCursorPosPx = barLevelRect.width * parseFloat(barLevel.getAttribute('aria-level')) / 100;
+                levelCursor.style.left = (100 * levelCursorPosPx / barLevelRect.width) + "%";
 
                 const levelCursorRect = levelCursor.getBoundingClientRect();
                 
