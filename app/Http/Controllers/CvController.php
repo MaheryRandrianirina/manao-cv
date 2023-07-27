@@ -526,8 +526,18 @@ class CvController extends Controller
 
                 $cv = Cv::find($contact[0]->cv_id);
             }
-            
-            $pdf = Pdf::loadView('components.cvs.'. $cv->model, ["cv" => $cv, "stringNumber" => $this->stringNumber]);
+
+            $image = null;
+            if($cv->image){
+                $imagePath = public_path(Storage::url($cv->image));
+                $image = "data:image/png;base64,". base64_encode(file_get_contents($imagePath));
+            }
+
+            $pdf = Pdf::loadView('components.cvs.'. $cv->model, [
+                "cv" => $cv, 
+                "stringNumber" => $this->stringNumber,
+                "image" => $image
+            ]);
             
             return $pdf->download("cv.pdf");
 
@@ -549,11 +559,18 @@ class CvController extends Controller
             throw new NotFoundHttpException("Cet url n'existe pas");
         }
 
+        $image = null;
+        if($cv->image){
+            $imagePath = public_path(Storage::url($cv->image));
+            $image = "data:image/png;base64,". base64_encode(file_get_contents($imagePath));
+        }
+        
         return view('cv.show', [
             'cv' => $cv,
             'title' => $cv->name . " " . $cv->firstname,
             "token" => csrf_token(),
-            "stringNumber" => $this->stringNumber
+            "stringNumber" => $this->stringNumber,
+            "image" => $image
         ]);
     }
 
