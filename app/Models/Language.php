@@ -12,7 +12,7 @@ class Language extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        "name", "level", "level_string", "cv_id"
+        "name", "level", "string_level", "cv_id"
     ];
 
     protected $table = "language";
