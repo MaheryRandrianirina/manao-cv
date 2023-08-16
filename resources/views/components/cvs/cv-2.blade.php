@@ -181,6 +181,7 @@
             <div class="experiences-list list customizable-list">
                 @if(isset($cv))
                     <?php $i = 0;?>
+
                     @foreach($cv->experiences as $experience)
                         <?php $i++;?>
                         <p class="date" aria-input-number="2">
@@ -196,13 +197,16 @@
                             ?>
                             
                             @foreach($splitted_task as $task)
+
                             <?php $task_i++;?>
                             <li id="textarea" aria-name="experience_{{$stringNumber[$i]}}_task_{{$stringNumber[$task_i]}}" class="task-{{$stringNumber[$task_i]}}">
                                 {{ $task }}
                             </li> 
+                            
                             @endforeach                      
                         </ul>
                     @endforeach
+
                 @else
                 <div class="experience experience-one">
                     <p class="date" aria-input-number="2">

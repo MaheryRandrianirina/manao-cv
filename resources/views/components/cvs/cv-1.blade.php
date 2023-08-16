@@ -5,7 +5,9 @@
     <div class="left bg-indigo p-4 text-white">
         <div class="about mb-5">
             @if(isset($cv) && $image !== null)
-            <img id="input" aria-type="file" aria-name="profile_photo" class="profile-photo user bg-secondary d-block mt-0 mb-0 ms-auto me-auto" src="{{ $image }}" alt="photo de profile">
+            <img id="input" aria-type="file" aria-name="profile_photo" 
+                class="profile-photo user bg-secondary d-block mt-0 mb-0 ms-auto me-auto" 
+                src="{{ $image }}" alt="photo de profile">
             @else
             <svg id="input" aria-type="file" aria-name="profile_photo" class="profile-photo user bg-secondary d-block mt-0 mb-0 ms-auto me-auto" viewBox="0 0 448 512">
                 <path d="M313.6 304c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h452c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zM224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z"/>
@@ -51,7 +53,6 @@
                     </svg>
                     <p id="input" aria-name="linkedin_url" class="mb-0 ms-3">Url linkedin</p>
                     @endif
-                    
                 </div>
             </div>
         </div>
@@ -62,13 +63,14 @@
                     <?php $i = 0;?>
                     @foreach($cv->formations as $formation)
                     <?php $i++;?>
-                    <div class="formation-{{$stringNumber[$i]}}">
-                        <div class="graduation">
+                    <div class="formation-{{$stringNumber[$i]}}"> 
+                       <div class="graduation">
                             <h4 id="input" aria-name="graduation_{{$stringNumber[$i]}}">{{ $formation->graduation }}</h4>
                             <p id="input" aria-name="etablissement_{{$stringNumber[$i]}}" class="college">{{ $formation->etablissement }}</p>
                             <p class="date" aria-input-number="2">
-                                <?php $splitted_date = mb_split(" - ",$formation->date); ?>
-                                <span aria-name="year_debut_{{$stringNumber[$i]}}" id="input" aria-type="number">{{ $splitted_date[0] }}</span> <span id="separator">-</span> <span aria-name="year_end_{{$stringNumber[$i]}}" id="input" aria-type="number">{{$splitted_date[1]}}</span>
+                                <?php $splitted_date = mb_split(" - ", $formation->date); ?>
+                                <span aria-name="year_debut_{{$stringNumber[$i]}}" id="input" aria-type="number">{{ $splitted_date[0] }}</span> <span id="separator">-</span> 
+                                <span aria-name="year_end_{{$stringNumber[$i]}}" id="input" aria-type="number">{{$splitted_date[1]}}</span>
                             </p>
                         </div>
                     </div>
@@ -151,7 +153,8 @@
                             </h4>
                             <p class="date" aria-input-number="2">
                                 <?php $splitted_date = mb_split(" - ",$experience->date); ?>
-                                <span id="input" aria-name="year_month_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> <span id="separator">-</span> <span id="input" aria-name="year_month_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
+                                <span id="input" aria-name="year_month_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> <span id="separator">-</span> 
+                                <span id="input" aria-name="year_month_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
                             </p>
                             <div class="task">
                                 <p>

@@ -1,5 +1,7 @@
 export default function InteractionsWithSavings(){
+
     const barsChevron = document.querySelectorAll('.bar .chevron');
+
     if(barsChevron.length > 0){
         barsChevron.forEach(barChevron => {
             barChevron.addEventListener('click', handleBarChevronClick);
@@ -61,7 +63,7 @@ export default function InteractionsWithSavings(){
                                     link.classList.remove('block');
                                 }
                             })
-                            console.log(countLinks, links.length)
+                            
                             if(countLinks <= 11){
                                 watchLess.parentElement.removeChild(watchLess)
                             }else if(countLinks >= links.length - 10){

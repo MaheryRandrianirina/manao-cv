@@ -148,7 +148,7 @@ class CvController extends Controller
             if($request->profile_photo){
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
-
+            
             $cv = $this->saveCV($request, $path);
             
             $this->saveContact($request, $this->cv ? $this->cv->id : $cv->id);
@@ -167,6 +167,7 @@ class CvController extends Controller
 
             echo json_encode([
                 "success" => true,
+                "cv_id" => $this->cv ? $this->cv->id : $cv->id
             ]);
         }catch(Exception $e){
             throw $e;
@@ -401,6 +402,7 @@ class CvController extends Controller
 
             echo json_encode([
                 "success" => true,
+                "cv_id" => $cv->id
             ]);
         }catch(Exception $e){
             throw $e;
@@ -469,6 +471,7 @@ class CvController extends Controller
 
             echo json_encode([
                 "success" => true,
+                "cv_id" => $cv->id
             ]);
         }catch(Exception $e){
             throw $e;
@@ -510,6 +513,7 @@ class CvController extends Controller
 
             echo json_encode([
                 "success" => true,
+                "cv_id" => $cv->id
             ]);
         }catch(Exception $e){
             throw $e;
@@ -558,6 +562,7 @@ class CvController extends Controller
 
     public function show(Request $request, string $name, int $id){
         $cv = Cv::find($id);
+        
         if($cv === null || ($cv->name !== $name)){
             throw new NotFoundHttpException("Cet url n'existe pas");
         }
@@ -568,6 +573,7 @@ class CvController extends Controller
             $image = "data:image/png;base64,". base64_encode(file_get_contents($imagePath));
         }
         
+
         return view('cv.show', [
             'cv' => $cv,
             'title' => $cv->name . " " . $cv->firstname,

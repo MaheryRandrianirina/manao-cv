@@ -44,6 +44,7 @@ export default class CVModels {
         this.editCvClicked = false;
         this.cv_id_input;
         this.csrfInput;
+        this.closeButtonClickNumber = 0;
         /**
          * @type {HTMLInputElement | undefined}
          */
@@ -95,6 +96,9 @@ export default class CVModels {
          */
         this.elementsInnerText = {};
         this.elementsInnerTextLength = 0;
+
+        this.mustUpdateWhenSaving = false;
+        this.lastInsertedCvId
     }
 
     createCVForm()
@@ -1040,6 +1044,8 @@ export default class CVModels {
         this.removeConsole();
 
         this.removeCloseButton();
+
+        this.closeButtonClickNumber++;
     }
 
     removeCloseButton()
@@ -1052,7 +1058,6 @@ export default class CVModels {
     removeConsole()
     {
         if(this.console){
-            console.log("console : ", this.console)
             this.console.parentElement.removeChild(this.console);
         }
     }
@@ -1205,6 +1210,13 @@ export default class CVModels {
 
     saveInputsValues(inputName, inputValue)
     {
+        if(this.closeButtonClickNumber > 0
+            && (inputName === "email" || inputName === "phone_number")
+            && this.inputsValues[inputName].toLowerCase() === inputValue.toLowerCase()
+        ){
+            this.mustUpdateWhenSaving = true;
+        }
+
         if(inputValue){
             this.inputsValues[inputName] = inputValue;
 
@@ -1348,9 +1360,16 @@ export default class CVModels {
                 formData.append(name, this.inputsValues[name]);
             }
 
-            if(this.pathname.includes('/cv/show')){
+            if(this.pathname.includes('/cv/show')
+                || this.mustUpdateWhenSaving
+            ){
                 const cv_id_input = document.querySelector('.cv-id');
-                formData.append(cv_id_input.name, cv_id_input.value);
+                
+                if(cv_id_input){
+                    formData.append(cv_id_input.name, cv_id_input.value);
+                }else if(this.lastInsertedCvId){
+                    formData.append("cv_id", this.lastInsertedCvId);
+                }
 
                 axios.post('/cv/edit', formData).then(res => {
                     this.processCvPostingRes(res, download);
@@ -1360,7 +1379,7 @@ export default class CVModels {
 
                 return;
             }
-            
+
             axios.post("/cv/save", formData).then(res => {
                 this.processCvPostingRes(res, download);
             }).catch(err => {
@@ -1383,6 +1402,10 @@ export default class CVModels {
             if(download){
                 this.launchDownload();
             }
+        }
+
+        if(response.data.cv_id){
+            this.lastInsertedCvId = parseInt(response.data.cv_id);
         }
     }
 

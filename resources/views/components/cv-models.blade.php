@@ -8,6 +8,5 @@
             @include('components.cvs.cv-3')
             @include('components.cvs.cv-4')
         </div>
-        
     </div>
 </div>

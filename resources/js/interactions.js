@@ -8,6 +8,7 @@ export default class Interactions {
 
         this.withCVModels();
 
+        // AVEC LES ENREGISTREMENTS 
         this.withSavings();
     }
 

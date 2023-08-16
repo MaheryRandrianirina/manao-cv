@@ -11111,6 +11111,7 @@ li.nav-item a.text-white:hover {
 .cv.d-flex {
     margin-top: 0 !important;
 }
+
 .cv.d-flex .left .icon {
     width: 20px;
     height: 20px;
@@ -11213,6 +11214,7 @@ li.nav-item a.text-white:hover {
 .cv.cv-4 .cv-bottom .right {
     width: 60%
 }
+
 </style>
 
 @if($cv->model === "cv-1")
