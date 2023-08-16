@@ -5135,6 +5135,7 @@ var CVModels = /*#__PURE__*/function () {
     this.editCvClicked = false;
     this.cv_id_input;
     this.csrfInput;
+    this.closeButtonClickNumber = 0;
     /**
      * @type {HTMLInputElement | undefined}
      */
@@ -5186,6 +5187,8 @@ var CVModels = /*#__PURE__*/function () {
 
     this.elementsInnerText = {};
     this.elementsInnerTextLength = 0;
+    this.mustUpdateWhenSaving = false;
+    this.lastInsertedCvId;
   }
 
   _createClass(CVModels, [{
@@ -6097,6 +6100,7 @@ var CVModels = /*#__PURE__*/function () {
       this.createCVForm();
       this.removeConsole();
       this.removeCloseButton();
+      this.closeButtonClickNumber++;
     }
   }, {
     key: "removeCloseButton",
@@ -6109,7 +6113,6 @@ var CVModels = /*#__PURE__*/function () {
     key: "removeConsole",
     value: function removeConsole() {
       if (this.console) {
-        console.log("console : ", this.console);
         this.console.parentElement.removeChild(this.console);
       }
     }
@@ -6237,6 +6240,10 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "saveInputsValues",
     value: function saveInputsValues(inputName, inputValue) {
+      if (this.closeButtonClickNumber > 0 && inputName === "email" && this.inputsValues['email'].toLowerCase() === inputValue.toLowerCase()) {
+        this.mustUpdateWhenSaving = true;
+      }
+
       if (inputValue) {
         this.inputsValues[inputName] = inputValue;
         this.inputsValuesLength++;
@@ -6373,9 +6380,16 @@ var CVModels = /*#__PURE__*/function () {
         formData.append(name, this.inputsValues[name]);
       }
 
-      if (this.pathname.includes('/cv/show')) {
+      if (this.pathname.includes('/cv/show') || this.mustUpdateWhenSaving) {
         var cv_id_input = document.querySelector('.cv-id');
-        formData.append(cv_id_input.name, cv_id_input.value);
+        console.log(cv_id_input, this.lastInsertedCvId);
+
+        if (cv_id_input) {
+          formData.append(cv_id_input.name, cv_id_input.value);
+        } else if (this.lastInsertedCvId) {
+          formData.append("cv_id", this.lastInsertedCvId);
+        }
+
         axios__WEBPACK_IMPORTED_MODULE_10___default().post('/cv/edit', formData).then(function (res) {
           _this10.processCvPostingRes(res, download);
         })["catch"](function (err) {
@@ -6407,6 +6421,10 @@ var CVModels = /*#__PURE__*/function () {
         if (download) {
           this.launchDownload();
         }
+      }
+
+      if (response.data.cv_id) {
+        this.lastInsertedCvId = parseInt(response.data.cv_id);
       }
     }
     /**
@@ -6761,7 +6779,8 @@ var Interactions = /*#__PURE__*/function () {
     _classCallCheck(this, Interactions);
 
     this.withNavbar();
-    this.withCVModels();
+    this.withCVModels(); // AVEC LES ENREGISTREMENTS 
+
     this.withSavings();
   }
 
@@ -7923,7 +7942,6 @@ function InteractionsWithSavings() {
                     link.classList.remove('block');
                   }
                 });
-                console.log(countLinks, links.length);
 
                 if (countLinks <= 11) {
                   watchLess.parentElement.removeChild(watchLess);
