@@ -201,8 +201,8 @@
                         @foreach($cv->formations as $formation)
                         <?php $i++;?>
                             <div class="formation-{{ $stringNumber[$i] }}">
-                                <div class="graduation">
-                                    <h4 id="input" aria-name="graduation_{{ $stringNumber[$i] }}">{{ $formation->graduation }}</h4>
+                                <div class="degree">
+                                    <h4 id="input" aria-name="degree_{{ $stringNumber[$i] }}">{{ $formation->degree }}</h4>
                                     <p aria-input-number="2" class="date-and-college text-gray">
                                         <span aria-input-number="2">
                                             <?php $splitted_date = mb_split(" - ",$formation->date); ?>
@@ -216,8 +216,8 @@
                         @endforeach
                     @else
                     <div class="formation-one">
-                        <div class="graduation">
-                            <h4 id="input" aria-name="graduation_one">DIPLOME XXXXXXXXX</h4>
+                        <div class="degree">
+                            <h4 id="input" aria-name="degree_one">DIPLOME XXXXXXXXX</h4>
                             <p aria-input-number="2" class="date-and-college text-gray">
                                 <span aria-input-number="2">
                                     <span id="input" aria-name="year_debut_one" aria-type="number">20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_end_one" aria-type="number">20XX</span>
@@ -228,8 +228,8 @@
                         </div>
                     </div>
                     <div class="formation-two">
-                        <div class="graduation">
-                            <h4 id="input" aria-name="graduation_two">DIPLOME XXXXXXXXX</h4>
+                        <div class="degree">
+                            <h4 id="input" aria-name="degree_two">DIPLOME XXXXXXXXX</h4>
                             <p class="date-and-college text-gray">
                                 <span aria-input-number="2">
                                     <span id="input" aria-name="year_debut_two" aria-type="number">20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_end_two" aria-type="number">20XX</span>

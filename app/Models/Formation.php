@@ -12,7 +12,7 @@ class Formation extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        "etablissement", "date", "graduation","cv_id"
+        "etablissement", "date", "degree","cv_id"
     ];
 
     protected $table = "formation";

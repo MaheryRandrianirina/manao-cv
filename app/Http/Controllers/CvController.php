@@ -81,7 +81,7 @@ class CvController extends Controller
         $this->echo = $echo;
 
         foreach($request->request as $name => $value){
-            if(strchr($name, "graduation")){
+            if(strchr($name, "degree")){
                 $this->rules[$name] = ["string", "required"];
 
                 $this->formations++;
@@ -309,12 +309,12 @@ class CvController extends Controller
             $etablissement = "etablissement_" . $this->stringNumber[$i+1];
             $year_debut = "year_debut_" . $this->stringNumber[$i+1];
             $year_end = "year_end_" . $this->stringNumber[$i+1];
-            $graduation = "graduation_" . $this->stringNumber[$i+1];
+            $degree = "degree_" . $this->stringNumber[$i+1];
             
             $arrayValues = [
                 "etablissement" => $request->$etablissement,
                 "date" => $request->$year_debut . " - " . $request->$year_end,
-                "graduation" => $request->$graduation,
+                "degree" => $request->$degree,
                 "cv_id" => $cv_id
             ];
 

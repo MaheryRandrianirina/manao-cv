@@ -5354,7 +5354,7 @@ var CVModels = /*#__PURE__*/function () {
         if (inputName.includes("level")) {
           input.placeholder = "Niveau";
           input.setAttribute('required', "true");
-        } else if (inputName.includes("graduation")) {
+        } else if (inputName.includes("degree")) {
           input.placeholder = "Diplôme";
           input.setAttribute('required', "true");
         } else if (inputName.includes('year_debut')) {

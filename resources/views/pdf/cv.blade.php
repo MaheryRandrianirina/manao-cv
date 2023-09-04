@@ -10896,7 +10896,7 @@ li.nav-item a.text-white:hover {
 .cv-form .cv.cv-3 span.name {
   margin-left: 10px;
 }
-.cv-form .cv.cv-3 .graduation .etablissement {
+.cv-form .cv.cv-3 .degree .etablissement {
   margin-right: 20px;
 }
 .cv-form .cv.cv-3 .experiences .experience {
@@ -10984,7 +10984,7 @@ li.nav-item a.text-white:hover {
   margin-left: auto;
   margin-right: auto;
 }
-.cv-form form.cv.cv-4 .graduation .date-and-college .etablissement {
+.cv-form form.cv.cv-4 .degree .date-and-college .etablissement {
   margin-left: 10px;
 }
 .cv-form div.cv-4 .cv-top .name {
@@ -11154,7 +11154,7 @@ li.nav-item a.text-white:hover {
     text-transform: capitalize !important;
 }
 
-.cv.cv-1.d-flex .graduation {
+.cv.cv-1.d-flex .degree {
     text-transform: capitalize !important;
 }
 

@@ -17,7 +17,7 @@ class CreateFormationTable extends Migration
             $table->id();
             $table->string('etablissement');
             $table->string('date');
-            $table->string('graduation');
+            $table->string('degree');
         });
     }
 
