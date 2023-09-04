@@ -1022,10 +1022,12 @@ export default class CVModels {
 
         this.addClickEventToConsoleButtons();
 
+        const svgProfilePhoto = document.querySelector('svg.profile-photo');
+
         if(this.pathname.includes('/cv/show')
             && this.editCvClicked && this.profilePhotoImg
+        && svgProfilePhoto !== null
         ){
-            const svgProfilePhoto = document.querySelector('svg.profile-photo');
             svgProfilePhoto.replaceWith(this.profilePhotoImg);
         }
 
@@ -1100,7 +1102,7 @@ export default class CVModels {
                         className.replace('form-control', '').replace('mb-2', 'mb-0')
                     );
                     
-                    const inputValue = formInput.value;
+                    const inputValue = formInput.files !== null ? formInput.files[0] : formInput.value;
                     if(inputValue && inputValue.length > 0){
                         this.saveInputsValues(formInput.name, inputValue);
                     }else {
@@ -1218,8 +1220,8 @@ export default class CVModels {
     saveInputsValues(inputName, inputValue)
     {
         if(this.closeButtonClickNumber > 0
-            && (inputName === "email" || inputName === "phone_number")
-            && this.inputsValues[inputName].toLowerCase() === inputValue.toLowerCase()
+            && (inputName === "email" || inputName === "phone_number" || inputName === "profile_photo")
+            && this.inputsValues[inputName] === inputValue
             && this.saved
         ){
             this.mustUpdateWhenSaving = true;

@@ -144,10 +144,7 @@ class CvController extends Controller
         $path = "";
 
         try {
-
-            if($request->profile_photo){
-                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
-            }
+            $path = $this->storeProfilePhoto($request);
             
             $cv = $this->saveCV($request, $path);
             
@@ -203,6 +200,11 @@ class CvController extends Controller
         
     }
 
+    /**
+     * enregistre le cv
+     * 
+     * @return Cv
+     */
     private function saveCV(Request $request, $path) {
         $arrayValues = [
             "name" => $request->name,
@@ -225,8 +227,34 @@ class CvController extends Controller
             }
 
             $this->cv->update($arrayValues);
+
+            return $this->cv;
         }
         
+    }
+
+    private function storeProfilePhoto(Request $request): string
+    {
+        if($request->profile_photo 
+            && !is_string($request->profile_photo) 
+        ){
+
+            if($this->update){
+                
+                $imagePath = storage_path(DIRECTORY_SEPARATOR . 
+                    "app" . DIRECTORY_SEPARATOR . 
+                    "public" . DIRECTORY_SEPARATOR . 
+                    $this->cv->image);
+                    
+                if(file_exists($imagePath)){
+                    Storage::disk("public")->delete($imagePath);
+                }    
+            }
+
+            return Storage::disk("public")->put("profile_photo", $request->profile_photo);
+        }
+
+        return "";
     }
 
     private function saveExperiences(Request $request, int $cv_id, bool $multitask = false) {
@@ -377,13 +405,11 @@ class CvController extends Controller
         $path = "";
         
         try {
-            if($request->profile_photo && !is_string($request->profile_photo)){
-                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
-            }
+            $path = $this->storeProfilePhoto($request);
 
             
             $cv = $this->saveCV($request, $path);
-
+            
             $this->saveContact($request, $this->cv ? $this->cv->id : $cv->id);
 
             $this->saveExperiences($request, $this->cv ? $this->cv->id : $cv->id, true);
@@ -447,9 +473,7 @@ class CvController extends Controller
         $path = "";
         
         try {
-            if($request->profile_photo){
-                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
-            }
+            $path = $this->storeProfilePhoto($request);
 
             $cv = $this->saveCV($request, $path);
 
@@ -490,10 +514,7 @@ class CvController extends Controller
         $path = "";
         
         try {
-            if($request->profile_photo){
-                $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
-            }
-
+            $path = $this->storeProfilePhoto($request);
             
             $cv = $this->saveCV($request, $path);
             

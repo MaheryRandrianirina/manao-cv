@@ -6078,9 +6078,9 @@ var CVModels = /*#__PURE__*/function () {
       this.divFromForm = this.transformFormToDiv();
       this.replaceSeeButtonContainerToConsole();
       this.addClickEventToConsoleButtons();
+      var svgProfilePhoto = document.querySelector('svg.profile-photo');
 
-      if (this.pathname.includes('/cv/show') && this.editCvClicked && this.profilePhotoImg) {
-        var svgProfilePhoto = document.querySelector('svg.profile-photo');
+      if (this.pathname.includes('/cv/show') && this.editCvClicked && this.profilePhotoImg && svgProfilePhoto !== null) {
         svgProfilePhoto.replaceWith(this.profilePhotoImg);
       }
 
@@ -6143,7 +6143,7 @@ var CVModels = /*#__PURE__*/function () {
 
             var elementToReplaceInput = _this7.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
 
-            var inputValue = formInput.value;
+            var inputValue = formInput.files !== null ? formInput.files[0] : formInput.value;
 
             if (inputValue && inputValue.length > 0) {
               _this7.saveInputsValues(formInput.name, inputValue);
@@ -6241,7 +6241,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "saveInputsValues",
     value: function saveInputsValues(inputName, inputValue) {
-      if (this.closeButtonClickNumber > 0 && (inputName === "email" || inputName === "phone_number") && this.inputsValues[inputName].toLowerCase() === inputValue.toLowerCase() && this.saved) {
+      if (this.closeButtonClickNumber > 0 && (inputName === "email" || inputName === "phone_number" || inputName === "profile_photo") && this.inputsValues[inputName] === inputValue && this.saved) {
         this.mustUpdateWhenSaving = true;
       }
 
