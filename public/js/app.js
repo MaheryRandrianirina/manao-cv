@@ -5189,6 +5189,7 @@ var CVModels = /*#__PURE__*/function () {
     this.elementsInnerTextLength = 0;
     this.mustUpdateWhenSaving = false;
     this.lastInsertedCvId;
+    this.saved = false;
   }
 
   _createClass(CVModels, [{
@@ -6240,7 +6241,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "saveInputsValues",
     value: function saveInputsValues(inputName, inputValue) {
-      if (this.closeButtonClickNumber > 0 && (inputName === "email" || inputName === "phone_number") && this.inputsValues[inputName].toLowerCase() === inputValue.toLowerCase()) {
+      if (this.closeButtonClickNumber > 0 && (inputName === "email" || inputName === "phone_number") && this.inputsValues[inputName].toLowerCase() === inputValue.toLowerCase() && this.saved) {
         this.mustUpdateWhenSaving = true;
       }
 
@@ -6280,6 +6281,9 @@ var CVModels = /*#__PURE__*/function () {
 
       var profilePhotoImg = this.dom.createElement('img', 'profile-photo');
       profilePhotoImg.src = URL.createObjectURL(file);
+      profilePhotoImg.id = "input";
+      profilePhotoImg.setAttribute('aria-type', "file");
+      profilePhotoImg.setAttribute("aria-name", "profile_photo");
       this.profilePhotoInput.replaceWith(profilePhotoImg);
       this.shownProfilePhoto = true;
     }
@@ -6391,6 +6395,8 @@ var CVModels = /*#__PURE__*/function () {
 
         axios__WEBPACK_IMPORTED_MODULE_10___default().post('/cv/edit', formData).then(function (res) {
           _this10.processCvPostingRes(res, download);
+
+          _this10.saved = true;
         })["catch"](function (err) {
           _this10.processCvPostingError(err);
         });
@@ -6399,6 +6405,8 @@ var CVModels = /*#__PURE__*/function () {
 
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/save", formData).then(function (res) {
         _this10.processCvPostingRes(res, download);
+
+        _this10.saved = true;
       })["catch"](function (err) {
         _this10.processCvPostingError(err);
       });
@@ -6494,10 +6502,9 @@ var CVModels = /*#__PURE__*/function () {
 
       var withInputsValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/download", withInputsValues ? this.inputsValues : this.elementsInnerText).then(function (res) {
-        _this12.showNotificationAndActivateFinishButton(); // if(res.data){
-        //     this.handleSaveCV();
-        // }
+        _this12.showNotificationAndActivateFinishButton();
 
+        _this12.saved = true;
       })["catch"](function (err) {
         var errorString = err.toString();
 

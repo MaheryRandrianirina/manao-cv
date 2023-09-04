@@ -99,6 +99,8 @@ export default class CVModels {
 
         this.mustUpdateWhenSaving = false;
         this.lastInsertedCvId
+
+        this.saved = false;
     }
 
     createCVForm()
@@ -111,6 +113,7 @@ export default class CVModels {
                 this.createConsole("cv-show-console");
 
                 this.fetchElementsToBeInputs();
+
                 this.saveElementsToBeInputsInnerText();
 
                 this.saveProfilePhotoImg();
@@ -120,7 +123,9 @@ export default class CVModels {
                 this.saveElementsToBeTextareasInnerText();
                 
                 const csrfInput = document.querySelector("input[type='hidden']");
+
                 const cv_id = document.querySelector('.cv-id');
+
                 this.elementsInnerText[csrfInput.name] = csrfInput.value;
                 this.elementsInnerText[cv_id.name] = parseInt(cv_id.value);
                 
@@ -234,6 +239,7 @@ export default class CVModels {
     transformToForm()
     {
         const cv = document.querySelector('.cv');
+
         const form = this.dom.createElement('form');
         form.action = cv.getAttribute('aria-link');
         form.method = "POST";
@@ -242,6 +248,7 @@ export default class CVModels {
         const arrayClassList = Array.from(cv.classList);
         form.className = arrayClassList.join(' ');
         form.innerHTML = cv.innerHTML;
+
         cv.replaceWith(form);
 
         this.form = form
@@ -1213,6 +1220,7 @@ export default class CVModels {
         if(this.closeButtonClickNumber > 0
             && (inputName === "email" || inputName === "phone_number")
             && this.inputsValues[inputName].toLowerCase() === inputValue.toLowerCase()
+            && this.saved
         ){
             this.mustUpdateWhenSaving = true;
         }
@@ -1249,11 +1257,15 @@ export default class CVModels {
     showProfilePhoto(file)
     {
         this.throwErrorIfUndefined(this.profilePhotoInput, "this.profilePhotoInput");
+
         /**
         * @type {HTMLImageElement}
         */
         const profilePhotoImg = this.dom.createElement('img', 'profile-photo');
         profilePhotoImg.src = URL.createObjectURL(file);
+        profilePhotoImg.id = "input";
+        profilePhotoImg.setAttribute('aria-type', "file");
+        profilePhotoImg.setAttribute("aria-name", "profile_photo" );
 
         this.profilePhotoInput.replaceWith(profilePhotoImg);
 
@@ -1356,35 +1368,39 @@ export default class CVModels {
     handleSaveCV(download = false)
     {
         const formData = new FormData();
-            for(const name in this.inputsValues){
-                formData.append(name, this.inputsValues[name]);
-            }
+        for(const name in this.inputsValues){
+            formData.append(name, this.inputsValues[name]);
+        }
 
-            if(this.pathname.includes('/cv/show')
-                || this.mustUpdateWhenSaving
-            ){
-                const cv_id_input = document.querySelector('.cv-id');
+        if(this.pathname.includes('/cv/show')
+            || this.mustUpdateWhenSaving
+        ){
+            const cv_id_input = document.querySelector('.cv-id');
                 
-                if(cv_id_input){
-                    formData.append(cv_id_input.name, cv_id_input.value);
-                }else if(this.lastInsertedCvId){
-                    formData.append("cv_id", this.lastInsertedCvId);
-                }
-
-                axios.post('/cv/edit', formData).then(res => {
-                    this.processCvPostingRes(res, download);
-                }).catch(err => {
-                    this.processCvPostingError(err);
-                })
-
-                return;
+            if(cv_id_input){
+                formData.append(cv_id_input.name, cv_id_input.value);
+            }else if(this.lastInsertedCvId){
+                formData.append("cv_id", this.lastInsertedCvId);
             }
 
-            axios.post("/cv/save", formData).then(res => {
+            axios.post('/cv/edit', formData).then(res => {
                 this.processCvPostingRes(res, download);
+
+                this.saved = true;
             }).catch(err => {
                 this.processCvPostingError(err);
-            });
+            })
+
+            return;
+        }
+
+        axios.post("/cv/save", formData).then(res => {
+            this.processCvPostingRes(res, download);
+
+            this.saved = true;
+        }).catch(err => {
+            this.processCvPostingError(err);
+        });
     }
 
     /**
@@ -1479,9 +1495,8 @@ export default class CVModels {
     {
         axios.post("/cv/download", withInputsValues ? this.inputsValues : this.elementsInnerText).then(res => {
             this.showNotificationAndActivateFinishButton();
-            // if(res.data){
-            //     this.handleSaveCV();
-            // }
+            
+            this.saved = true;
         }).catch(err => {
             const errorString = err.toString();
             if(errorString.toLowerCase().includes('network error')){

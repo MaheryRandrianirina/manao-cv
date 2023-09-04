@@ -377,7 +377,7 @@ class CvController extends Controller
         $path = "";
         
         try {
-            if($request->profile_photo && !stringValue($request->profile_photo)){
+            if($request->profile_photo && !is_string($request->profile_photo)){
                 $path = Storage::disk("public")->put("profile_photo", $request->profile_photo);
             }
 
@@ -419,7 +419,7 @@ class CvController extends Controller
             ];
 
             if(!$this->update){
-                Hobby::create();
+                Hobby::create($arrayValues);
             }else {
                 $hobbies = Hobby::where('cv_id', $this->cv->id)->get();
 
