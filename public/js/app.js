@@ -8009,19 +8009,36 @@ function InteractionsWithSavings() {
     });
   }
 
+  var inputSearch = document.querySelector('.search_input');
+
+  if (inputSearch) {
+    inputSearch.addEventListener('keyup', function (e) {
+      e.preventDefault();
+      var input = e.currentTarget;
+      var inputValue = input.value;
+
+      if (inputValue.length === 0) {
+        var links = document.querySelectorAll('.cvs-list a.block');
+        links.forEach(function (link) {
+          hideLink(link);
+        });
+      }
+    });
+  }
+
   function searchForCvByInput(input) {
     if (input) {
+      var inputValue = input.value;
       var links = document.querySelectorAll('.cvs-list a');
       links.forEach(function (link) {
-        if (link.innerHTML.toLowerCase().includes(input.value.toLowerCase())) {
-          console.log(link);
-          showLink(link);
+        if (link.innerHTML.toLowerCase().includes(inputValue.toLowerCase()) && inputValue.length > 0) {
+          showLinkByInputValueLength(link, inputValue);
         }
       });
     }
   }
 
-  function showLink(link) {
+  function showLinkByInputValueLength(link, inputValue) {
     var bar = link.parentElement.previousElementSibling;
     var chevron = bar.querySelector('.chevron');
 
@@ -8036,6 +8053,23 @@ function InteractionsWithSavings() {
     }
 
     link.classList.add('block');
+  }
+
+  function hideLink(link) {
+    var bar = link.parentElement.previousElementSibling;
+    var chevron = bar.querySelector('.chevron');
+
+    if (chevron.classList.contains('active')) {
+      chevron.classList.remove('active');
+    }
+
+    var cvsElement = chevron.parentElement.nextElementSibling;
+
+    if (cvsElement.classList.contains('active')) {
+      cvsElement.classList.remove('active');
+    }
+
+    link.classList.remove('block');
   }
 }
 

@@ -42,6 +42,7 @@ export default function InteractionsWithSavings(){
 
                 if(countLinks > 10){
                     watchMore.style.opacity = 1;
+
                     watchMore.addEventListener('click', (e)=>{
                         e.preventDefault();
 
@@ -52,26 +53,26 @@ export default function InteractionsWithSavings(){
 
                             watchMore.after(watchLess);
 
-                        watchLess.addEventListener('click', e => {
-                            e.preventDefault();
-    
-                            let less = countLinks - 10;
-                            const reversedLinks = links.reverse();
-                            reversedLinks.forEach(link => {
-                                if(link.classList.contains('block') && countLinks > less){
-                                    countLinks--;
-                                    link.classList.remove('block');
+                            watchLess.addEventListener('click', e => {
+                                e.preventDefault();
+        
+                                let less = countLinks - 10;
+                                const reversedLinks = links.reverse();
+                                reversedLinks.forEach(link => {
+                                    if(link.classList.contains('block') && countLinks > less){
+                                        countLinks--;
+                                        link.classList.remove('block');
+                                    }
+                                })
+                                
+                                if(countLinks <= 11){
+                                    watchLess.parentElement.removeChild(watchLess)
+                                }else if(countLinks >= links.length - 10){
+                                    watchMore.style.display = "inline-block";
+                                    watchMore.style.opacity = 1;
                                 }
                             })
-                            
-                            if(countLinks <= 11){
-                                watchLess.parentElement.removeChild(watchLess)
-                            }else if(countLinks >= links.length - 10){
-                                watchMore.style.display = "inline-block";
-                                watchMore.style.opacity = 1;
-                            }
-                        })
-                    }
+                        }
 
                         let more = countLinks + 10;
                         
@@ -126,19 +127,40 @@ export default function InteractionsWithSavings(){
         })
     }
 
+    const inputSearch = document.querySelector('.search_input');
+    if(inputSearch){
+        inputSearch.addEventListener('keyup', e => {
+            e.preventDefault();
+
+            const input = e.currentTarget;
+            const inputValue = input.value
+            if(inputValue.length === 0){
+                let links = document.querySelectorAll('.cvs-list a.block');
+                links.forEach(link => {
+                    hideLink(link);
+                });
+            }
+        })
+    }
+
     function searchForCvByInput(input){
         if(input){
+            const inputValue = input.value;
+
             let links = document.querySelectorAll('.cvs-list a');
             links.forEach(link => {
-                if(link.innerHTML.toLowerCase().includes(input.value.toLowerCase())){
-                    console.log(link)
-                    showLink(link);
+                if(link.innerHTML
+                    .toLowerCase()
+                    .includes(inputValue.toLowerCase())
+                    && inputValue.length > 0
+                ){
+                    showLinkByInputValueLength(link, inputValue);
                 }
             });
         }
     }
 
-    function showLink(link) {
+    function showLinkByInputValueLength(link, inputValue){
         const bar = link.parentElement.previousElementSibling;
 
         const chevron = bar.querySelector('.chevron');
@@ -152,5 +174,20 @@ export default function InteractionsWithSavings(){
         }
         
         link.classList.add('block');
+    }
+
+    function hideLink(link) {
+        const bar = link.parentElement.previousElementSibling;
+        const chevron = bar.querySelector('.chevron');
+        if(chevron.classList.contains('active')){
+            chevron.classList.remove('active');
+        }
+
+        const cvsElement = chevron.parentElement.nextElementSibling;
+        if(cvsElement.classList.contains('active')){
+            cvsElement.classList.remove('active');
+        }
+        
+        link.classList.remove('block');
     }
 }
