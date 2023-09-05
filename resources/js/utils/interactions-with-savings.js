@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export default function InteractionsWithSavings(){
 
     const barsChevron = document.querySelectorAll('.bar .chevron');
@@ -11,8 +13,7 @@ export default function InteractionsWithSavings(){
     function handleBarChevronClick(e){
         e.preventDefault();
         
-        const chevron = e.currentTarget;
-        toggleCvListBy(chevron)
+        toggleCvListBy(e.currentTarget)
     }
 
     /**
@@ -132,13 +133,15 @@ export default function InteractionsWithSavings(){
         inputSearch.addEventListener('keyup', e => {
             e.preventDefault();
 
+            hideLinkByInput(e.currentTarget);
+        })
+
+        inputSearch.addEventListener('click', e => {
             const input = e.currentTarget;
-            const inputValue = input.value
-            if(inputValue.length === 0){
-                let links = document.querySelectorAll('.cvs-list a.block');
-                links.forEach(link => {
-                    hideLink(link);
-                });
+            if(input.value.length > 0){
+                setTimeout(() => {
+                    hideLinkByInput(input);
+                }, 100);
             }
         })
     }
@@ -146,6 +149,7 @@ export default function InteractionsWithSavings(){
     function searchForCvByInput(input){
         if(input){
             const inputValue = input.value;
+            let foundLinks = 0;
 
             let links = document.querySelectorAll('.cvs-list a');
             links.forEach(link => {
@@ -154,13 +158,36 @@ export default function InteractionsWithSavings(){
                     .includes(inputValue.toLowerCase())
                     && inputValue.length > 0
                 ){
-                    showLinkByInputValueLength(link, inputValue);
+                    showLink(link);
+
+                    hideWatchMoreButton(link.parentElement);
+
+                    foundLinks++;
                 }
             });
+
+            if(foundLinks === 0){
+                axios.post("/cv/search", {"degree": inputValue}).then(res => {
+                    const cvs = res.data;
+
+                    cvs.forEach(cv => {
+                        const cvLink = document.querySelector(`.cvs a.cv${cv.id}`);
+                        if(cvLink){
+                            showLink(cvLink);
+
+                            hideWatchMoreButton(cvLink.parentElement);
+                        }
+                    })
+                    
+                    // AFFICHER LES LIENS QUI CORRESPONDANT AUX CVS RECUPERES
+                }).catch(err => {
+                    console.error(err)
+                })
+            }
         }
     }
 
-    function showLinkByInputValueLength(link, inputValue){
+    function showLink(link){
         const bar = link.parentElement.previousElementSibling;
 
         const chevron = bar.querySelector('.chevron');
@@ -176,6 +203,16 @@ export default function InteractionsWithSavings(){
         link.classList.add('block');
     }
 
+    function hideLinkByInput(input){
+        const inputValue = input.value;
+        if(inputValue.length === 0){
+            let links = document.querySelectorAll('.cvs-list a.block');
+            links.forEach(link => {
+                hideLink(link);
+            });
+        }
+    }
+
     function hideLink(link) {
         const bar = link.parentElement.previousElementSibling;
         const chevron = bar.querySelector('.chevron');
@@ -189,5 +226,12 @@ export default function InteractionsWithSavings(){
         }
         
         link.classList.remove('block');
+    }
+
+    function hideWatchMoreButton(cvsElement) {
+        const watchMore = cvsElement.querySelector('.btn.btn-primary');
+        if(watchMore){
+            watchMore.style.display = "none";
+        }
     }
 }

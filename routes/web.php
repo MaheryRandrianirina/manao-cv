@@ -41,6 +41,8 @@ Route::middleware("auth")->group(function(){
     ]);
 
     Route::post("/cv/delete", [CvController::class, "delete"]);
+
+    Route::post("/cv/search", [CvController::class, "findByDegree"]);
 });
 
 require __DIR__.'/auth.php';

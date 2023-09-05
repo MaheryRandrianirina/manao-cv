@@ -628,6 +628,19 @@ class CvController extends Controller
         }catch(Exception $e){
             throw $e;
         }
+    }
+
+    public function findByDegree(Request $request): void 
+    {
+        $request->validate(['degree' => "required", "string"]);
+
+        $cvs = [];
         
+        $formations = Formation::where('degree', "like", "%" .$request->degree . "%")->get();
+        foreach($formations as $formation){
+            $cvs[] = Cv::find($formation->cv_id);
+        }
+
+        echo json_encode($cvs);
     }
 }

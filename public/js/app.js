@@ -7891,6 +7891,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ InteractionsWithSavings)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
 function InteractionsWithSavings() {
   var barsChevron = document.querySelectorAll('.bar .chevron');
 
@@ -7902,8 +7905,7 @@ function InteractionsWithSavings() {
 
   function handleBarChevronClick(e) {
     e.preventDefault();
-    var chevron = e.currentTarget;
-    toggleCvListBy(chevron);
+    toggleCvListBy(e.currentTarget);
   }
   /**
    * 
@@ -8014,14 +8016,15 @@ function InteractionsWithSavings() {
   if (inputSearch) {
     inputSearch.addEventListener('keyup', function (e) {
       e.preventDefault();
+      hideLinkByInput(e.currentTarget);
+    });
+    inputSearch.addEventListener('click', function (e) {
       var input = e.currentTarget;
-      var inputValue = input.value;
 
-      if (inputValue.length === 0) {
-        var links = document.querySelectorAll('.cvs-list a.block');
-        links.forEach(function (link) {
-          hideLink(link);
-        });
+      if (input.value.length > 0) {
+        setTimeout(function () {
+          hideLinkByInput(input);
+        }, 100);
       }
     });
   }
@@ -8029,16 +8032,37 @@ function InteractionsWithSavings() {
   function searchForCvByInput(input) {
     if (input) {
       var inputValue = input.value;
+      var foundLinks = 0;
       var links = document.querySelectorAll('.cvs-list a');
       links.forEach(function (link) {
         if (link.innerHTML.toLowerCase().includes(inputValue.toLowerCase()) && inputValue.length > 0) {
-          showLinkByInputValueLength(link, inputValue);
+          showLink(link);
+          hideWatchMoreButton(link.parentElement);
+          foundLinks++;
         }
       });
+
+      if (foundLinks === 0) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/cv/search", {
+          "degree": inputValue
+        }).then(function (res) {
+          var cvs = res.data;
+          cvs.forEach(function (cv) {
+            var cvLink = document.querySelector(".cvs a.cv".concat(cv.id));
+
+            if (cvLink) {
+              showLink(cvLink);
+              hideWatchMoreButton(cvLink.parentElement);
+            }
+          }); // AFFICHER LES LIENS QUI CORRESPONDANT AUX CVS RECUPERES
+        })["catch"](function (err) {
+          console.error(err);
+        });
+      }
     }
   }
 
-  function showLinkByInputValueLength(link, inputValue) {
+  function showLink(link) {
     var bar = link.parentElement.previousElementSibling;
     var chevron = bar.querySelector('.chevron');
 
@@ -8053,6 +8077,17 @@ function InteractionsWithSavings() {
     }
 
     link.classList.add('block');
+  }
+
+  function hideLinkByInput(input) {
+    var inputValue = input.value;
+
+    if (inputValue.length === 0) {
+      var links = document.querySelectorAll('.cvs-list a.block');
+      links.forEach(function (link) {
+        hideLink(link);
+      });
+    }
   }
 
   function hideLink(link) {
@@ -8070,6 +8105,14 @@ function InteractionsWithSavings() {
     }
 
     link.classList.remove('block');
+  }
+
+  function hideWatchMoreButton(cvsElement) {
+    var watchMore = cvsElement.querySelector('.btn.btn-primary');
+
+    if (watchMore) {
+      watchMore.style.display = "none";
+    }
   }
 }
 

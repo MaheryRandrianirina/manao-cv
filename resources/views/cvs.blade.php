@@ -16,7 +16,7 @@
         </div>
         <div class="cvs p-2">
             @foreach($men as $man)
-                <a class="d-block mb-2 border-bottom" href="/cv/show/{{$man->name}}-{{$man->id}}">{{ $man->name }} {{ $man->firstname}}</a>
+                <a class="d-block mb-2 border-bottom cv{{ $man->id }}" href="/cv/show/{{$man->name}}-{{$man->id}}">{{ $man->name }} {{ $man->firstname}}</a>
             @endforeach
             <button class="btn btn-primary mt-3">Voir plus</button>
         </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="cvs p-2">
             @foreach($women as $woman)
-                <a class="d-block mb-2 border-bottom" href="/cv/show/{{$woman->name}}-{{$woman->id}}">{{ $woman->name }} {{ $woman->firstname}}</a>
+                <a class="d-block mb-2 border-bottom cv{{ $man->id }}" href="/cv/show/{{$woman->name}}-{{$woman->id}}">{{ $woman->name }} {{ $woman->firstname}}</a>
             @endforeach
             <button class="btn btn-primary mt-3">Voir plus</button>
         </div>
