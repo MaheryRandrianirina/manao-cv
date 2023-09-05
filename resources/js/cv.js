@@ -163,7 +163,6 @@ export default class CVModels {
                 this.addClickableSeeButton();
             }
             
-
             return;
         }
 
@@ -548,7 +547,8 @@ export default class CVModels {
 
     transformElementsToBeSelect()
     {
-        const elementsToBeSelect = this.form.querySelectorAll('#select')
+        const elementsToBeSelect = this.form.querySelectorAll('#select');
+        
         if(elementsToBeSelect && elementsToBeSelect.length > 0){
             elementsToBeSelect.forEach(element => {
                 const selectName = element.getAttribute('aria-name');
@@ -1484,6 +1484,7 @@ export default class CVModels {
     handleSaveCV(download = false)
     {
         const formData = new FormData();
+        
         for(const name in this.inputsValues){
             formData.append(name, this.inputsValues[name]);
         }

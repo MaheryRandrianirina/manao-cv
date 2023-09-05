@@ -16,7 +16,7 @@ class CreateSkillTable extends Migration
         Schema::create('skill', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('level')->unsigned()->nullable();
+            $table->float('level')->unsigned()->nullable();
             $table->foreignId('cv_id')->constrained()->onDelete('cascade');
 
         });

@@ -334,7 +334,7 @@ class CvController extends Controller
         }
     }
 
-    private function saveLanguages(Request $request,int $cv_id, bool $levelString = true) {
+    private function saveLanguages(Request $request,int $cv_id, bool $stringLevel = true) {
         for($i = 0; $i < $this->languages; $i++){
             $name = "language_" . $this->stringNumber[$i+1];
             $level = "language_level_" . $this->stringNumber[$i+1];
@@ -344,10 +344,10 @@ class CvController extends Controller
                 "cv_id" => $cv_id
             ];
 
-            if($levelString){
-                $arrayValues["level_string"] = $request->$level;
+            if($stringLevel){
+                $arrayValues["string_level"] = $request->$level;
             }else {
-                $arrayValues["level"] = (int) $request->$level;
+                $arrayValues["level"] = (float) $request->$level;
             }
 
             if(!$this->update){

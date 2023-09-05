@@ -17,7 +17,7 @@ class CreateLanguageTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('string_level')->nullable();
-            $table->integer('level')->unsigned()->nullable();
+            $table->float('level')->unsigned()->nullable();
             $table->foreignId('cv_id')->constrained()->onDelete('cascade');
         });
     }

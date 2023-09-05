@@ -112,7 +112,7 @@
                         <p class="language-with-level mb-0 ms-3" aria-input-number="2">
                             <span id="input" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> 
                             <span id="separator">:</span> 
-                            <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->level_string }}</span>
+                            <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->string_level }}</span>
                         </p>
                     </div>
                 @endforeach
