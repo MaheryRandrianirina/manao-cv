@@ -138,9 +138,9 @@
                                 </h4>
                                 <p aria-input-number="2" class="date text-gray">
                                     <?php $splitted_date = mb_split(" - ",$experience->date); ?>
-                                    <span id="input" aria-type="date" aria-name="year_month_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> 
+                                    <span id="input" aria-type="date" aria-name="year_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> 
                                     <span id="separator">-</span> 
-                                    <span id="input" aria-type="date" aria-name="year_month_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
+                                    <span id="input" aria-type="date" aria-name="year_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
                                 </p>
                                 <ul class="task list customizable-list">
                                     <?php 
@@ -163,9 +163,9 @@
                             <span id="input" aria-name="company_work_one">Poste occupé</span> <span id="separator">|</span> <span id="input" aria-name="company_name_one">Nom de l'entreprise</span>
                         </h4>
                         <p aria-input-number="2" class="date text-gray">
-                            <span id="input" aria-type="date" aria-name="year_month_debut_one">Nov. 20XX</span> 
+                            <span id="input" aria-type="date" aria-name="year_debut_one">Nov. 20XX</span> 
                             <span id="separator">-</span> 
-                            <span id="input" aria-type="date" aria-name="year_month_end_one">Juil. 20XX</span>
+                            <span id="input" aria-type="date" aria-name="year_end_one">Juil. 20XX</span>
                         </p>
                         <ul class="task list customizable-list">
                             <li id="textarea" aria-name="experience_one_task_one" class="task-one">

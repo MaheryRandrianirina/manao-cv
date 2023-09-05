@@ -159,6 +159,23 @@ li.nav-item a.text-white:hover {
             height:200px; 
             border-radius: 50%;
         }
+
+        .date .inputs-date-wrapper {
+            width: 48%;
+            label {
+                text-transform: initial;
+            }
+            input {
+                width: 100% !important;
+            }
+        }
+
+        .right {
+            .date .inputs-date-wrapper label {
+                color: $black !important;
+                font-weight: normal;
+            }
+        }
     }
 
     .cv.cv-1 {
@@ -368,6 +385,17 @@ li.nav-item a.text-white:hover {
         }
         .skill.skill-three .level::after {
             width: 70px;
+        }
+
+        .date-and-college .inputs-date-wrapper {
+            width: 48%;
+            label {
+                text-transform: initial;
+                color: $black !important;
+            }
+            input {
+                width: 100% !important;
+            }
         }
     }
 

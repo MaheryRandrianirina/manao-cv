@@ -100,9 +100,9 @@ class CvController extends Controller
                 $this->rules[$name] = ["string", "required"];
             }else if(strchr($name, "company_work")){
                 $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "year_month_debut")){
+            }else if(strchr($name, "year_debut")){
                 $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "year_month_end")){
+            }else if(strchr($name, "year_end")){
                 $this->rules[$name] = ["string", "required"];
             }else if(strchr($name, "skill") && !strchr($name, "skill_level")){
                 $this->rules[$name] = ["string", "required"];
@@ -261,8 +261,8 @@ class CvController extends Controller
         for($i = 0; $i < $this->experiences; $i++){
             $company_name = "company_name_" . $this->stringNumber[$i+1];
             $work = "company_work_" . $this->stringNumber[$i+1];
-            $year_month_debut = "year_month_debut_" . $this->stringNumber[$i+1];
-            $year_month_end = "year_month_end_" . $this->stringNumber[$i+1];
+            $year_debut = "year_debut_" . $this->stringNumber[$i+1];
+            $year_end = "year_end_" . $this->stringNumber[$i+1];
             $task = "";
             $tasks = [];
 
@@ -282,7 +282,7 @@ class CvController extends Controller
             $arrayValues = [
                 "entreprise_name" => $request->$company_name,
                 "work" => $request->$work,
-                "date" => $request->$year_month_debut . " - " . $request->$year_month_end,
+                "date" => $request->$year_debut . " - " . $request->$year_end,
                 "task" => $task ? $request->$task : join("\n", $tasks),
                 "cv_id" => $cv_id
             ];
@@ -343,7 +343,7 @@ class CvController extends Controller
                 "name" => $request->$name,
                 "cv_id" => $cv_id
             ];
-
+            
             if($stringLevel){
                 $arrayValues["string_level"] = $request->$level;
             }else {

@@ -192,9 +192,9 @@
                         <?php $i++;?>
                         <p class="date" aria-input-number="2">
                             <?php $splitted_date = mb_split(" - ",$experience->date); ?>
-                            <span id="input" aria-type="date" aria-name="year_month_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> 
+                            <span id="input" aria-type="date" aria-name="year_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> 
                             <span id="separator">-</span> 
-                            <span id="input" aria-type="date" aria-name="year_month_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
+                            <span id="input" aria-type="date" aria-name="year_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
                         </p>
                         <h4 id="input" aria-name="company_name_{{ $stringNumber[$i] }}" class="company-name">{{ $experience->entreprise_name }}</h4>
                         <p id="input" aria-name="company_work_{{ $stringNumber[$i] }}" class="work">{{ $experience->work }}</p>
@@ -218,9 +218,9 @@
                 @else
                 <div class="experience experience-one">
                     <p class="date" aria-input-number="2">
-                        <span id="input" aria-type="date" aria-name="year_month_debut_one">Sept. 20XX</span> 
+                        <span id="input" aria-type="date" aria-name="year_debut_one">Sept. 20XX</span> 
                         <span id="separator">-</span> 
-                        <span id="input" aria-type="date" aria-name="year_month_end_one">Juil. 20XX</span>
+                        <span id="input" aria-type="date" aria-name="year_end_one">Juil. 20XX</span>
                     </p>
                     <h4 id="input" aria-name="company_name_one" class="company-name">NOM DE L'ENTREPRISE</h4>
                     <p id="input" aria-name="company_work_one" class="work">Poste occupé</p>
@@ -238,9 +238,9 @@
                 </div>
                 <div class="experience experience-two">
                     <p class="date" aria-input-number="2">
-                        <span id="input" aria-type="date" aria-name="year_month_debut_two">Sept. 20XX</span> 
+                        <span id="input" aria-type="date" aria-name="year_debut_two">Sept. 20XX</span> 
                         <span id="separator">-</span> 
-                        <span id="input" aria-type="date" aria-name="year_month_end_one">Juil. 20XX</span>
+                        <span id="input" aria-type="date" aria-name="year_end_one">Juil. 20XX</span>
                     </p>
                     <h4 id="input" aria-name="company_name_two" class="company-name">NOM DE L'ENTREPRISE</h4>
                     <p id="input" aria-name="company_work_two" class="work">Poste occupé</p>

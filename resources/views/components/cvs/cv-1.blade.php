@@ -155,8 +155,8 @@
                             </h4>
                             <p class="date" aria-input-number="2">
                                 <?php $splitted_date = mb_split(" - ",$experience->date); ?>
-                                <span id="input" aria-type="date" aria-name="year_month_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> <span id="separator">-</span> 
-                                <span id="input" aria-type="date" aria-name="year_month_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
+                                <span id="input" aria-type="date" aria-name="year_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> <span id="separator">-</span> 
+                                <span id="input" aria-type="date" aria-name="year_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
                             </p>
                             <div class="task">
                                 <p>
@@ -172,9 +172,9 @@
                         <span id="input" aria-name="company_name_one">NOM DE L'ENTREPRISE</span> <span id="separator">|</span> <span id="input" aria-name="company_work_one">Poste occupé</span>
                     </h4>
                     <p class="date" aria-input-number="2">
-                        <span id="input" aria-type="date" aria-name="year_month_debut_one">Sept. 20XX</span> 
+                        <span id="input" aria-type="date" aria-name="year_debut_one">Sept. 20XX</span> 
                         <span id="separator">-</span> 
-                        <span id="input" aria-type="date" aria-name="year_month_end_one">Juil. 20XX</span>
+                        <span id="input" aria-type="date" aria-name="year_end_one">Juil. 20XX</span>
                     </p>
                     <div class="task">
                         <p>
@@ -188,9 +188,9 @@
                         <span id="input" aria-name="company_name_two">NOM DE L'ENTREPRISE</span> <span id="separator">|</span> <span id="input" aria-name="company_work_two">Poste occupé</span>
                     </h4>
                     <p class="date" aria-input-number="2">
-                        <span id="input" aria-type="date" aria-name="year_month_debut_two">Sept. 20XX</span> 
+                        <span id="input" aria-type="date" aria-name="year_debut_two">Sept. 20XX</span> 
                         <span id="separator">-</span> 
-                        <span id="input" aria-type="date" aria-name="year_month_end_two">Juil. 20XX</span>
+                        <span id="input" aria-type="date" aria-name="year_end_two">Juil. 20XX</span>
                     </p>
                     <div class="task">
                         <p>

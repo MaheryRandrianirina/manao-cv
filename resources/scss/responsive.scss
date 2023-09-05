@@ -8,6 +8,21 @@
     }
 }
 
+@media only screen and (max-width:1000px){
+    .cv-form.cv-4-form {
+        .right {
+            .date-and-college.text-gray.d-flex.justify-content-between {
+                display: block !important;
+            }
+
+            input.etablissement {
+                margin-left: 0 !important;
+            }
+        }
+        
+    }
+}
+
 @media screen and (max-width:880px) {
     .cv-form.cv-3-form {
         div.cv .right .about {

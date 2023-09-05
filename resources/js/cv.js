@@ -318,10 +318,10 @@ export default class CVModels {
                 if(this.modelName === "cv-2" || this.modelName === "cv-3"){
                     this.addLevelCursorWithIndicatorIfThereIsValue(element);
                 }
-            }else if(inputName.includes('year_month_debut')){
+            }else if(inputName.includes('year_debut')){
                 input.placeholder = "Mois et année de début";
                 input.setAttribute('required', "true");
-            }else if(inputName.includes('year_month_end')){
+            }else if(inputName.includes('year_end')){
                 input.placeholder = "Mois et année de fin";
                 input.setAttribute('required', "true");
             }else if((inputName.includes('skill') &&
@@ -439,6 +439,8 @@ export default class CVModels {
                 label.innerText = "Choisir une photo : ";
             }
 
+            this.addLabelInputDate(input, inputName, element);
+
             element.replaceWith(input);
         })
 
@@ -543,6 +545,37 @@ export default class CVModels {
         })
 
         this.addListenersToEveryBarLevels();
+    }
+
+    /**
+     * 
+     * @param {HTMLInputElement} input 
+     * @param {string} inputName 
+     * @param {HTMLElement} element
+     */
+    addLabelInputDate(input, inputName, element){
+        let label;
+        let wrapper;
+        
+        if(inputName.includes('year')){
+            label = this.dom.createElement('label', 'mb-1 text-white');
+
+            wrapper = this.dom.createElement('div', 'inputs-date-wrapper');
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+        }
+
+        if(label && inputName.includes('year_debut')){
+            label.innerText = "Date de début";
+        }else if(label && inputName.includes('year_end')){
+            label.innerText = "Date de fin";
+        }
+
+        if(wrapper){
+            element.replaceWith(wrapper)
+        }
+
+        return;
     }
 
     transformElementsToBeSelect()

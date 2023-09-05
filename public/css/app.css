@@ -10617,6 +10617,19 @@ li.nav-item a.text-white:hover {
   height: 200px;
   border-radius: 50%;
 }
+.cv .date .inputs-date-wrapper {
+  width: 48%;
+}
+.cv .date .inputs-date-wrapper label {
+  text-transform: initial;
+}
+.cv .date .inputs-date-wrapper input {
+  width: 100% !important;
+}
+.cv .right .date .inputs-date-wrapper label {
+  color: #000 !important;
+  font-weight: normal;
+}
 
 .cv.cv-1 .experiences .company-name span:nth-child(1) {
   text-transform: uppercase;
@@ -10790,6 +10803,16 @@ li.nav-item a.text-white:hover {
 }
 .cv.cv-4 .skill.skill-three .level::after {
   width: 70px;
+}
+.cv.cv-4 .date-and-college .inputs-date-wrapper {
+  width: 48%;
+}
+.cv.cv-4 .date-and-college .inputs-date-wrapper label {
+  text-transform: initial;
+  color: #000 !important;
+}
+.cv.cv-4 .date-and-college .inputs-date-wrapper input {
+  width: 100% !important;
 }
 
 .model-hover-style {
@@ -11133,6 +11156,14 @@ li.nav-item a.text-white:hover {
 @media only screen and (max-width: 1330px) {
   .cv-form .cv.cv-3 .right .about {
     margin-bottom: 20px !important;
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .cv-form.cv-4-form .right .date-and-college.text-gray.d-flex.justify-content-between {
+    display: block !important;
+  }
+  .cv-form.cv-4-form .right input.etablissement {
+    margin-left: 0 !important;
   }
 }
 @media screen and (max-width: 880px) {
