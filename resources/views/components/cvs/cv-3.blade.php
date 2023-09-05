@@ -155,7 +155,9 @@
                             <h4 id="input" aria-name="company_name_{{ $stringNumber[$i] }}" class="company-name">{{ $experience->entreprise_name }}</h4>
                             <p aria-input-number="2" class="date">
                                 <?php $splitted_date = mb_split(" - ",$experience->date); ?>
-                                <span id="input" aria-name="year_month_debut_one">{{ $splitted_date[0] }}</span> <span id="separator">-</span> <span id="input" aria-name="year_month_end_one">{{ $splitted_date[1] }}</span>
+                                <span id="input" aria-type="date" aria-name="year_month_debut_one">{{ $splitted_date[0] }}</span> 
+                                <span id="separator">-</span> 
+                                <span id="input" aria-type="date" aria-name="year_month_end_one">{{ $splitted_date[1] }}</span>
                             </p>
                             <ul class="task list customizable-list">
                                 <?php 
@@ -177,7 +179,9 @@
                     <h4 id="input" aria-name="company_work_one" class="work">Poste occupé</h4>
                     <h4 id="input" aria-name="company_name_one" class="company-name">Nom de l'entreprise</h4>
                     <p aria-input-number="2" class="date">
-                        <span id="input" aria-name="year_month_debut_one">Nov. 20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_month_end_one">Juil. 20XX</span>
+                        <span id="input" aria-type="date" aria-name="year_month_debut_one">Nov. 20XX</span> 
+                        <span id="separator">-</span> 
+                        <span id="input" aria-type="date" aria-name="year_month_end_one">Juil. 20XX</span>
                     </p>
                     <ul class="task list customizable-list">
                         <li id="textarea" aria-name="experience_one_task_one" class="task-one">
@@ -195,7 +199,9 @@
                     <h4 id="input" aria-name="company_work_two" class="work">Poste occupé</h4>
                     <h4 id="input" aria-name="company_name_two" class="company-name">Nom de l'entreprise</h4>
                     <p aria-input-number="2" class="date">
-                        <span id="input" aria-name="year_month_debut_two">Nov. 20XX</span> <span id="separator">-</span> <span id="input" aria-name="year_month_edn_two">Juil. 20XX</span>
+                        <span id="input" aria-type="date" aria-name="year_month_debut_two">Nov. 20XX</span> 
+                        <span id="separator">-</span> 
+                        <span id="input" aria-type="date" aria-name="year_month_edn_two">Juil. 20XX</span>
                     </p>
                     <ul class="task list customizable-list">
                         <li id="textarea" aria-name="experience_two_task_one" class="task-one">
@@ -226,7 +232,9 @@
                             <p aria-input-number='3' class="college">
                                 <span id="input" aria-name="etablissement_{{ $stringNumber[$i] }}" class="etablissement">{{ $formation->etablissement }}</span> <span id="separator"> : </span> <span aria-input-number="2" class="date">
                                     <?php $splitted_date = mb_split(" - ",$formation->date); ?>
-                                    <span id="input" aria-type="number" aria-name="year_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> <span id="separator">-</span> <span id="input" aria-type="number" aria-name="year_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
+                                    <span id="input" aria-type="date" aria-name="year_debut_{{ $stringNumber[$i] }}">{{ $splitted_date[0] }}</span> 
+                                    <span id="separator">-</span> 
+                                    <span id="input" aria-type="date" aria-name="year_end_{{ $stringNumber[$i] }}">{{ $splitted_date[1] }}</span>
                                 </span>
                             </p>
                         </div>
@@ -238,7 +246,9 @@
                         <h4 id="input" aria-name="degree_one">DIPLOME XXXXXXXXX</h4>
                         <p aria-input-number='3' class="college">
                             <span id="input" aria-name="etablissement_one" class="etablissement">Université ou école</span> <span id="separator"> : </span> <span aria-input-number="2" class="date">
-                                <span id="input" aria-type="number" aria-name="year_debut_one">20XX</span> <span id="separator">-</span> <span id="input" aria-type="number" aria-name="year_end_one">20XX</span>
+                                <span id="input" aria-type="date" aria-name="year_debut_one">20XX</span> 
+                                <span id="separator">-</span> 
+                                <span id="input" aria-type="date" aria-name="year_end_one">20XX</span>
                             </span>
                         </p>
                     </div>
@@ -248,7 +258,9 @@
                         <h4 id="input" aria-name="degree_two">DIPLOME XXXXXXXXX</h4>
                         <p aria-input-number='3' class="college">
                             <span id="input" aria-name="etablissement_two" class="etablissement">Université ou école</span> <span id="separator"> : </span> <span aria-input-number="2" class="date">
-                                <span id="input" aria-type="number" aria-name="year_debut_two">20XX</span> <span id="separator">-</span> <span id="input" aria-type="number" aria-name="year_end_two">20XX</span>
+                                <span id="input" aria-type="date" aria-name="year_debut_two">20XX</span> 
+                                <span id="separator">-</span> 
+                                <span id="input" aria-type="date" aria-name="year_end_two">20XX</span>
                             </span>
                         </p>
                     </div>
