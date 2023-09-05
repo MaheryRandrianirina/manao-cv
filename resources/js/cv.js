@@ -27,23 +27,41 @@ export default class CVModels {
          */
         this.levelCursorOrigin;
         this.barLevelPosition;
+
         this.moveFromBody = false;
+
         this.inputWithLevelValue;
+
         this.modelName = "";
+
         this.formInputs;
         this.formTextareas;
+        this.formSelects;
+
         this.elementsToBeInputs;
         this.elementsToBeTextareas;
+        this.elementsToBeSelect;
+
         this.formErrors;
+
         this.divFromForm;
+
         this.seeButtonContainer;
+
         this.console;
+
         this.closeIconContainer;
+
         this.shownProfilePhoto = false;
+
         this.pathname;
+
         this.editCvClicked = false;
+
         this.cv_id_input;
+
         this.csrfInput;
+
         this.closeButtonClickNumber = 0;
         /**
          * @type {HTMLInputElement | undefined}
@@ -463,18 +481,17 @@ export default class CVModels {
                     divToRempaceTextareaParent.before(label);
                 }
             }
-            
         })
+
+        this.transformElementsToBeSelect();
 
         const lists = document.querySelectorAll('.list.customizable-list')
         lists.forEach(list => {
             const listChildren = Array.from(list.children);
             const childrenLength = listChildren.length;
             const levelValueInput = list.querySelector('.level-value');
-            // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER AU CAS OU C'EST LA
-            // PREMIERE ENTREE DE L'UTILISATEUR DANS LA PAGE
+            // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE L'UTILISATEUR ARRIVE DANS LA PAGE
             for(let i = 0; i < childrenLength; i++){
-                
                 if(listChildren[i+1] 
                     && isNull(levelValueInput)
                 ){
@@ -523,11 +540,49 @@ export default class CVModels {
                     addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
                 }
                 
-                
             }
         })
 
         this.addListenersToEveryBarLevels();
+    }
+
+    transformElementsToBeSelect()
+    {
+        const elementsToBeSelect = this.form.querySelectorAll('#select')
+        if(elementsToBeSelect && elementsToBeSelect.length > 0){
+            elementsToBeSelect.forEach(element => {
+                const selectName = element.getAttribute('aria-name');
+                if(selectName === null){
+                    console.error("L'element n'a pas d'attribut 'aria-name'");
+
+                    return;
+                }
+                
+                /**
+                 * @type {HTMLSelectElement}
+                 */
+                const select = this.dom.createElement('select', getClassFrom(element) + " form-control mb-2");
+                select.name = selectName;
+                
+                const ariaOptions = element.getAttribute('aria-options');
+                if(ariaOptions === null){
+                    console.error("L'élément ne possède pas l'attribute 'aria-options'");
+                }
+                
+                const selectOptions = ariaOptions.split(", ");
+                selectOptions.forEach(option => {
+                    const optionElement = this.dom.createElement('option');
+                    optionElement.innerText = option;
+                    optionElement.value = option.toLowerCase();
+
+                    select.appendChild(optionElement);
+                })
+                
+                select.setAttribute('aria-nodename', element.nodeName);
+
+                element.replaceWith(select)
+            })
+        }
     }
 
     /**
@@ -754,6 +809,7 @@ export default class CVModels {
         }
         
         this.levelCursorPosition = {x: e.clientX, y: e.clientY};
+
         if(!this.levelCursorOrigin){
             const barLevelRect = this.barLevel.getBoundingClientRect();
             const barLevelRectPosition = {x: barLevelRect.x, y: barLevelRect.y}
@@ -792,27 +848,49 @@ export default class CVModels {
                     }
                     
                     if(isNull(previousElementOfParent)){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one"
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_one"
                     }else if(previousElementOfParentLevelInput.name.includes('one')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_two";
                     }else if(previousElementOfParentLevelInput.name.includes('two')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_three";
                     }else if(previousElementOfParentLevelInput.name.includes('three')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_four";
                     }else if(previousElementOfParentLevelInput.name.includes('four')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_five";
                     }else if(previousElementOfParentLevelInput.name.includes('five')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_six";
                     }else if(previousElementOfParentLevelInput.name.includes('six')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_seven";
                     }else if(previousElementOfParentLevelInput.name.includes('seven')){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_eight";
                     }else if(previousElementOfParentLevelInput.name.includes("eight")){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_eight";
                     }else if(previousElementOfParentLevelInput.name.includes("eight")){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_nine";
                     }else if(previousElementOfParentLevelInput.name.includes("nine")){
-                        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
+                        this.inputWithLevelValue.name = 
+                            this.barLevel.getAttribute('id')
+                                .replace('level', '') + "level_ten";
                     }
 
                     this.barLevel.appendChild(this.inputWithLevelValue)
@@ -985,15 +1063,18 @@ export default class CVModels {
     {
         let formInputs;
         let formTextareas;
+        let formSelects;
 
         if(this.form){
             formInputs = this.form.querySelectorAll('input')
             formTextareas = this.form.querySelectorAll('textarea');
+            formSelects = this.form.querySelectorAll('select');
         }else {
             const form = document.querySelector('form');
             if(form){
                 formInputs = form.querySelectorAll('input');
-                formTextareas = form.querySelectorAll('textarea')
+                formTextareas = form.querySelectorAll('textarea');
+                formSelects = form.querySelectorAll('select')
             }
         }
         
@@ -1014,6 +1095,11 @@ export default class CVModels {
         if(formTextareas){
             this.formTextareas = formTextareas;
             this.transformEachTextareaToText();
+        }
+
+        if(formSelects){
+            this.formSelects = formSelects;
+            this.transformEachSelectToText();
         }
         
         this.divFromForm = this.transformFormToDiv();
@@ -1278,38 +1364,66 @@ export default class CVModels {
     {
         this.throwErrorIfUndefined(this.formTextareas, "this.formTextareas");
 
-        this.formTextareas.forEach(formTextarea => {
-            const className = getClassFrom(formTextarea);
-            const elementToReplaceTextarea = this.dom.createElement(
-                formTextarea.getAttribute('aria-nodename').toLowerCase(), 
+        this.transformToText(this.formTextareas, "textarea");
+    }
+
+    /**
+     * 
+     * @param {HTMLTextAreaElement[] | HTMLSelectElement[]} elements 
+     */
+    transformToText(elements, elementNode) {
+        elements.forEach(element => {
+            const className = getClassFrom(element);
+            const elementOfReplacement = this.dom.createElement(
+                element.getAttribute('aria-nodename').toLowerCase(), 
                 className.replace('form-control', '').replace('mb-2', 'mb-0')
             );
                     
-            const inputValue = formTextarea.value;
-            this.saveInputsValues(formTextarea.name, inputValue);
+            const inputValue = element.value;
+            this.saveInputsValues(element.name, inputValue);
 
             let elementInnerText;
                     
-            if(formTextarea.name === "name"){
+            if(element.name === "name"){
                 elementInnerText = this.textStylePerModel[this.modelName].name === "uppercase" ? inputValue.toUpperCase() : 
                     inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             }else {
                 elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             }
 
-            elementToReplaceTextarea.innerHTML = elementInnerText;
+            elementOfReplacement.innerHTML = elementInnerText;
 
-            elementToReplaceTextarea.setAttribute('id', "textarea");
-            elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
+            elementOfReplacement.setAttribute('id', elementNode);
+            elementOfReplacement.setAttribute('aria-name', element.name);
 
-            const formTextareaNextElement = formTextarea.nextElementSibling;
-            if(formTextareaNextElement 
-                && formTextareaNextElement.classList.contains('text-danger')
-            ){
-                formTextarea.parentElement.removeChild(formTextareaNextElement);
+            if(elementNode === "select"){
+                let ariaOptions = "";
+
+                const options = Array.from(element.querySelectorAll('option'));
+                if(options.length > 0){
+                    ariaOptions = options.map(option => {
+                        return option.innerText;
+                    }).join(', ');
+                }
+                elementOfReplacement.setAttribute('aria-options', ariaOptions)
             }
-            formTextarea.replaceWith(elementToReplaceTextarea);
+
+            const nextElement = element.nextElementSibling;
+            if(nextElement 
+                && nextElement.classList.contains('text-danger')
+            ){
+                element.parentElement.removeChild(nextElement);
+            }
+
+            element.replaceWith(elementOfReplacement);
         })
+    }
+
+    transformEachSelectToText()
+    {
+        this.throwErrorIfUndefined(this.formSelects, "this.formSelects");
+
+        this.transformToText(this.formSelects, "select");
     }
 
     /**

@@ -10826,7 +10826,7 @@ li.nav-item a.text-white:hover {
 .cv-form .cv .languages-list .btn.btn-secondary.add-into-list {
   margin-left: 25px;
 }
-.cv-form .cv .justify-content-between input {
+.cv-form .cv .justify-content-between input, .cv-form .cv .justify-content-between select {
   width: 48%;
 }
 .cv-form .cv .level.bar-level .level-indicator {

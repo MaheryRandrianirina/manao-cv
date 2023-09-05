@@ -110,7 +110,9 @@
                             <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
                         </svg>
                         <p class="language-with-level mb-0 ms-3" aria-input-number="2">
-                            <span id="input" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> <span id="separator">:</span> <span id="input" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->level_string }}</span>
+                            <span id="input" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> 
+                            <span id="separator">:</span> 
+                            <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->level_string }}</span>
                         </p>
                     </div>
                 @endforeach
@@ -120,7 +122,7 @@
                         <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
                     </svg>
                     <p class="language-with-level mb-0 ms-3" aria-input-number="2">
-                        <span id="input" aria-name="language_one">Français</span> <span id="separator">:</span> <span id="input" aria-name="language_level_one">Bilingue</span>
+                        <span id="input" aria-name="language_one">Français</span> <span id="separator">:</span> <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_one">Bilingue</span>
                     </p>
                 </div>
                 <div class="language-two d-flex justify-content-start">
@@ -128,7 +130,7 @@
                         <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
                     </svg>
                     <p class="language-with-level mb-0 ms-3" aria-input-number="2">
-                        <span id="input" aria-name="language_two">Anglais</span> <span id="separator">:</span> <span id="input" aria-name="language_level_two">Courant</span>
+                        <span id="input" aria-name="language_two">Anglais</span> <span id="separator">:</span> <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_two">Courant</span>
                     </p>
                 </div>
                 @endif

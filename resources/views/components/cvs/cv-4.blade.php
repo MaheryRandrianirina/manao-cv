@@ -65,24 +65,24 @@
                             <?php $i++;?>
                             <div class="language-{{ $stringNumber[$i] }} d-flex justify-content-start mb-2">
                                 <p class="language-with-level mb-0 ms-0" aria-input-number="2">
-                                    <span id="input" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> <span id="separator">:</span> <span id="input" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->level_string }}</span>
+                                    <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> <span id="separator">:</span> <span id="input" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->level_string }}</span>
                                 </p>
                             </div>
                         @endforeach
                     @else
                     <div class="language-one">
                         <p aria-input-number="2" class="language-with-level mb-0 ms-0 d-inline-block">
-                            <span id="input" aria-name="language_one">Français</span> <span id="separator">:</span> <span id="input" aria-name="language_level_one">Bilingue</span>
+                            <span id="input" aria-name="language_one">Français</span> <span id="separator">:</span> <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_one">Bilingue</span>
                         </p>
                     </div>
                     <div class="language-two">
                         <p aria-input-number="2" class="language-with-level mb-0 ms-0 d-inline-block">
-                            <span id="input" aria-name="language_two">Anglais</span> <span id="separator">:</span> <span id="input" aria-name="language_level_two">Intermédiaire</span>
+                            <span id="input" aria-name="language_two">Anglais</span> <span id="separator">:</span> <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_two">Intermédiaire</span>
                         </p>
                     </div>
                     <div class="language-three">
                         <p aria-input-number="2" class="language-with-level mb-0 ms-0 d-inline-block">
-                            <span id="input" aria-name="language_three">Allemand</span> <span id="separator">:</span> <span id="input" aria-name="language_level_three">Débutant</span>
+                            <span id="input" aria-name="language_three">Allemand</span> <span id="separator">:</span> <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_three">Débutant</span>
                         </p>
                     </div>
                     @endif

@@ -5123,8 +5123,10 @@ var CVModels = /*#__PURE__*/function () {
     this.modelName = "";
     this.formInputs;
     this.formTextareas;
+    this.formSelects;
     this.elementsToBeInputs;
     this.elementsToBeTextareas;
+    this.elementsToBeSelect;
     this.formErrors;
     this.divFromForm;
     this.seeButtonContainer;
@@ -5517,12 +5519,12 @@ var CVModels = /*#__PURE__*/function () {
           }
         }
       });
+      this.transformElementsToBeSelect();
       var lists = document.querySelectorAll('.list.customizable-list');
       lists.forEach(function (list) {
         var listChildren = Array.from(list.children);
         var childrenLength = listChildren.length;
-        var levelValueInput = list.querySelector('.level-value'); // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER AU CAS OU C'EST LA
-        // PREMIERE ENTREE DE L'UTILISATEUR DANS LA PAGE
+        var levelValueInput = list.querySelector('.level-value'); // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE L'UTILISATEUR ARRIVE DANS LA PAGE
 
         for (var i = 0; i < childrenLength; i++) {
           if (listChildren[i + 1] && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
@@ -5572,6 +5574,48 @@ var CVModels = /*#__PURE__*/function () {
         }
       });
       this.addListenersToEveryBarLevels();
+    }
+  }, {
+    key: "transformElementsToBeSelect",
+    value: function transformElementsToBeSelect() {
+      var _this5 = this;
+
+      var elementsToBeSelect = this.form.querySelectorAll('#select');
+
+      if (elementsToBeSelect && elementsToBeSelect.length > 0) {
+        elementsToBeSelect.forEach(function (element) {
+          var selectName = element.getAttribute('aria-name');
+
+          if (selectName === null) {
+            console.error("L'element n'a pas d'attribut 'aria-name'");
+            return;
+          }
+          /**
+           * @type {HTMLSelectElement}
+           */
+
+
+          var select = _this5.dom.createElement('select', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(element) + " form-control mb-2");
+
+          select.name = selectName;
+          var ariaOptions = element.getAttribute('aria-options');
+
+          if (ariaOptions === null) {
+            console.error("L'élément ne possède pas l'attribute 'aria-options'");
+          }
+
+          var selectOptions = ariaOptions.split(", ");
+          selectOptions.forEach(function (option) {
+            var optionElement = _this5.dom.createElement('option');
+
+            optionElement.innerText = option;
+            optionElement.value = option.toLowerCase();
+            select.appendChild(optionElement);
+          });
+          select.setAttribute('aria-nodename', element.nodeName);
+          element.replaceWith(select);
+        });
+      }
     }
     /**
      * 
@@ -5738,23 +5782,23 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "addListenersToEveryBarLevels",
     value: function addListenersToEveryBarLevels() {
-      var _this5 = this;
+      var _this6 = this;
 
       var barLevels = document.querySelectorAll('.level.bar-level');
       barLevels.forEach(function (barLevel) {
         var levelCursor = barLevel.querySelector('.level-cursor');
 
         if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelCursor)) {
-          levelCursor = _this5.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
+          levelCursor = _this6.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
           barLevel.appendChild(levelCursor);
         }
 
-        if (_this5.pathname.includes('/cv/show')) {
-          _this5.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
+        if (_this6.pathname.includes('/cv/show')) {
+          _this6.levelIndicator = barLevel.parentElement.querySelector('.level-indicator');
 
-          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(_this5.levelIndicator)) {
-            _this5.levelIndicator = _this5.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
-            barLevel.appendChild(_this5.levelIndicator);
+          if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(_this6.levelIndicator)) {
+            _this6.levelIndicator = _this6.dom.createElement('span', 'level-indicator position-absolute top-0 start-0');
+            barLevel.appendChild(_this6.levelIndicator);
           }
 
           var barLevelRect = barLevel.getBoundingClientRect();
@@ -5762,14 +5806,14 @@ var CVModels = /*#__PURE__*/function () {
           levelCursor.style.left = 100 * levelCursorPosPx / barLevelRect.width + "%";
           var levelCursorRect = levelCursor.getBoundingClientRect();
           var levelIndicatorWidth = levelCursorRect.x - barLevelRect.x;
-          _this5.levelIndicator.style.width = levelIndicatorWidth + "px";
+          _this6.levelIndicator.style.width = levelIndicatorWidth + "px";
         }
 
-        levelCursor.addEventListener('mousedown', _this5.handleLevelCursorMouseDown.bind(_this5));
-        levelCursor.addEventListener('mouseup', _this5.handleLevelCursorMouseUp.bind(_this5));
-        barLevel.addEventListener('click', _this5.handleBarLevelClick.bind(_this5));
-        barLevel.addEventListener('mousemove', _this5.handleLevelCursorMove.bind(_this5));
-        barLevel.addEventListener('mouseleave', _this5.handleBarLevelMouseleave.bind(_this5));
+        levelCursor.addEventListener('mousedown', _this6.handleLevelCursorMouseDown.bind(_this6));
+        levelCursor.addEventListener('mouseup', _this6.handleLevelCursorMouseUp.bind(_this6));
+        barLevel.addEventListener('click', _this6.handleBarLevelClick.bind(_this6));
+        barLevel.addEventListener('mousemove', _this6.handleLevelCursorMove.bind(_this6));
+        barLevel.addEventListener('mouseleave', _this6.handleBarLevelMouseleave.bind(_this6));
       });
     }
     /**
@@ -5986,20 +6030,20 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleBarLevelMouseleave",
     value: function handleBarLevelMouseleave(e) {
-      var _this6 = this;
+      var _this7 = this;
 
       e.preventDefault();
 
       if (this.levelCursorOrigin) {
         document.body.addEventListener('mousemove', function (e) {
           e.preventDefault();
-          _this6.moveFromBody = true;
+          _this7.moveFromBody = true;
 
-          _this6.handleLevelCursorMove(e);
+          _this7.handleLevelCursorMove(e);
         });
         document.body.addEventListener('click', function (e) {
           e.preventDefault();
-          _this6.levelCursorOrigin = undefined;
+          _this7.levelCursorOrigin = undefined;
         });
       }
     }
@@ -6047,16 +6091,19 @@ var CVModels = /*#__PURE__*/function () {
     value: function transformFormToRealCV() {
       var formInputs;
       var formTextareas;
+      var formSelects;
 
       if (this.form) {
         formInputs = this.form.querySelectorAll('input');
         formTextareas = this.form.querySelectorAll('textarea');
+        formSelects = this.form.querySelectorAll('select');
       } else {
         var form = document.querySelector('form');
 
         if (form) {
           formInputs = form.querySelectorAll('input');
           formTextareas = form.querySelectorAll('textarea');
+          formSelects = form.querySelectorAll('select');
         }
       }
 
@@ -6073,6 +6120,11 @@ var CVModels = /*#__PURE__*/function () {
       if (formTextareas) {
         this.formTextareas = formTextareas;
         this.transformEachTextareaToText();
+      }
+
+      if (formSelects) {
+        this.formSelects = formSelects;
+        this.transformEachSelectToText();
       }
 
       this.divFromForm = this.transformFormToDiv();
@@ -6132,7 +6184,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "transformEachInputToText",
     value: function transformEachInputToText() {
-      var _this7 = this;
+      var _this8 = this;
 
       if (this.formInputs) {
         this.formInputs.forEach(function (formInput) {
@@ -6141,24 +6193,24 @@ var CVModels = /*#__PURE__*/function () {
           if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInput);
 
-            var elementToReplaceInput = _this7.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+            var elementToReplaceInput = _this8.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
 
             var inputValue = formInput.files !== null ? formInput.files[0] : formInput.value;
 
             if (inputValue && inputValue.length > 0) {
-              _this7.saveInputsValues(formInput.name, inputValue);
+              _this8.saveInputsValues(formInput.name, inputValue);
             } else {
-              _this7.savePlaceholder(formInput.name, formInput.getAttribute('placeholder'));
+              _this8.savePlaceholder(formInput.name, formInput.getAttribute('placeholder'));
             }
 
             var elementInnerText;
 
             if (formInput.name === "name") {
-              elementInnerText = _this7.textStylePerModel[_this7.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+              elementInnerText = _this8.textStylePerModel[_this8.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "firstname") {
-              elementInnerText = _this7.textStylePerModel[_this7.modelName].firstname === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+              elementInnerText = _this8.textStylePerModel[_this8.modelName].firstname === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "work") {
-              elementInnerText = _this7.textStylePerModel[_this7.modelName].work === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+              elementInnerText = _this8.textStylePerModel[_this8.modelName].work === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "email" || formInput.name === 'url_linkedin') {
               elementInnerText = inputValue;
             } else {
@@ -6183,7 +6235,7 @@ var CVModels = /*#__PURE__*/function () {
             if (formInputParent.classList.contains('justify-content-between') && separator && formInputParentChildren.length > 1 && !formInputParent.querySelector('#separator')) {
               formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
 
-              var separatorSpan = _this7.dom.createElement('span');
+              var separatorSpan = _this8.dom.createElement('span');
 
               separatorSpan.innerText = separator;
               separatorSpan.style.marginLeft = "5px";
@@ -6208,7 +6260,7 @@ var CVModels = /*#__PURE__*/function () {
             formInput.replaceWith(elementToReplaceInput);
           } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             if (formInput.name.includes('level')) {
-              _this7.saveInputsValues(formInput.name, formInput.value);
+              _this8.saveInputsValues(formInput.name, formInput.value);
 
               var inputParentElement = formInput.parentElement;
               var levelCursor = inputParentElement.querySelector('.level-cursor');
@@ -6218,19 +6270,19 @@ var CVModels = /*#__PURE__*/function () {
               }
             }
           } else if (formInput.classList.contains('profile-photo')) {
-            if (!_this7.shownProfilePhoto) {
+            if (!_this8.shownProfilePhoto) {
               formInput.innerHTML = (0,_icons_user_icon__WEBPACK_IMPORTED_MODULE_9__["default"])((0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInput));
               var userIcon = formInput.querySelector('.profile-photo');
               formInput.replaceWith(userIcon);
             }
           } else if (formInputIsHidden) {
-            _this7.saveInputsValues(formInput.name, formInput.value);
+            _this8.saveInputsValues(formInput.name, formInput.value);
           } else if (formInput.classList.contains('man') || formInput.classList.contains('woman')) {
             if (formInput.getAttribute('selected') === "true") {
-              _this7.saveInputsValues(formInput.name, formInput.value);
+              _this8.saveInputsValues(formInput.name, formInput.value);
             }
 
-            if (_this7.form.querySelector('.sex')) {
+            if (_this8.form.querySelector('.sex')) {
               var formInputGrandParent = formInput.parentElement.parentElement;
               formInputGrandParent.parentElement.removeChild(formInputGrandParent);
             }
@@ -6290,37 +6342,67 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "transformEachTextareaToText",
     value: function transformEachTextareaToText() {
-      var _this8 = this;
-
       this.throwErrorIfUndefined(this.formTextareas, "this.formTextareas");
-      this.formTextareas.forEach(function (formTextarea) {
-        var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formTextarea);
+      this.transformToText(this.formTextareas, "textarea");
+    }
+    /**
+     * 
+     * @param {HTMLTextAreaElement[] | HTMLSelectElement[]} elements 
+     */
 
-        var elementToReplaceTextarea = _this8.dom.createElement(formTextarea.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+  }, {
+    key: "transformToText",
+    value: function transformToText(elements, elementNode) {
+      var _this9 = this;
 
-        var inputValue = formTextarea.value;
+      elements.forEach(function (element) {
+        var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(element);
 
-        _this8.saveInputsValues(formTextarea.name, inputValue);
+        var elementOfReplacement = _this9.dom.createElement(element.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
+
+        var inputValue = element.value;
+
+        _this9.saveInputsValues(element.name, inputValue);
 
         var elementInnerText;
 
-        if (formTextarea.name === "name") {
-          elementInnerText = _this8.textStylePerModel[_this8.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+        if (element.name === "name") {
+          elementInnerText = _this9.textStylePerModel[_this9.modelName].name === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
         } else {
           elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
         }
 
-        elementToReplaceTextarea.innerHTML = elementInnerText;
-        elementToReplaceTextarea.setAttribute('id', "textarea");
-        elementToReplaceTextarea.setAttribute('aria-name', formTextarea.name);
-        var formTextareaNextElement = formTextarea.nextElementSibling;
+        elementOfReplacement.innerHTML = elementInnerText;
+        elementOfReplacement.setAttribute('id', elementNode);
+        elementOfReplacement.setAttribute('aria-name', element.name);
 
-        if (formTextareaNextElement && formTextareaNextElement.classList.contains('text-danger')) {
-          formTextarea.parentElement.removeChild(formTextareaNextElement);
+        if (elementNode === "select") {
+          var ariaOptions = "";
+          var options = Array.from(element.querySelectorAll('option'));
+
+          if (options.length > 0) {
+            ariaOptions = options.map(function (option) {
+              return option.innerText;
+            }).join(', ');
+          }
+
+          elementOfReplacement.setAttribute('aria-options', ariaOptions);
         }
 
-        formTextarea.replaceWith(elementToReplaceTextarea);
+        var nextElement = element.nextElementSibling;
+
+        if (nextElement && nextElement.classList.contains('text-danger')) {
+          element.parentElement.removeChild(nextElement);
+        }
+
+        element.replaceWith(elementOfReplacement);
       });
+    }
+  }, {
+    key: "transformEachSelectToText",
+    value: function transformEachSelectToText() {
+      this.throwErrorIfUndefined(this.formSelects, "this.formSelects");
+      this.transformToText(this.formSelects, "select");
     }
     /**
      * remplace l'élément form par un élément div
@@ -6348,12 +6430,12 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "addClickEventToConsoleButtons",
     value: function addClickEventToConsoleButtons() {
-      var _this9 = this;
+      var _this10 = this;
 
       this.throwErrorIfUndefined(this.console, "this.console");
       var consoleButtons = this.console.querySelectorAll('.icon');
       consoleButtons.forEach(function (consoleButton) {
-        consoleButton.addEventListener('click', _this9.handleConsoleButtonClick.bind(_this9));
+        consoleButton.addEventListener('click', _this10.handleConsoleButtonClick.bind(_this10));
       });
     }
   }, {
@@ -6375,7 +6457,7 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "handleSaveCV",
     value: function handleSaveCV() {
-      var _this10 = this;
+      var _this11 = this;
 
       var download = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var formData = new FormData();
@@ -6394,21 +6476,21 @@ var CVModels = /*#__PURE__*/function () {
         }
 
         axios__WEBPACK_IMPORTED_MODULE_10___default().post('/cv/edit', formData).then(function (res) {
-          _this10.processCvPostingRes(res, download);
+          _this11.processCvPostingRes(res, download);
 
-          _this10.saved = true;
+          _this11.saved = true;
         })["catch"](function (err) {
-          _this10.processCvPostingError(err);
+          _this11.processCvPostingError(err);
         });
         return;
       }
 
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/save", formData).then(function (res) {
-        _this10.processCvPostingRes(res, download);
+        _this11.processCvPostingRes(res, download);
 
-        _this10.saved = true;
+        _this11.saved = true;
       })["catch"](function (err) {
-        _this10.processCvPostingError(err);
+        _this11.processCvPostingError(err);
       });
     }
     /**
@@ -6476,11 +6558,11 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "showNotificationAndActivateFinishButton",
     value: function showNotificationAndActivateFinishButton() {
-      var _this11 = this;
+      var _this12 = this;
 
       this.dom.createModal("alert-success-cv-saving p-3 position-absolute start-0 end-0 m-auto alert alert-success", "Votre CV a été enregistré !", false);
       setTimeout(function () {
-        _this11.dom.closeModal();
+        _this12.dom.closeModal();
       }, 3000);
       var finishButton = this.console.querySelector('.check-icon');
       finishButton.classList.add('active');
@@ -6498,25 +6580,25 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "launchDownload",
     value: function launchDownload() {
-      var _this12 = this;
+      var _this13 = this;
 
       var withInputsValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/download", withInputsValues ? this.inputsValues : this.elementsInnerText).then(function (res) {
-        _this12.showNotificationAndActivateFinishButton();
+        _this13.showNotificationAndActivateFinishButton();
 
-        _this12.saved = true;
+        _this13.saved = true;
       })["catch"](function (err) {
         var errorString = err.toString();
 
         if (errorString.toLowerCase().includes('network error')) {
-          _this12.showNotificationAndActivateFinishButton();
+          _this13.showNotificationAndActivateFinishButton();
         }
       });
     }
   }, {
     key: "handleDeleteCV",
     value: function handleDeleteCV() {
-      var _this13 = this;
+      var _this14 = this;
 
       if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.cv_id_input) && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.csrfInput)) {
         this.cv_id_input = document.querySelector('input.cv-id');
@@ -6524,7 +6606,7 @@ var CVModels = /*#__PURE__*/function () {
         var hiddenInputs = document.querySelectorAll('input[type="hidden"]');
         hiddenInputs.forEach(function (hiddenInput) {
           if (hiddenInput.name === "_token") {
-            _this13.csrfInput = hiddenInput;
+            _this14.csrfInput = hiddenInput;
           }
         });
       }
