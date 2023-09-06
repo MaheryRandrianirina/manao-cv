@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
-use DateTimeZone;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CvController extends Controller
@@ -81,7 +80,8 @@ class CvController extends Controller
         $model = $request->model;
         
         $this->echo = $echo;
-
+        var_dump($request->request);
+        die();
         foreach($request->request as $name => $value){
             if(strchr($name, "degree")){
                 $this->rules[$name] = ["string", "required"];

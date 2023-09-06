@@ -5746,8 +5746,7 @@ var CVModels = /*#__PURE__*/function () {
 
       if (newList.className.includes('one')) {
         newList.className = newList.className.replace("one", "two");
-        var listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
-        console.log(listsInputs);
+        var listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (listsInputs) {
           listsInputs.forEach(function (listInput) {
@@ -5757,7 +5756,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('two')) {
         newList.className = newList.className.replace("two", "three");
 
-        var _listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs) {
           _listsInputs.forEach(function (listInput) {
@@ -5767,7 +5766,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('three')) {
         newList.className = newList.className.replace("three", "four");
 
-        var _listsInputs2 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs2 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs2) {
           _listsInputs2.forEach(function (listInput) {
@@ -5777,7 +5776,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('four')) {
         newList.className = newList.className.replace("four", "five");
 
-        var _listsInputs3 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs3 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs3) {
           _listsInputs3.forEach(function (listInput) {
@@ -5787,7 +5786,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('five')) {
         newList.className = newList.className.replace("five", "six");
 
-        var _listsInputs4 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs4 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs4) {
           _listsInputs4.forEach(function (listInput) {
@@ -5803,7 +5802,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('six')) {
         newList.className = newList.className.replace("six", "seven");
 
-        var _listsInputs5 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs5 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs5) {
           _listsInputs5.forEach(function (listInput) {
@@ -5813,7 +5812,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('seven')) {
         newList.className = newList.className.replace("seven", "eight");
 
-        var _listsInputs6 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs6 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs6) {
           _listsInputs6.forEach(function (listInput) {
@@ -5823,7 +5822,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('eight')) {
         newList.className = newList.className.replace("eight", "nine");
 
-        var _listsInputs7 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs7 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs7) {
           _listsInputs7.forEach(function (listInput) {
@@ -5833,7 +5832,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('nine')) {
         newList.className = newList.className.replace("nine", "ten");
 
-        var _listsInputs8 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        var _listsInputs8 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
         if (_listsInputs8) {
           _listsInputs8.forEach(function (listInput) {

@@ -706,8 +706,11 @@ export default class CVModels {
         if(newList.className.includes('one')){
             newList.className = newList.className.replace("one", "two");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
-            console.log(listsInputs)
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
+            
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace('one', "two");
@@ -716,7 +719,11 @@ export default class CVModels {
         }else if(newList.className.includes('two')){
             newList.className = newList.className.replace("two", "three");
             
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
+            
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("two", "three");
@@ -725,7 +732,10 @@ export default class CVModels {
         }else if(newList.className.includes('three')){
             newList.className = newList.className.replace("three", "four");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("three", "four");
@@ -734,7 +744,10 @@ export default class CVModels {
         }else if(newList.className.includes('four')){
             newList.className = newList.className.replace("four", "five");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("four", "five");
@@ -743,7 +756,10 @@ export default class CVModels {
         }else if(newList.className.includes('five')){
             newList.className = newList.className.replace("five", "six");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("five", "six");
@@ -758,7 +774,10 @@ export default class CVModels {
         }else if(newList.className.includes('six')){
             newList.className = newList.className.replace("six", "seven");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("six", "seven");
@@ -767,7 +786,10 @@ export default class CVModels {
         }else if(newList.className.includes('seven')){
             newList.className = newList.className.replace("seven", "eight");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("seven", "eight");
@@ -776,7 +798,10 @@ export default class CVModels {
         }else if(newList.className.includes('eight')){
             newList.className = newList.className.replace("eight", "nine");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("eight", "nine");
@@ -785,7 +810,10 @@ export default class CVModels {
         }else if(newList.className.includes('nine')){
             newList.className = newList.className.replace("nine", "ten");
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
+                ...Array.from(newList.querySelectorAll('select')),
+                ...Array.from(newList.querySelectorAll('textarea'))
+            ];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("nine", "ten");
