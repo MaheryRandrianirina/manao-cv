@@ -13,6 +13,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
+use DateTimeZone;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CvController extends Controller
@@ -88,9 +90,9 @@ class CvController extends Controller
             }else if(strchr($name, "etablissement")){
                 $this->rules[$name] = ["string", "required"];
             }else if(strchr($name, "year_debut")){
-                $this->rules[$name] = ["integer", "required"];
+                $this->rules[$name] = ["date", "required"];
             }else if(strchr($name, "year_end")){
-                $this->rules[$name] = ["integer", "required"];
+                $this->rules[$name] = ["date", "required"];
             }else if(strchr($name, "language") && !strchr($name, "language_level")){
                 $this->rules[$name] = ["string", "required"];
                 $this->languages++;
@@ -99,10 +101,6 @@ class CvController extends Controller
             }else if(strchr($name, "company_name")){
                 $this->rules[$name] = ["string", "required"];
             }else if(strchr($name, "company_work")){
-                $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "year_debut")){
-                $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "year_end")){
                 $this->rules[$name] = ["string", "required"];
             }else if(strchr($name, "skill") && !strchr($name, "skill_level")){
                 $this->rules[$name] = ["string", "required"];
@@ -261,13 +259,14 @@ class CvController extends Controller
         for($i = 0; $i < $this->experiences; $i++){
             $company_name = "company_name_" . $this->stringNumber[$i+1];
             $work = "company_work_" . $this->stringNumber[$i+1];
-            $year_debut = "year_debut_" . $this->stringNumber[$i+1];
-            $year_end = "year_end_" . $this->stringNumber[$i+1];
+            $year_debut = "year_debut_experience_" . $this->stringNumber[$i+1];
+            $year_end = "year_end_experience_" . $this->stringNumber[$i+1];
             $task = "";
             $tasks = [];
 
             if($multitask){
                 $countTasks = 0;
+
                 foreach($request->request as $name => $value){
                     if(strchr($name, "experience_" . $this->stringNumber[$i+1])){
                         $countTasks++;
@@ -282,7 +281,8 @@ class CvController extends Controller
             $arrayValues = [
                 "entreprise_name" => $request->$company_name,
                 "work" => $request->$work,
-                "date" => $request->$year_debut . " - " . $request->$year_end,
+                "date_debut" => new DateTime($request->$year_debut),
+                "date_end" => new DateTime($request->$year_end),
                 "task" => $task ? $request->$task : join("\n", $tasks),
                 "cv_id" => $cv_id
             ];
@@ -307,13 +307,14 @@ class CvController extends Controller
         
         for($i = 0; $i < $this->formations; $i++){
             $etablissement = "etablissement_" . $this->stringNumber[$i+1];
-            $year_debut = "year_debut_" . $this->stringNumber[$i+1];
-            $year_end = "year_end_" . $this->stringNumber[$i+1];
+            $year_debut = "year_debut_formation_" . $this->stringNumber[$i+1];
+            $year_end = "year_end_formation_" . $this->stringNumber[$i+1];
             $degree = "degree_" . $this->stringNumber[$i+1];
             
             $arrayValues = [
                 "etablissement" => $request->$etablissement,
-                "date" => $request->$year_debut . " - " . $request->$year_end,
+                "date_debut" => new DateTime($request->$year_debut),
+                "date_end" => new DateTime($request->$year_end),
                 "degree" => $request->$degree,
                 "cv_id" => $cv_id
             ];

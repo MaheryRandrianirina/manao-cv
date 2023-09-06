@@ -5080,11 +5080,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var _icons_edit_icon__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./icons/edit-icon */ "./resources/js/icons/edit-icon.js");
 /* harmony import */ var _icons_delete_icon__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./icons/delete-icon */ "./resources/js/icons/delete-icon.js");
+/* harmony import */ var _utils_date__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./utils/date */ "./resources/js/utils/date.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
 
 
 
@@ -6224,7 +6226,7 @@ var CVModels = /*#__PURE__*/function () {
         this.formInputs.forEach(function (formInput) {
           var formInputIsHidden = formInput.type === "hidden";
 
-          if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
+          if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman') && !formInput.classList.contains('')) {
             var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInput);
 
             var elementToReplaceInput = _this8.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
@@ -6247,6 +6249,16 @@ var CVModels = /*#__PURE__*/function () {
               elementInnerText = _this8.textStylePerModel[_this8.modelName].work === "uppercase" ? inputValue.toUpperCase() : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             } else if (formInput.name === "email" || formInput.name === 'url_linkedin') {
               elementInnerText = inputValue;
+            } else if (formInput.name.includes("year")) {
+              var splittedDate = inputValue.split('-');
+              formInput.parentElement.parentElement.appendChild(formInput);
+              formInput.parentElement.removeChild(formInput.parentElement.querySelector('.inputs-date-wrapper'));
+
+              if (formInput.name.includes("formation")) {
+                elementInnerText = splittedDate[0];
+              } else {
+                elementInnerText = _utils_date__WEBPACK_IMPORTED_MODULE_13__.months[parseInt(splittedDate[1])] + " " + splittedDate[0];
+              }
             } else {
               elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
 
@@ -6265,8 +6277,9 @@ var CVModels = /*#__PURE__*/function () {
             var formInputParent = formInput.parentElement;
             var formInputParentChildren = Array.from(formInputParent.children);
             var separator = formInputParent.getAttribute('aria-separator');
+            var secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start') && formInput.name.includes('year');
 
-            if (formInputParent.classList.contains('justify-content-between') && separator && formInputParentChildren.length > 1 && !formInputParent.querySelector('#separator')) {
+            if ((formInputParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && separator && formInputParentChildren.length > 1) {
               formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
 
               var separatorSpan = _this8.dom.createElement('span');
@@ -6275,6 +6288,12 @@ var CVModels = /*#__PURE__*/function () {
               separatorSpan.style.marginLeft = "5px";
               separatorSpan.style.marginRight = "5px";
               separatorSpan.setAttribute('id', 'separator');
+              var previousSeparatorSpan = formInputParent.querySelector('#separator');
+
+              if (previousSeparatorSpan) {
+                formInputParent.removeChild(previousSeparatorSpan);
+              }
+
               formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
             }
 
@@ -7803,6 +7822,35 @@ function Responsive() {
     }
   }
 }
+
+/***/ }),
+
+/***/ "./resources/js/utils/date.js":
+/*!************************************!*\
+  !*** ./resources/js/utils/date.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "months": () => (/* binding */ months)
+/* harmony export */ });
+var months = {
+  1: "Janvier",
+  2: "Février",
+  3: "Mars",
+  4: "Avril",
+  5: "Mai",
+  6: "Juin",
+  7: "Juillet",
+  8: "Août",
+  9: "Septembre",
+  10: "Octobre",
+  11: "Novembre",
+  12: "Décembre"
+};
+
 
 /***/ }),
 

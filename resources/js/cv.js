@@ -11,6 +11,7 @@ import UserIcon from "./icons/user-icon";
 import axios from "axios";
 import EditIcon from "./icons/edit-icon";
 import DeleteIcon from "./icons/delete-icon";
+import { months } from "./utils/date";
 
 export default class CVModels {
 
@@ -1213,6 +1214,7 @@ export default class CVModels {
                     && !formInput.classList.contains('level-value')
                     && !formInput.classList.contains('man')
                     && !formInput.classList.contains('woman')
+                    && !formInput.classList.contains('')
                 ){
                     const className = getClassFrom(formInput);
                     
@@ -1220,7 +1222,7 @@ export default class CVModels {
                         formInput.getAttribute('aria-nodename').toLowerCase(), 
                         className.replace('form-control', '').replace('mb-2', 'mb-0')
                     );
-                    
+
                     const inputValue = formInput.files !== null ? formInput.files[0] : formInput.value;
                     if(inputValue && inputValue.length > 0){
                         this.saveInputsValues(formInput.name, inputValue);
@@ -1247,6 +1249,18 @@ export default class CVModels {
                             inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
                     }else if(formInput.name === "email" || formInput.name === 'url_linkedin'){
                         elementInnerText = inputValue;
+                    }else if(formInput.name.includes("year")){
+                        const splittedDate = inputValue.split('-');
+
+                        formInput.parentElement.parentElement.appendChild(formInput);
+                        formInput.parentElement.removeChild(formInput.parentElement.querySelector('.inputs-date-wrapper'));
+
+                        if(formInput.name.includes("formation")){
+                            elementInnerText = splittedDate[0];
+                        }else {
+                            elementInnerText = months[parseInt(splittedDate[1])] + " " + splittedDate[0];
+                        }
+                       
                     }else {
                         elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
                         
@@ -1254,7 +1268,7 @@ export default class CVModels {
                             elementInnerText = formatString(elementInnerText, "phone_number");
                         }
                     }
-
+                    
                     elementToReplaceInput.innerHTML = elementInnerText;
                     if(elementToReplaceInput.nodeName.toLowerCase() === "svg" 
                         && elementToReplaceInput.classList.contains('profile-photo')
@@ -1263,13 +1277,17 @@ export default class CVModels {
                         elementToReplaceInput.innerHTML = innerUserIcon();
                     }
 
-                    const formInputParent = formInput.parentElement;
+                    let formInputParent = formInput.parentElement;
                     const formInputParentChildren = Array.from(formInputParent.children);
-
                     const separator = formInputParent.getAttribute('aria-separator');
-                    if(formInputParent.classList.contains('justify-content-between')
+                    
+                    const secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start')
+                        && formInput.name.includes('year');
+
+                    if((formInputParent.classList.contains('justify-content-between')
+                        || secondLoopForInputTypeDate
+                        )
                         && separator && formInputParentChildren.length > 1
-                        && !formInputParent.querySelector('#separator')
                     ){
                         formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
 
@@ -1278,6 +1296,11 @@ export default class CVModels {
                         separatorSpan.style.marginLeft = "5px";
                         separatorSpan.style.marginRight = "5px";
                         separatorSpan.setAttribute('id', 'separator');
+                        
+                        const previousSeparatorSpan = formInputParent.querySelector('#separator');
+                        if(previousSeparatorSpan){
+                            formInputParent.removeChild(previousSeparatorSpan)
+                        }
 
                         formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
                     }

@@ -17,7 +17,8 @@ class CreateExperienceTable extends Migration
             $table->id();
             $table->string('entreprise_name');
             $table->string('work');
-            $table->string('date');
+            $table->dateTime('date_debut');
+            $table->dateTime('date_end');
             $table->mediumText('task');
             $table->foreignId('cv_id')->constrained()->onDelete('cascade');
         });

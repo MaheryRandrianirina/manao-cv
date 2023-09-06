@@ -16,7 +16,8 @@ class CreateFormationTable extends Migration
         Schema::create('formation', function (Blueprint $table) {
             $table->id();
             $table->string('etablissement');
-            $table->string('date');
+            $table->dateTime('date_debut');
+            $table->dateTime('date_end');
             $table->string('degree');
         });
     }
