@@ -499,13 +499,18 @@ export default class CVModels {
         lists.forEach(list => {
             const listChildren = Array.from(list.children);
             const childrenLength = listChildren.length;
+
             const levelValueInput = list.querySelector('.level-value');
-            // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE L'UTILISATEUR ARRIVE DANS LA PAGE
-            for(let i = 0; i < childrenLength; i++){
-                if(listChildren[i+1] 
-                    && isNull(levelValueInput)
-                ){
-                    list.removeChild(listChildren[i+1]);
+
+            // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE 
+            // L'UTILISATEUR ARRIVE DANS LA PAGE. SEULEMENT LORSQU'IL CREE MAIS PAS LORSQU'IL VEUT MODIFIER
+            if(!this.pathname.includes('cv/show')){
+                for(let i = 0; i < childrenLength; i++){
+                    if(listChildren[i+1] 
+                        && isNull(levelValueInput)
+                    ){
+                        list.removeChild(listChildren[i+1]);
+                    }
                 }
             }
 
@@ -516,10 +521,12 @@ export default class CVModels {
                 if(isNull(addIntoListButton) 
                 ){
                     if(this.inputsValuesLength > 0 
-                    && list.classList.contains('skills-list-left')
-                    && list.nextElementSibling.children.length > 0){
+                        && list.classList.contains('skills-list-left')
+                        && list.nextElementSibling.children.length > 0
+                    ){
                         return;
                     }
+
                     addIntoListButton = this.dom.createElement('button', 'btn btn-secondary add-into-list');
                 }
                 
@@ -550,6 +557,9 @@ export default class CVModels {
                     addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
                 }
                 
+                if(this.pathname.includes('/cv/show')){
+                    listChildren[childrenLength - 1].after(addIntoListButton);
+                }
             }
         })
 

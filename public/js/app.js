@@ -5468,13 +5468,11 @@ var CVModels = /*#__PURE__*/function () {
 
         if (inputNumber) {
           parentElement.classList.add('d-flex', 'justify-content-between');
+          var separator = parentElement.querySelector('#separator');
 
-          var _separator = parentElement.querySelector('#separator');
-
-          if (_separator) {
-            parentElement.setAttribute('aria-separator', _separator.innerHTML);
-
-            _separator.parentElement.removeChild(_separator);
+          if (separator) {
+            parentElement.setAttribute('aria-separator', separator.innerHTML);
+            separator.parentElement.removeChild(separator);
           }
         }
 
@@ -5535,11 +5533,14 @@ var CVModels = /*#__PURE__*/function () {
       lists.forEach(function (list) {
         var listChildren = Array.from(list.children);
         var childrenLength = listChildren.length;
-        var levelValueInput = list.querySelector('.level-value'); // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE L'UTILISATEUR ARRIVE DANS LA PAGE
+        var levelValueInput = list.querySelector('.level-value'); // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE 
+        // L'UTILISATEUR ARRIVE DANS LA PAGE. SEULEMENT LORSQU'IL CREE MAIS PAS LORSQU'IL VEUT MODIFIER
 
-        for (var i = 0; i < childrenLength; i++) {
-          if (listChildren[i + 1] && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
-            list.removeChild(listChildren[i + 1]);
+        if (!_this4.pathname.includes('cv/show')) {
+          for (var i = 0; i < childrenLength; i++) {
+            if (listChildren[i + 1] && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
+              list.removeChild(listChildren[i + 1]);
+            }
           }
         }
 
@@ -5581,6 +5582,10 @@ var CVModels = /*#__PURE__*/function () {
             }
 
             addIntoListButton.addEventListener('click', _this4.handleAddNewList.bind(_this4));
+          }
+
+          if (_this4.pathname.includes('/cv/show')) {
+            listChildren[childrenLength - 1].after(addIntoListButton);
           }
         }
       });
@@ -6283,15 +6288,13 @@ var CVModels = /*#__PURE__*/function () {
 
             var formInputParent = formInput.parentElement;
             var formInputParentChildren = Array.from(formInputParent.children);
-
-            var _separator2 = formInputParent.getAttribute('aria-separator');
-
+            var separator = formInputParent.getAttribute('aria-separator');
             var secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start') && formInput.name.includes('year');
 
-            if ((formInputParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && _separator2 && formInputParentChildren.length > 1) {
+            if ((formInputParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && separator && formInputParentChildren.length > 1) {
               formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
 
-              _this8.insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren);
+              _this8.insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren, separator);
             }
 
             elementToReplaceInput.setAttribute('id', "input");
@@ -6362,11 +6365,12 @@ var CVModels = /*#__PURE__*/function () {
      * 
      * @param {HTMLDivElement|HTMLParagraphElement} formInputParent 
      * @param {HTMLInputElement[]} formInputParentChildren 
+     * @param {string} separator
      */
 
   }, {
     key: "insertSeparatorSpanBeforeLastFormInput",
-    value: function insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren) {
+    value: function insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren, separator) {
       var separatorSpan = this.dom.createElement('span');
       separatorSpan.innerText = separator;
       separatorSpan.style.marginLeft = "5px";
