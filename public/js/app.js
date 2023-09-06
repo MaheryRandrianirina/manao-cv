@@ -5081,6 +5081,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icons_edit_icon__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./icons/edit-icon */ "./resources/js/icons/edit-icon.js");
 /* harmony import */ var _icons_delete_icon__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./icons/delete-icon */ "./resources/js/icons/delete-icon.js");
 /* harmony import */ var _utils_date__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./utils/date */ "./resources/js/utils/date.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -5536,7 +5548,7 @@ var CVModels = /*#__PURE__*/function () {
         var levelValueInput = list.querySelector('.level-value'); // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE 
         // L'UTILISATEUR ARRIVE DANS LA PAGE. SEULEMENT LORSQU'IL CREE MAIS PAS LORSQU'IL VEUT MODIFIER
 
-        if (!_this4.pathname.includes('cv/show')) {
+        if (!_this4.pathname.includes('/cv/show') && _this4.closeButtonClickNumber === 0 || _this4.pathname.includes('/cv/show') && !_this4.editCvClicked) {
           for (var i = 0; i < childrenLength; i++) {
             if (listChildren[i + 1] && (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
               list.removeChild(listChildren[i + 1]);
@@ -5575,7 +5587,7 @@ var CVModels = /*#__PURE__*/function () {
               addIntoListButton.innerText = "Ajouter un autre intérêt";
             }
 
-            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput)) {
+            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(levelValueInput) && _this4.closeButtonClickNumber === 0) {
               listChildren[0].after(addIntoListButton);
             } else {
               lastChild.after(addIntoListButton);
@@ -5584,7 +5596,7 @@ var CVModels = /*#__PURE__*/function () {
             addIntoListButton.addEventListener('click', _this4.handleAddNewList.bind(_this4));
           }
 
-          if (_this4.pathname.includes('/cv/show')) {
+          if (_this4.pathname.includes('/cv/show') && _this4.closeButtonClickNumber === 0) {
             listChildren[childrenLength - 1].after(addIntoListButton);
           }
         }
@@ -5628,7 +5640,7 @@ var CVModels = /*#__PURE__*/function () {
     value: function transformElementsToBeSelect() {
       var _this5 = this;
 
-      var elementsToBeSelect = this.form.querySelectorAll('#select');
+      var elementsToBeSelect = Array.from(this.form.querySelectorAll('#select'));
 
       if (elementsToBeSelect && elementsToBeSelect.length > 0) {
         elementsToBeSelect.forEach(function (element) {
@@ -5734,7 +5746,8 @@ var CVModels = /*#__PURE__*/function () {
 
       if (newList.className.includes('one')) {
         newList.className = newList.className.replace("one", "two");
-        var listsInputs = newList.querySelectorAll('input');
+        var listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
+        console.log(listsInputs);
 
         if (listsInputs) {
           listsInputs.forEach(function (listInput) {
@@ -5744,7 +5757,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('two')) {
         newList.className = newList.className.replace("two", "three");
 
-        var _listsInputs = newList.querySelectorAll('input');
+        var _listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs) {
           _listsInputs.forEach(function (listInput) {
@@ -5754,7 +5767,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('three')) {
         newList.className = newList.className.replace("three", "four");
 
-        var _listsInputs2 = newList.querySelectorAll('input');
+        var _listsInputs2 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs2) {
           _listsInputs2.forEach(function (listInput) {
@@ -5764,7 +5777,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('four')) {
         newList.className = newList.className.replace("four", "five");
 
-        var _listsInputs3 = newList.querySelectorAll('input');
+        var _listsInputs3 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs3) {
           _listsInputs3.forEach(function (listInput) {
@@ -5774,7 +5787,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('five')) {
         newList.className = newList.className.replace("five", "six");
 
-        var _listsInputs4 = newList.querySelectorAll('input');
+        var _listsInputs4 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs4) {
           _listsInputs4.forEach(function (listInput) {
@@ -5790,7 +5803,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('six')) {
         newList.className = newList.className.replace("six", "seven");
 
-        var _listsInputs5 = newList.querySelectorAll('input');
+        var _listsInputs5 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs5) {
           _listsInputs5.forEach(function (listInput) {
@@ -5800,7 +5813,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('seven')) {
         newList.className = newList.className.replace("seven", "eight");
 
-        var _listsInputs6 = newList.querySelectorAll('input');
+        var _listsInputs6 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs6) {
           _listsInputs6.forEach(function (listInput) {
@@ -5810,7 +5823,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('eight')) {
         newList.className = newList.className.replace("eight", "nine");
 
-        var _listsInputs7 = newList.querySelectorAll('input');
+        var _listsInputs7 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs7) {
           _listsInputs7.forEach(function (listInput) {
@@ -5820,7 +5833,7 @@ var CVModels = /*#__PURE__*/function () {
       } else if (newList.className.includes('nine')) {
         newList.className = newList.className.replace("nine", "ten");
 
-        var _listsInputs8 = newList.querySelectorAll('input');
+        var _listsInputs8 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))));
 
         if (_listsInputs8) {
           _listsInputs8.forEach(function (listInput) {
@@ -6206,10 +6219,10 @@ var CVModels = /*#__PURE__*/function () {
     key: "handleCloseFinalCV",
     value: function handleCloseFinalCV(e) {
       e.preventDefault();
+      this.closeButtonClickNumber++;
       this.createCVForm();
       this.removeConsole();
       this.removeCloseButton();
-      this.closeButtonClickNumber++;
     }
   }, {
     key: "removeCloseButton",

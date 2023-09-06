@@ -504,7 +504,10 @@ export default class CVModels {
 
             // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE 
             // L'UTILISATEUR ARRIVE DANS LA PAGE. SEULEMENT LORSQU'IL CREE MAIS PAS LORSQU'IL VEUT MODIFIER
-            if(!this.pathname.includes('cv/show')){
+            
+            if((!this.pathname.includes('/cv/show') && this.closeButtonClickNumber === 0) 
+                || (this.pathname.includes('/cv/show') && !this.editCvClicked )
+            ){
                 for(let i = 0; i < childrenLength; i++){
                     if(listChildren[i+1] 
                         && isNull(levelValueInput)
@@ -516,6 +519,7 @@ export default class CVModels {
 
             if(list.classList.contains('skills-list-right') && this.inputsValuesLength === 0){
                 list.innerHTML = "";
+
             }else {
                 let addIntoListButton = list.querySelector('.add-into-list');
                 if(isNull(addIntoListButton) 
@@ -548,7 +552,7 @@ export default class CVModels {
                         addIntoListButton.innerText = "Ajouter un autre intérêt";
                     }
                     
-                    if(isNull(levelValueInput)){
+                    if(isNull(levelValueInput) && this.closeButtonClickNumber === 0){
                         listChildren[0].after(addIntoListButton);
                     }else {
                         lastChild.after(addIntoListButton);
@@ -557,7 +561,7 @@ export default class CVModels {
                     addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
                 }
                 
-                if(this.pathname.includes('/cv/show')){
+                if(this.pathname.includes('/cv/show') && this.closeButtonClickNumber === 0){
                     listChildren[childrenLength - 1].after(addIntoListButton);
                 }
             }
@@ -599,7 +603,7 @@ export default class CVModels {
 
     transformElementsToBeSelect()
     {
-        const elementsToBeSelect = this.form.querySelectorAll('#select');
+        const elementsToBeSelect = Array.from(this.form.querySelectorAll('#select'));
         
         if(elementsToBeSelect && elementsToBeSelect.length > 0){
             elementsToBeSelect.forEach(element => {
@@ -698,10 +702,12 @@ export default class CVModels {
         }
 
         addNewListButton.before(newList)
+        
         if(newList.className.includes('one')){
             newList.className = newList.className.replace("one", "two");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
+            console.log(listsInputs)
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace('one', "two");
@@ -710,7 +716,7 @@ export default class CVModels {
         }else if(newList.className.includes('two')){
             newList.className = newList.className.replace("two", "three");
             
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("two", "three");
@@ -719,7 +725,7 @@ export default class CVModels {
         }else if(newList.className.includes('three')){
             newList.className = newList.className.replace("three", "four");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("three", "four");
@@ -728,7 +734,7 @@ export default class CVModels {
         }else if(newList.className.includes('four')){
             newList.className = newList.className.replace("four", "five");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("four", "five");
@@ -737,7 +743,7 @@ export default class CVModels {
         }else if(newList.className.includes('five')){
             newList.className = newList.className.replace("five", "six");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("five", "six");
@@ -752,7 +758,7 @@ export default class CVModels {
         }else if(newList.className.includes('six')){
             newList.className = newList.className.replace("six", "seven");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("six", "seven");
@@ -761,7 +767,7 @@ export default class CVModels {
         }else if(newList.className.includes('seven')){
             newList.className = newList.className.replace("seven", "eight");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("seven", "eight");
@@ -770,7 +776,7 @@ export default class CVModels {
         }else if(newList.className.includes('eight')){
             newList.className = newList.className.replace("eight", "nine");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("eight", "nine");
@@ -779,7 +785,7 @@ export default class CVModels {
         }else if(newList.className.includes('nine')){
             newList.className = newList.className.replace("nine", "ten");
 
-            const listsInputs = newList.querySelectorAll('input');
+            const listsInputs = [...Array.from(newList.querySelectorAll('input')), ...Array.from(newList.querySelectorAll('select'))];
             if(listsInputs){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("nine", "ten");
@@ -1171,7 +1177,7 @@ export default class CVModels {
 
         if(this.pathname.includes('/cv/show')
             && this.editCvClicked && this.profilePhotoImg
-        && svgProfilePhoto !== null
+            && svgProfilePhoto !== null
         ){
             svgProfilePhoto.replaceWith(this.profilePhotoImg);
         }
@@ -1193,13 +1199,13 @@ export default class CVModels {
     {
         e.preventDefault();
 
+        this.closeButtonClickNumber++;
+
         this.createCVForm();
 
         this.removeConsole();
 
         this.removeCloseButton();
-
-        this.closeButtonClickNumber++;
     }
 
     removeCloseButton()

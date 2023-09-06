@@ -350,7 +350,7 @@ class CvController extends Controller
             }else {
                 $arrayValues["level"] = (float) $request->$level;
             }
-
+            var_dump($arrayValues);
             if(!$this->update){
                 Language::create($arrayValues);
             }else {
