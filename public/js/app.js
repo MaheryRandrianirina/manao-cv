@@ -5374,11 +5374,7 @@ var CVModels = /*#__PURE__*/function () {
           if (_this4.modelName === "cv-2" || _this4.modelName === "cv-3") {
             _this4.addLevelCursorWithIndicatorIfThereIsValue(element);
           }
-        } else if (inputName.includes('year_debut')) {
-          input.placeholder = "Mois et année de début";
-          input.setAttribute('required', "true");
-        } else if (inputName.includes('year_end')) {
-          input.placeholder = "Mois et année de fin";
+        } else if (inputName.includes('year')) {
           input.setAttribute('required', "true");
         } else if (inputName.includes('skill') && _this4.modelName !== "cv-3" || _this4.modelName === "cv-2" && inputName.includes('lang')) {
           input.placeholder = "Compétence";
@@ -5452,10 +5448,19 @@ var CVModels = /*#__PURE__*/function () {
             input.setAttribute('required', "false");
           }
 
-          if (element.getAttribute('aria-name') === "phone_number") {
+          var ariaName = element.getAttribute('aria-name');
+
+          if (ariaName === "phone_number") {
             input.setAttribute('value', element.innerText.split(' ').join(''));
-          } else if (element.getAttribute('aria-name') === "email") {
+          } else if (ariaName === "email") {
             input.setAttribute('value', element.innerText.replace(' ', ''));
+          } else if (ariaName.includes('year')) {
+            var elementAfterCurrentElement = element.nextElementSibling;
+            var dataValue = elementAfterCurrentElement ? elementAfterCurrentElement.getAttribute('data-value') : null;
+
+            if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(elementAfterCurrentElement) && !(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(dataValue) && dataValue.length > 0) {
+              input.setAttribute('value', dataValue);
+            }
           }
         }
 
@@ -5463,11 +5468,13 @@ var CVModels = /*#__PURE__*/function () {
 
         if (inputNumber) {
           parentElement.classList.add('d-flex', 'justify-content-between');
-          var separator = parentElement.querySelector('#separator');
 
-          if (separator) {
-            parentElement.setAttribute('aria-separator', separator.innerHTML);
-            separator.parentElement.removeChild(separator);
+          var _separator = parentElement.querySelector('#separator');
+
+          if (_separator) {
+            parentElement.setAttribute('aria-separator', _separator.innerHTML);
+
+            _separator.parentElement.removeChild(_separator);
           }
         }
 
@@ -6276,25 +6283,15 @@ var CVModels = /*#__PURE__*/function () {
 
             var formInputParent = formInput.parentElement;
             var formInputParentChildren = Array.from(formInputParent.children);
-            var separator = formInputParent.getAttribute('aria-separator');
+
+            var _separator2 = formInputParent.getAttribute('aria-separator');
+
             var secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start') && formInput.name.includes('year');
 
-            if ((formInputParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && separator && formInputParentChildren.length > 1) {
+            if ((formInputParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && _separator2 && formInputParentChildren.length > 1) {
               formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
 
-              var separatorSpan = _this8.dom.createElement('span');
-
-              separatorSpan.innerText = separator;
-              separatorSpan.style.marginLeft = "5px";
-              separatorSpan.style.marginRight = "5px";
-              separatorSpan.setAttribute('id', 'separator');
-              var previousSeparatorSpan = formInputParent.querySelector('#separator');
-
-              if (previousSeparatorSpan) {
-                formInputParent.removeChild(previousSeparatorSpan);
-              }
-
-              formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
+              _this8.insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren);
             }
 
             elementToReplaceInput.setAttribute('id', "input");
@@ -6311,6 +6308,12 @@ var CVModels = /*#__PURE__*/function () {
             }
 
             formInput.replaceWith(elementToReplaceInput);
+            var dateValuesHolders = Array.from(elementToReplaceInput.parentElement.querySelectorAll('span[hidden]'));
+            var ariaName = elementToReplaceInput.getAttribute('aria-name');
+
+            if (_this8.pathname.includes('/cv/show') && ariaName.includes('year')) {
+              elementToReplaceInput.after(dateValuesHolders[0]);
+            }
           } else if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('man') && !formInput.classList.contains('woman')) {
             if (formInput.name.includes('level')) {
               _this8.saveInputsValues(formInput.name, formInput.value);
@@ -6354,6 +6357,28 @@ var CVModels = /*#__PURE__*/function () {
         this.inputsValues[inputName] = inputValue;
         this.inputsValuesLength++;
       }
+    }
+    /**
+     * 
+     * @param {HTMLDivElement|HTMLParagraphElement} formInputParent 
+     * @param {HTMLInputElement[]} formInputParentChildren 
+     */
+
+  }, {
+    key: "insertSeparatorSpanBeforeLastFormInput",
+    value: function insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren) {
+      var separatorSpan = this.dom.createElement('span');
+      separatorSpan.innerText = separator;
+      separatorSpan.style.marginLeft = "5px";
+      separatorSpan.style.marginRight = "5px";
+      separatorSpan.setAttribute('id', 'separator');
+      var previousSeparatorSpan = formInputParent.querySelector('#separator');
+
+      if (previousSeparatorSpan) {
+        formInputParent.removeChild(previousSeparatorSpan);
+      }
+
+      formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
     }
   }, {
     key: "savePlaceholder",

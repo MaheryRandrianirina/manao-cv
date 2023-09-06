@@ -27,4 +27,17 @@ trait DateGetter {
 
         return $date->format($this->format);
     }
+
+    public function format(string $format, bool $debut = true): string
+    {
+        $date = null;
+
+        if($debut){
+            $date = (new DateTime($this->date_debut));
+        }else {
+            $date = (new DateTime($this->date_end));
+        }
+
+        return $date->format($format);
+    }
 }

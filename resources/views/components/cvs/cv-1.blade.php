@@ -68,8 +68,11 @@
                             <h4 id="input" aria-name="degree_{{$stringNumber[$i]}}">{{ $formation->degree }}</h4>
                             <p id="input" aria-name="etablissement_{{$stringNumber[$i]}}" class="college">{{ $formation->etablissement }}</p>
                             <p class="date" aria-input-number="2">
-                                <span aria-name="year_debut_formation_{{$stringNumber[$i]}}" id="input" aria-type="date">{{ $formation->getDateDebut() }}</span> <span id="separator">-</span> 
+                                <span aria-name="year_debut_formation_{{$stringNumber[$i]}}" id="input" aria-type="date">{{ $formation->getDateDebut() }}</span> 
+                                <span data-value="{{ $formation->format("Y-m-d") }}" hidden></span>
+                                <span id="separator">-</span> 
                                 <span aria-name="year_end_formation_{{$stringNumber[$i]}}" id="input" aria-type="date">{{ $formation->getDateEnd() }}</span>
+                                <span data-value="{{ $formation->format("Y-m-d", false) }}" hidden></span>
                             </p>
                         </div>
                     </div>
@@ -157,8 +160,11 @@
                                 <span id="input" aria-name="company_name_{{ $stringNumber[$i] }}">{{ $experience->entreprise_name }}</span> <span id="separator">|</span> <span id="input" aria-name="company_work_{{ $stringNumber[$i] }}">{{ $experience->work }}</span>
                             </h4>
                             <p class="date" aria-input-number="2">
-                                <span id="input" aria-type="date" aria-name="year_debut_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateDebut() }}</span> <span id="separator">-</span> 
+                                <span id="input" aria-type="date" aria-name="year_debut_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateDebut() }}</span> 
+                                <span data-value="{{ $experience->format("Y-m-d") }}" hidden></span>
+                                <span id="separator">-</span> 
                                 <span id="input" aria-type="date" aria-name="year_end_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateEnd() }}</span>
+                                <span data-value="{{ $experience->format("Y-m-d", false) }}" hidden></span>
                             </p>
                             <div class="task">
                                 <p>

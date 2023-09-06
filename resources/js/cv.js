@@ -319,11 +319,7 @@ export default class CVModels {
                 if(this.modelName === "cv-2" || this.modelName === "cv-3"){
                     this.addLevelCursorWithIndicatorIfThereIsValue(element);
                 }
-            }else if(inputName.includes('year_debut')){
-                input.placeholder = "Mois et année de début";
-                input.setAttribute('required', "true");
-            }else if(inputName.includes('year_end')){
-                input.placeholder = "Mois et année de fin";
+            }else if(inputName.includes('year')){
                 input.setAttribute('required', "true");
             }else if((inputName.includes('skill') &&
                 this.modelName !== "cv-3") || (
@@ -416,10 +412,22 @@ export default class CVModels {
                     input.setAttribute('required', "false");
                 }
                 
-                if(element.getAttribute('aria-name') === "phone_number"){
+                const ariaName = element.getAttribute('aria-name');
+                if(ariaName === "phone_number"){
                     input.setAttribute('value', element.innerText.split(' ').join(''));
-                }else if(element.getAttribute('aria-name') === "email"){
+                }else if(ariaName === "email"){
                     input.setAttribute('value', element.innerText.replace(' ', ''));
+                }else if(ariaName.includes('year')){
+                    const elementAfterCurrentElement = element.nextElementSibling;
+                    const dataValue = elementAfterCurrentElement ? elementAfterCurrentElement.getAttribute('data-value') : null;
+
+                    if(!isNull(elementAfterCurrentElement) 
+                        && !isNull(dataValue) 
+                        && dataValue.length > 0
+                    ){
+                        input.setAttribute('value', dataValue);
+                    }
+                    
                 }
             }
 
@@ -1289,20 +1297,10 @@ export default class CVModels {
                         )
                         && separator && formInputParentChildren.length > 1
                     ){
+                        
                         formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
 
-                        const separatorSpan = this.dom.createElement('span');
-                        separatorSpan.innerText = separator;
-                        separatorSpan.style.marginLeft = "5px";
-                        separatorSpan.style.marginRight = "5px";
-                        separatorSpan.setAttribute('id', 'separator');
-                        
-                        const previousSeparatorSpan = formInputParent.querySelector('#separator');
-                        if(previousSeparatorSpan){
-                            formInputParent.removeChild(previousSeparatorSpan)
-                        }
-
-                        formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
+                        this.insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren)
                     }
 
                     elementToReplaceInput.setAttribute('id', "input");
@@ -1320,6 +1318,18 @@ export default class CVModels {
                     }
 
                     formInput.replaceWith(elementToReplaceInput);
+
+                    const dateValuesHolders = Array.from(
+                        elementToReplaceInput.parentElement.querySelectorAll('span[hidden]')
+                    );
+                    
+                    const ariaName = elementToReplaceInput.getAttribute('aria-name');
+
+                    if(this.pathname.includes('/cv/show') 
+                        && ariaName.includes('year')
+                    ){
+                        elementToReplaceInput.after(dateValuesHolders[0]);
+                    }
                 }else if(!formInputIsHidden && !formInput.classList.contains('profile-photo')
                     && !formInput.classList.contains('man')
                     && !formInput.classList.contains('woman')
@@ -1374,6 +1384,27 @@ export default class CVModels {
 
             this.inputsValuesLength++;
         }
+    }
+
+    /**
+     * 
+     * @param {HTMLDivElement|HTMLParagraphElement} formInputParent 
+     * @param {HTMLInputElement[]} formInputParentChildren 
+     */
+    insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren)
+    {
+        const separatorSpan = this.dom.createElement('span');
+        separatorSpan.innerText = separator;
+        separatorSpan.style.marginLeft = "5px";
+        separatorSpan.style.marginRight = "5px";
+        separatorSpan.setAttribute('id', 'separator');
+                        
+        const previousSeparatorSpan = formInputParent.querySelector('#separator');
+        if(previousSeparatorSpan){
+            formInputParent.removeChild(previousSeparatorSpan)
+        }
+
+        formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
     }
 
     savePlaceholder(inputName, inputPlacehoder)
@@ -1727,6 +1758,7 @@ export default class CVModels {
     handleEditCV()
     {
         this.editCvClicked = true;
+
         this.createCVForm();
     }
 
