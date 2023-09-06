@@ -623,9 +623,16 @@ export default class CVModels {
                 
                 const selectOptions = ariaOptions.split(", ");
                 selectOptions.forEach(option => {
+                    /**
+                     * @type {HTMLOptionElement}
+                     */
                     const optionElement = this.dom.createElement('option');
                     optionElement.innerText = option;
                     optionElement.value = option.toLowerCase();
+                    
+                    if(option.toLowerCase() === element.innerHTML.toLowerCase()){
+                        optionElement.selected = true;
+                    }
 
                     select.appendChild(optionElement);
                 })

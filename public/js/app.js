@@ -5654,10 +5654,18 @@ var CVModels = /*#__PURE__*/function () {
 
           var selectOptions = ariaOptions.split(", ");
           selectOptions.forEach(function (option) {
+            /**
+             * @type {HTMLOptionElement}
+             */
             var optionElement = _this5.dom.createElement('option');
 
             optionElement.innerText = option;
             optionElement.value = option.toLowerCase();
+
+            if (option.toLowerCase() === element.innerHTML.toLowerCase()) {
+              optionElement.selected = true;
+            }
+
             select.appendChild(optionElement);
           });
           select.setAttribute('aria-nodename', element.nodeName);
