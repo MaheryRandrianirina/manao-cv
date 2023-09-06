@@ -5728,6 +5728,19 @@ var CVModels = /*#__PURE__*/function () {
       var previousList = addNewListButton.previousElementSibling;
       var newList = addNewListButton.previousElementSibling.cloneNode();
       newList.innerHTML = previousList.innerHTML;
+
+      if (newList.classList.contains('experience')) {
+        var experienceTextareas = Array.from(newList.querySelectorAll('textarea'));
+
+        if (experienceTextareas.length > 1) {
+          for (var i = 0; i < experienceTextareas.length; i++) {
+            if (i > 0) {
+              experienceTextareas[i].parentElement.removeChild(experienceTextareas[i]);
+            }
+          }
+        }
+      }
+
       var newListLevelIndicators = Array.from(newList.querySelectorAll('.level-indicator'));
 
       if (newListLevelIndicators.length > 0) {
@@ -5748,50 +5761,60 @@ var CVModels = /*#__PURE__*/function () {
         newList.className = newList.className.replace("one", "two");
         var listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (listsInputs) {
+        if (listsInputs.length > 0) {
           listsInputs.forEach(function (listInput) {
             listInput.name = listInput.name.replace('one', "two");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("one")) + "two";
         }
       } else if (newList.className.includes('two')) {
         newList.className = newList.className.replace("two", "three");
 
         var _listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs) {
+        if (_listsInputs.length > 0) {
           _listsInputs.forEach(function (listInput) {
             listInput.name = listInput.name.replace("two", "three");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("two")) + "three";
         }
       } else if (newList.className.includes('three')) {
         newList.className = newList.className.replace("three", "four");
 
         var _listsInputs2 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs2) {
+        if (_listsInputs2.length > 0) {
           _listsInputs2.forEach(function (listInput) {
             listInput.name = listInput.name.replace("three", "four");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("three")) + "four";
         }
       } else if (newList.className.includes('four')) {
         newList.className = newList.className.replace("four", "five");
 
         var _listsInputs3 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs3) {
+        if (_listsInputs3.length > 0) {
           _listsInputs3.forEach(function (listInput) {
             listInput.name = listInput.name.replace("four", "five");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("four")) + "five";
         }
       } else if (newList.className.includes('five')) {
         newList.className = newList.className.replace("five", "six");
 
         var _listsInputs4 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs4) {
+        if (_listsInputs4.length > 0) {
           _listsInputs4.forEach(function (listInput) {
             listInput.name = listInput.name.replace("five", "six");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("five")) + "six";
         }
 
         if (newList.parentElement.classList.contains('skills-list-left')) {
@@ -5804,40 +5827,48 @@ var CVModels = /*#__PURE__*/function () {
 
         var _listsInputs5 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs5) {
+        if (_listsInputs5.length > 0) {
           _listsInputs5.forEach(function (listInput) {
             listInput.name = listInput.name.replace("six", "seven");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("six")) + "seven";
         }
       } else if (newList.className.includes('seven')) {
         newList.className = newList.className.replace("seven", "eight");
 
         var _listsInputs6 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs6) {
+        if (_listsInputs6.length > 0) {
           _listsInputs6.forEach(function (listInput) {
             listInput.name = listInput.name.replace("seven", "eight");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("seven")) + "eight";
         }
       } else if (newList.className.includes('eight')) {
         newList.className = newList.className.replace("eight", "nine");
 
         var _listsInputs7 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs7) {
+        if (_listsInputs7.length > 0) {
           _listsInputs7.forEach(function (listInput) {
             listInput.name = listInput.name.replace("eight", "nine");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("eight")) + "nine";
         }
       } else if (newList.className.includes('nine')) {
         newList.className = newList.className.replace("nine", "ten");
 
         var _listsInputs8 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
 
-        if (_listsInputs8) {
+        if (_listsInputs8.length > 0) {
           _listsInputs8.forEach(function (listInput) {
             listInput.name = listInput.name.replace("nine", "ten");
           });
+        } else {
+          newList.name = newList.name.substring(0, newList.name.lastIndexOf("nine")) + "ten";
         }
       }
 

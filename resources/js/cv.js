@@ -505,7 +505,9 @@ export default class CVModels {
             // SUPPRIMER TOUS LES ELEMENTS DE LA LISTE A PART LE PREMIER LORSQUE 
             // L'UTILISATEUR ARRIVE DANS LA PAGE. SEULEMENT LORSQU'IL CREE MAIS PAS LORSQU'IL VEUT MODIFIER
             
-            if((!this.pathname.includes('/cv/show') && this.closeButtonClickNumber === 0) 
+            if((!this.pathname.includes('/cv/show') 
+                    && this.closeButtonClickNumber === 0
+                ) 
                 || (this.pathname.includes('/cv/show') && !this.editCvClicked )
             ){
                 for(let i = 0; i < childrenLength; i++){
@@ -688,6 +690,17 @@ export default class CVModels {
         const previousList = addNewListButton.previousElementSibling;
         const newList = addNewListButton.previousElementSibling.cloneNode();  
         newList.innerHTML = previousList.innerHTML
+
+        if(newList.classList.contains('experience')){
+            const experienceTextareas = Array.from(newList.querySelectorAll('textarea'));
+            if(experienceTextareas.length > 1){
+                for(let i = 0; i < experienceTextareas.length; i++){
+                    if(i > 0){
+                        experienceTextareas[i].parentElement.removeChild(experienceTextareas[i]);
+                    }
+                }
+            }
+        }
         
         const newListLevelIndicators = Array.from(newList.querySelectorAll('.level-indicator'));
         if(newListLevelIndicators.length > 0){
@@ -711,10 +724,12 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
             
-            if(listsInputs){
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace('one', "two");
                 });
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("one")) + "two" 
             }
         }else if(newList.className.includes('two')){
             newList.className = newList.className.replace("two", "three");
@@ -724,10 +739,12 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
             
-            if(listsInputs){
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("two", "three");
                 });
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("two")) + "three" 
             }
         }else if(newList.className.includes('three')){
             newList.className = newList.className.replace("three", "four");
@@ -736,10 +753,12 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("three", "four");
                 });
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("three")) + "four" 
             }
         }else if(newList.className.includes('four')){
             newList.className = newList.className.replace("four", "five");
@@ -748,10 +767,13 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("four", "five");
                 })
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("four")) + "five" 
             }
         }else if(newList.className.includes('five')){
             newList.className = newList.className.replace("five", "six");
@@ -760,10 +782,13 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("five", "six");
                 })
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("five")) + "six" 
             }
             
             if(newList.parentElement.classList.contains('skills-list-left')){
@@ -778,10 +803,13 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("six", "seven");
                 })
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("six")) + "seven" 
             }
         }else if(newList.className.includes('seven')){
             newList.className = newList.className.replace("seven", "eight");
@@ -790,10 +818,13 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("seven", "eight");
                 })
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("seven")) + "eight" 
             }
         }else if(newList.className.includes('eight')){
             newList.className = newList.className.replace("eight", "nine");
@@ -802,10 +833,13 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("eight", "nine");
                 })
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("eight")) + "nine" 
             }
         }else if(newList.className.includes('nine')){
             newList.className = newList.className.replace("nine", "ten");
@@ -814,10 +848,13 @@ export default class CVModels {
                 ...Array.from(newList.querySelectorAll('select')),
                 ...Array.from(newList.querySelectorAll('textarea'))
             ];
-            if(listsInputs){
+
+            if(listsInputs.length > 0){
                 listsInputs.forEach(listInput => {
                     listInput.name = listInput.name.replace("nine", "ten");
                 })
+            }else {
+                newList.name = newList.name.substring(0, newList.name.lastIndexOf("nine")) + "ten" 
             }
         }
         
