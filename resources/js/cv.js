@@ -1300,7 +1300,11 @@ export default class CVModels {
                         
                         formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
 
-                        this.insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren)
+                        this.insertSeparatorSpanBeforeLastFormInput(
+                            formInputParent, 
+                            formInputParentChildren, 
+                            separator
+                        )
                     }
 
                     elementToReplaceInput.setAttribute('id', "input");
@@ -1390,8 +1394,9 @@ export default class CVModels {
      * 
      * @param {HTMLDivElement|HTMLParagraphElement} formInputParent 
      * @param {HTMLInputElement[]} formInputParentChildren 
+     * @param {string} separator
      */
-    insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren)
+    insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren, separator)
     {
         const separatorSpan = this.dom.createElement('span');
         separatorSpan.innerText = separator;
