@@ -456,51 +456,14 @@ export default class CVModels {
             element.replaceWith(input);
         })
 
-        const elementsToBeTextarea = document.querySelectorAll('#textarea');
-        elementsToBeTextarea.forEach(element => {
-            const textareaName = element.getAttribute('aria-name');
+        let elementsToBeTextarea = Array.from(document.querySelectorAll('#textarea'));
+        this.transformElementsToTextarea(elementsToBeTextarea);
 
-            /**
-             * @type {HTMLTextAreaElement}
-             */
-            const textarea = this.dom.createElement(
-                'textarea', 
-                Array.from(element.classList).join(' ') + " form-control"
-            );
-
-            textarea.name = textareaName ? textareaName : "";
-            textarea.placeholder = "Ecrire quelque chose";
-            textarea.setAttribute('aria-nodename', element.nodeName)
-
-            if(this.inputsValuesLength > 0 && this.inputsValues[textarea.name]){
-                textarea.setAttribute('value', this.inputsValues[textarea.name])
-                textarea.innerHTML = this.inputsValues[textarea.name];
-            }
-            
-            if(this.pathname.includes('/cv/show')){
-                textarea.setAttribute('value', element.innerText.trim());
-                textarea.innerText = element.innerText.trim();
-            }
-            
-            element.replaceWith(textarea);
-            
-            const textareaParent = textarea.parentElement;
-            const textareaParentInnerHTML = textareaParent.innerHTML;
-
-            if(textareaParent.nodeName === "UL"){
-                const divToRempaceTextareaParent = this.dom.createElement('div', getClassFrom(textareaParent));
-                
-                textareaParent.replaceWith(divToRempaceTextareaParent);
-
-                divToRempaceTextareaParent.innerHTML = textareaParentInnerHTML;
-
-                if(this.modelName === "cv-2" || this.modelName === "cv-3"){
-                    const label = this.dom.createElement('p', 'mb-1');
-                    label.innerText = "Tâches réalisées :";
-                    divToRempaceTextareaParent.before(label);
-                }
-            }
-        })
+        // ON RESELECTIONNE LES ELEMENTS QUI DEVIENDRONT DES TEXTAREA POUR VOIR S'IL EN EXISTE ENCORE
+        elementsToBeTextarea = document.querySelectorAll('#textarea');
+        if(elementsToBeTextarea.length > 0){
+            this.transformElementsToTextarea(elementsToBeTextarea);
+        }
 
         this.transformElementsToBeSelect();
 
@@ -619,6 +582,58 @@ export default class CVModels {
         }
 
         return;
+    }
+
+    /**
+     * 
+     * @param {HTMLTextAreaElement[]} elementsToBeTextarea 
+     */
+    transformElementsToTextarea(elementsToBeTextarea)
+    {
+        elementsToBeTextarea.forEach(element => {
+            const textareaName = element.getAttribute('aria-name');
+
+            /**
+             * @type {HTMLTextAreaElement}
+             */
+            const textarea = this.dom.createElement(
+                'textarea', 
+                Array.from(element.classList).join(' ') + " form-control"
+            );
+
+            textarea.name = textareaName ? textareaName : "";
+            textarea.placeholder = "Ecrire quelque chose";
+            textarea.setAttribute('aria-nodename', element.nodeName)
+
+            if(this.inputsValuesLength > 0 && this.inputsValues[textarea.name]){
+                textarea.setAttribute('value', this.inputsValues[textarea.name])
+                textarea.innerHTML = this.inputsValues[textarea.name];
+            }
+            
+            if(this.pathname.includes('/cv/show')){
+                textarea.setAttribute('value', element.innerText.trim().toLowerCase());
+                textarea.innerText = element.innerText.trim().toLowerCase();
+            }
+            
+            element.replaceWith(textarea);
+
+            const textareaParent = textarea.parentElement;
+            const textareaParentInnerHTML = textareaParent.innerHTML;
+
+            if(textareaParent.nodeName === "UL"){
+                const divToReplaceTextareaParent = this.dom.createElement('div', getClassFrom(textareaParent));
+                
+                textareaParent.replaceWith(divToReplaceTextareaParent);
+
+                divToReplaceTextareaParent.innerHTML = textareaParentInnerHTML;
+
+                if(this.modelName === "cv-2" || this.modelName === "cv-3"){
+                    const label = this.dom.createElement('p', 'mb-1');
+                    label.innerText = "Tâches réalisées :";
+                    divToReplaceTextareaParent.before(label);
+                }
+            }
+        })
     }
 
     transformElementsToBeSelect()

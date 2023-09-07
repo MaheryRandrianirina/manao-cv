@@ -10601,6 +10601,9 @@ li.nav-item a.text-white:hover {
 .cv h2, .cv .h2, .cv h3, .cv .h3 {
   font-weight: bolder;
 }
+.cv label {
+  font-size: 16px;
+}
 .cv .contact-list .email-adress p {
   text-transform: lowercase !important;
 }
@@ -10629,6 +10632,12 @@ li.nav-item a.text-white:hover {
 .cv .right .date .inputs-date-wrapper label {
   color: #000 !important;
   font-weight: normal;
+}
+.cv .experiences-list .experience .work {
+  text-transform: capitalize;
+}
+.cv .experiences-list .experience p.mb-1 {
+  font-size: 16px;
 }
 
 .cv.cv-1 .experiences .company-name span:nth-child(1) {
@@ -10673,6 +10682,9 @@ li.nav-item a.text-white:hover {
 
 .cv.cv-2 .icon {
   fill: #000;
+}
+.cv.cv-2 .about .firstname, .cv.cv-2 .about .name {
+  text-transform: uppercase;
 }
 .cv.cv-2 .level {
   position: relative;
@@ -10831,6 +10843,7 @@ li.nav-item a.text-white:hover {
 
 .cv-form {
   position: relative;
+  text-transform: capitalize;
 }
 .cv-form .cv {
   margin: 0 auto !important;
@@ -10895,6 +10908,9 @@ li.nav-item a.text-white:hover {
 .cv-form .cv.cv-1 .experience {
   margin-bottom: 30px;
 }
+.cv-form .cv.cv-1 .experiences-list .experience .company-name {
+  text-transform: uppercase;
+}
 .cv-form .cv.cv-2 {
   margin-left: auto !important;
 }
@@ -10913,6 +10929,9 @@ li.nav-item a.text-white:hover {
 }
 .cv-form .cv.cv-2 .experiences .experience {
   margin-bottom: 15px;
+}
+.cv-form .cv.cv-2 .experiences .experience .company-name {
+  text-transform: uppercase;
 }
 .cv-form .cv.cv-2 .experiences .task.list {
   position: relative;
@@ -11165,6 +11184,12 @@ li.nav-item a.text-white:hover {
   .cv-form.cv-4-form .right input.etablissement {
     margin-left: 0 !important;
   }
+  .cv .date.justify-content-between {
+    display: block !important;
+  }
+  .cv .date.justify-content-between .inputs-date-wrapper {
+    width: 100%;
+  }
 }
 @media screen and (max-width: 880px) {
   .cv-form.cv-3-form div.cv .right .about {
@@ -11208,12 +11233,18 @@ li.nav-item a.text-white:hover {
     width: 150px !important;
     height: 150px !important;
   }
+  .cv-form .cv select {
+    width: 100% !important;
+  }
   .cv-form .cv.cv-3 .left::before {
     border-left: 127px solid #0d6efd;
     border-right: 119px solid transparent;
   }
   .cv-form div.cv.cv-3 .right .about {
     width: 170px;
+  }
+  .cv-form.cv-4-form .right .inputs-date-wrapper {
+    width: 100%;
   }
 }
 @media only screen and (max-width: 600px) {
@@ -11304,13 +11335,17 @@ li.nav-item a.text-white:hover {
     display: flex !important;
     flex-direction: column !important;
   }
+  .cv-form .cv.cv-2 .skills .btn.btn-secondary.add-into-list {
+    width: 100%;
+    font-size: 14px;
+  }
 }
 @media only screen and (max-width: 500px) {
   .cv-form .cv h2, .cv-form .cv .h2 {
     font-size: 18px;
   }
   .cv-form .cv h3, .cv-form .cv .h3 {
-    font-size: 17px;
+    font-size: 16px;
   }
   .cv-form .cv h4, .cv-form .cv .h4 {
     font-size: 15px;
@@ -11333,6 +11368,15 @@ li.nav-item a.text-white:hover {
   .cv-form .cv.cv-3 .right::before {
     border-left: 881px solid transparent;
   }
+  .cv-form .cv.cv-2 .left .about, .cv-form .cv.cv-2 .left .contact, .cv-form .cv.cv-2 .left .hobbies, .cv-form .cv.cv-2 .left .languages, .cv-form .cv.cv-2 .left .skills {
+    padding: 10px !important;
+  }
+  .cv-form .cv.cv-2 .right {
+    padding: 10px !important;
+  }
+  .cv-form .cv.cv-2 .right .formation svg {
+    width: 18px;
+  }
   nav.navbar.navbar-expand-md .container-fluid .navbar-toggler, nav.navbar.navbar-expand-md .container-sm .navbar-toggler, nav.navbar.navbar-expand-md .container-md .navbar-toggler, nav.navbar.navbar-expand-md .container-lg .navbar-toggler, nav.navbar.navbar-expand-md .container-xl .navbar-toggler, nav.navbar.navbar-expand-md .container-xxl .navbar-toggler {
     left: 90% !important;
   }
@@ -11349,6 +11393,18 @@ li.nav-item a.text-white:hover {
     width: 100px !important;
     height: 100px !important;
   }
+  .cv-form .cv h2, .cv-form .cv .h2 {
+    font-size: 17px;
+  }
+  .cv-form .cv h3, .cv-form .cv .h3 {
+    font-size: 15px;
+  }
+  .cv-form .cv h4, .cv-form .cv .h4 {
+    font-size: 14px;
+  }
+  .cv-form .cv p, .cv-form .cv li {
+    font-size: 11px;
+  }
   .cv-form .cv.cv-1 .skills-list.d-flex.justify-content-between {
     flex-direction: column !important;
   }
@@ -11356,12 +11412,6 @@ li.nav-item a.text-white:hover {
     width: 100%;
   }
   .cv-form .cv.cv-1 .left, .cv-form .cv.cv-1 .right, .cv-form .cv.cv-3 .left, .cv-form .cv.cv-3 .right, .cv-form .cv.cv-4 .left, .cv-form .cv.cv-4 .right {
-    padding: 10px !important;
-  }
-  .cv-form .cv.cv-2 .left .about, .cv-form .cv.cv-2 .left .contact, .cv-form .cv.cv-2 .left .hobbies, .cv-form .cv.cv-2 .left .languages, .cv-form .cv.cv-2 .left .skills {
-    padding: 10px !important;
-  }
-  .cv-form .cv.cv-2 .right {
     padding: 10px !important;
   }
   .cv-form .cv.cv-3 .right::before {
@@ -11386,20 +11436,6 @@ li.nav-item a.text-white:hover {
   }
   .cv-form div.cv.cv-1 .profil {
     margin-top: 0 !important;
-  }
-}
-@media only screen and (max-width: 417px) {
-  .cv-form .cv h2, .cv-form .cv .h2 {
-    font-size: 17px;
-  }
-  .cv-form .cv h3, .cv-form .cv .h3 {
-    font-size: 16px;
-  }
-  .cv-form .cv h4, .cv-form .cv .h4 {
-    font-size: 14px;
-  }
-  .cv-form .cv p, .cv-form .cv li {
-    font-size: 11px;
   }
 }
 @media only screen and (max-width: 400px) {

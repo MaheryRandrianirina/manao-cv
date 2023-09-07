@@ -18,8 +18,16 @@
             input.etablissement {
                 margin-left: 0 !important;
             }
+        }   
+    }
+
+    .cv {
+        .date.justify-content-between {
+            display: block !important;
+            .inputs-date-wrapper {
+                width: 100%;
+            }
         }
-        
     }
 }
 
@@ -87,6 +95,10 @@
                 width: 150px !important;
                 height: 150px !important;
             }
+
+            select {
+                width: 100% !important;
+            }
         }
 
         .cv.cv-3 .left::before {
@@ -99,6 +111,14 @@
                 width: 170px;
             }
         }
+    }
+
+    .cv-form.cv-4-form {
+        .right {
+            .inputs-date-wrapper {
+                width: 100%;
+            }
+        }   
     }
 }
 
@@ -229,6 +249,13 @@
                 flex-direction: column !important;
             }
         }
+
+        .cv.cv-2 {
+            .skills .btn.btn-secondary.add-into-list {
+                width: 100%;
+                font-size: 14px;
+            }
+        }
     }
 }
 
@@ -239,7 +266,7 @@
                 font-size: 18px;
             }
             h3 {
-                font-size: 17px;
+                font-size: 16px;
             }
             h4 {
                 font-size: 15px;
@@ -263,6 +290,20 @@
         .cv.cv-3 {
             .right::before {
                 border-left: 881px solid transparent;
+            }
+        }
+
+        .cv.cv-2 {
+            .left {
+                .about, .contact, .hobbies, .languages, .skills {
+                    padding: 10px !important;
+                }
+            }
+            .right {
+                padding: 10px !important;
+                .formation svg {
+                    width: 18px;
+                }
             }
         }
     }
@@ -290,6 +331,18 @@
                 width: 100px !important;
                 height: 100px !important;
             }
+            h2 {
+                font-size: 17px;
+            }
+            h3 {
+                font-size: 15px;
+            }
+            h4 {
+                font-size: 14px;
+            }
+            p, li {
+                font-size: 11px;
+            }
         }
         .cv.cv-1 {
             .skills-list.d-flex.justify-content-between {
@@ -302,17 +355,6 @@
     
         .cv.cv-1, .cv.cv-3, .cv.cv-4 {
             .left, .right {
-                padding: 10px !important;
-            }
-        }
-    
-        .cv.cv-2 {
-            .left {
-                .about, .contact, .hobbies, .languages, .skills {
-                    padding: 10px !important;
-                }
-            }
-            .right {
                 padding: 10px !important;
             }
         }
@@ -350,31 +392,8 @@
         div.cv.cv-1 .profil {
             margin-top: 0 !important;
         }
-
-        div.cv.cv-2 {
-
-        }
     }
 
-}
-
-@media only screen and (max-width: 417px){
-    .cv-form {
-        .cv {
-            h2 {
-                font-size: 17px;
-            }
-            h3 {
-                font-size: 16px;
-            }
-            h4 {
-                font-size: 14px;
-            }
-            p, li {
-                font-size: 11px;
-            }
-        }
-    }
 }
 
 @media only screen and (max-width: 400px) {
