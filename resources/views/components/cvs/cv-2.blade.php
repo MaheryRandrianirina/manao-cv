@@ -191,7 +191,8 @@
                     <?php $i = 0;?>
 
                     @foreach($cv->experiences as $experience)
-                        <?php $i++;?>
+                    <?php $i++;?>
+                    <div class="experience experience-{{ $stringNumber[$i] }}">
                         <p class="date" aria-input-number="2">
                             <?php $splitted_date = mb_split(" - ",$experience->date); ?>
                             <span id="input" aria-type="date" aria-name="year_debut_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateDebut() }}</span> 
@@ -217,6 +218,7 @@
                             
                             @endforeach                      
                         </ul>
+                    </div>
                     @endforeach
 
                 @else

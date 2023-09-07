@@ -484,7 +484,6 @@ export default class CVModels {
             
             element.replaceWith(textarea);
             
-            console.log(textarea.parentElement)
             const textareaParent = textarea.parentElement;
             const textareaParentInnerHTML = textareaParent.innerHTML;
 
@@ -550,9 +549,16 @@ export default class CVModels {
 
                 const lastChild = listChildren[childrenLength - 1];
                 if(lastChild){
-                    if(lastChild.className.includes('task')){
+                    if(lastChild.className.includes('task') 
+                    ){
                         addIntoListButton.innerText = "Ajouter une autre tâche";
-                    }else if(lastChild.className.includes('experience')){
+                    }else if(lastChild.className.includes('experience') 
+                        || (lastChild.className.includes('task') 
+                            && (lastChild.nodeName.toLowerCase() === "div"
+                                || lastChild.nodeName.toLowerCase() === "button"
+                            )
+                        )
+                    ){
                         addIntoListButton.innerText = "Ajouter une autre expérience";
                     }else if(lastChild.className.includes('skill')){
                         addIntoListButton.innerText = "Ajouter une autre compétence";
@@ -564,7 +570,9 @@ export default class CVModels {
                         addIntoListButton.innerText = "Ajouter un autre intérêt";
                     }
                     
-                    if(isNull(levelValueInput) && this.closeButtonClickNumber === 0){
+                    if(isNull(levelValueInput) 
+                        && this.closeButtonClickNumber === 0
+                    ){
                         listChildren[0].after(addIntoListButton);
                     }else {
                         lastChild.after(addIntoListButton);
@@ -574,7 +582,7 @@ export default class CVModels {
                 }
                 
                 if(this.pathname.includes('/cv/show') && this.closeButtonClickNumber === 0){
-                    listChildren[childrenLength - 1].after(addIntoListButton);
+                    lastChild.after(addIntoListButton);
                 }
             }
         })

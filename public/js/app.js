@@ -5524,7 +5524,6 @@ var CVModels = /*#__PURE__*/function () {
         }
 
         element.replaceWith(textarea);
-        console.log(textarea.parentElement);
         var textareaParent = textarea.parentElement;
         var textareaParentInnerHTML = textareaParent.innerHTML;
 
@@ -5577,7 +5576,7 @@ var CVModels = /*#__PURE__*/function () {
           if (lastChild) {
             if (lastChild.className.includes('task')) {
               addIntoListButton.innerText = "Ajouter une autre tâche";
-            } else if (lastChild.className.includes('experience')) {
+            } else if (lastChild.className.includes('experience') || lastChild.className.includes('task') && (lastChild.nodeName.toLowerCase() === "div" || lastChild.nodeName.toLowerCase() === "button")) {
               addIntoListButton.innerText = "Ajouter une autre expérience";
             } else if (lastChild.className.includes('skill')) {
               addIntoListButton.innerText = "Ajouter une autre compétence";
@@ -5599,7 +5598,7 @@ var CVModels = /*#__PURE__*/function () {
           }
 
           if (_this4.pathname.includes('/cv/show') && _this4.closeButtonClickNumber === 0) {
-            listChildren[childrenLength - 1].after(addIntoListButton);
+            lastChild.after(addIntoListButton);
           }
         }
       });
