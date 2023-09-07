@@ -6329,6 +6329,16 @@ var CVModels = /*#__PURE__*/function () {
               } else {
                 elementInnerText = _utils_date__WEBPACK_IMPORTED_MODULE_13__.months[parseInt(splittedDate[1])] + " " + splittedDate[0];
               }
+
+              var formInputParentChildren = Array.from(formInputGrandParent.children);
+              var separator = formInputGrandParent.getAttribute('aria-separator');
+              var secondLoopForInputTypeDate = formInputGrandParent.classList.contains('justify-content-start');
+
+              if ((formInputGrandParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && separator && formInputParentChildren.length > 1) {
+                formInputGrandParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputGrandParent).replace('between', 'start');
+
+                _this9.insertSeparatorSpanBeforeLastFormInput(formInputGrandParent, formInputParentChildren, separator);
+              }
             } else {
               elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
 
@@ -6342,16 +6352,6 @@ var CVModels = /*#__PURE__*/function () {
             if (elementToReplaceInput.nodeName.toLowerCase() === "svg" && elementToReplaceInput.classList.contains('profile-photo')) {
               formInput.parentElement.removeChild(formInput.previousElementSibling);
               elementToReplaceInput.innerHTML = (0,_icons_inner_user_icon__WEBPACK_IMPORTED_MODULE_5__["default"])();
-            }
-
-            var formInputParentChildren = Array.from(formInputParent.children);
-            var separator = formInputParent.getAttribute('aria-separator');
-            var secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start') && formInput.name.includes('year');
-
-            if ((formInputParent.classList.contains('justify-content-between') || secondLoopForInputTypeDate) && separator && formInputParentChildren.length > 1) {
-              formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
-
-              _this9.insertSeparatorSpanBeforeLastFormInput(formInputParent, formInputParentChildren, separator);
             }
 
             elementToReplaceInput.setAttribute('id', "input");
@@ -6628,8 +6628,6 @@ var CVModels = /*#__PURE__*/function () {
         return;
       }
 
-      console.log(this.inputsValues, formData);
-      debugger;
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/save", formData).then(function (res) {
         _this12.processCvPostingRes(res, download);
 

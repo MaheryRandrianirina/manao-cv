@@ -80,7 +80,8 @@ class CvController extends Controller
         $model = $request->model;
         
         $this->echo = $echo;
-
+        var_dump($request->request);
+        die();
         foreach($request->request as $name => $value){
             if(str_contains($name, "degree")){
                 $this->rules[$name] = ["string", "required"];
@@ -350,7 +351,7 @@ class CvController extends Controller
             }else {
                 $arrayValues["level"] = (float) $request->$level;
             }
-            
+           
             if(!$this->update){
                 Language::create($arrayValues);
             }else {
@@ -371,6 +372,7 @@ class CvController extends Controller
         for($i = 0; $i < $this->skills; $i++){
             $name = "skill_" . $this->stringNumber[$i+1];
             $level = "skill_level_" . $this->stringNumber[$i+1];
+
             if(!$this->update){
                 Skill::create([
                     "name" => $request->$name,
@@ -510,7 +512,7 @@ class CvController extends Controller
         if($this->update){
             $this->removeRequiredFromRules();
         }
-
+        
         $request->validate($this->rules);
         $path = "";
         

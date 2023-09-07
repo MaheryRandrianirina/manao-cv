@@ -1375,6 +1375,27 @@ export default class CVModels {
                         }else {
                             elementInnerText = months[parseInt(splittedDate[1])] + " " + splittedDate[0];
                         }
+
+                        const formInputParentChildren = Array.from(formInputGrandParent.children);
+
+                        let separator = formInputGrandParent.getAttribute('aria-separator');
+
+                        const secondLoopForInputTypeDate = formInputGrandParent.classList.contains('justify-content-start')
+                        
+                        if((formInputGrandParent.classList.contains('justify-content-between')
+                            || secondLoopForInputTypeDate
+                            )
+                            && separator && formInputParentChildren.length > 1
+                        ){
+                            
+                            formInputGrandParent.className = getClassFrom(formInputGrandParent).replace('between', 'start');
+
+                            this.insertSeparatorSpanBeforeLastFormInput(
+                                formInputGrandParent, 
+                                formInputParentChildren, 
+                                separator
+                            )
+                        }
                        
                     }else {
                         elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
@@ -1390,27 +1411,6 @@ export default class CVModels {
                     ){
                         formInput.parentElement.removeChild(formInput.previousElementSibling);
                         elementToReplaceInput.innerHTML = innerUserIcon();
-                    }
-
-                    const formInputParentChildren = Array.from(formInputParent.children);
-                    const separator = formInputParent.getAttribute('aria-separator');
-                    
-                    const secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start')
-                        && formInput.name.includes('year');
-
-                    if((formInputParent.classList.contains('justify-content-between')
-                        || secondLoopForInputTypeDate
-                        )
-                        && separator && formInputParentChildren.length > 1
-                    ){
-                        
-                        formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
-
-                        this.insertSeparatorSpanBeforeLastFormInput(
-                            formInputParent, 
-                            formInputParentChildren, 
-                            separator
-                        )
                     }
 
                     elementToReplaceInput.setAttribute('id', "input");
@@ -1519,7 +1519,8 @@ export default class CVModels {
         ){
             formInputParent.removeChild(previousSeparatorSpan);
             //previousSeparatorSpan.parentElement.removeChild(previousSeparatorSpan);
-        }else if(previousSeparatorSpan 
+        }
+        else if(previousSeparatorSpan 
             && previousSeparatorSpan.parentElement !== formInputParent
         ){
             formInputParent.querySelector('span').removeChild(previousSeparatorSpan);
@@ -1719,8 +1720,6 @@ export default class CVModels {
             return;
         }
 
-        console.log(this.inputsValues, formData)
-        debugger
         axios.post("/cv/save", formData).then(res => {
             this.processCvPostingRes(res, download);
 
