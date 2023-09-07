@@ -120,6 +120,8 @@ export default class CVModels {
         this.lastInsertedCvId
 
         this.saved = false;
+
+        this.newListElement;
     }
 
     createCVForm()
@@ -560,7 +562,7 @@ export default class CVModels {
                         lastChild.after(addIntoListButton);
                     }
                     
-                    addIntoListButton.addEventListener('click', this.handleAddNewList.bind(this));
+                    addIntoListButton.addEventListener('click', this.handleAddNewListElement.bind(this));
                 }
                 
                 if(this.pathname.includes('/cv/show') && this.closeButtonClickNumber === 0){
@@ -679,20 +681,22 @@ export default class CVModels {
      * 
      * @param {MouseEvent} e 
      */
-    handleAddNewList(e)
+    handleAddNewListElement(e)
     {
         e.preventDefault();
 
         /**
          * @type {HTMLButtonElement}
          */
-        const addNewListButton = e.target;
-        const previousList = addNewListButton.previousElementSibling;
-        const newList = addNewListButton.previousElementSibling.cloneNode();  
-        newList.innerHTML = previousList.innerHTML
+        const addNewListElementButton = e.target;
+        const previousList = addNewListElementButton.previousElementSibling;
+        this.newListElement = addNewListElementButton.previousElementSibling.cloneNode();  
+        this.newListElement.innerHTML = previousList.innerHTML
 
-        if(newList.classList.contains('experience')){
-            const experienceTextareas = Array.from(newList.querySelectorAll('textarea'));
+        this.addClickEventToNewButtonIfExist()
+
+        if(this.newListElement.classList.contains('experience')){
+            const experienceTextareas = Array.from(this.newListElement.querySelectorAll('textarea'));
             if(experienceTextareas.length > 1){
                 for(let i = 0; i < experienceTextareas.length; i++){
                     if(i > 0){
@@ -702,160 +706,47 @@ export default class CVModels {
             }
         }
         
-        const newListLevelIndicators = Array.from(newList.querySelectorAll('.level-indicator'));
-        if(newListLevelIndicators.length > 0){
-            const lastListLevelIndicator = newListLevelIndicators[newListLevelIndicators.length - 1];
+        const newListElementLevelIndicators = Array.from(this.newListElement.querySelectorAll('.level-indicator'));
+        if(newListElementLevelIndicators.length > 0){
+            const lastListLevelIndicator = newListElementLevelIndicators[newListElementLevelIndicators.length - 1];
             lastListLevelIndicator.parentElement.removeChild(lastListLevelIndicator);
         }
 
-        const newListCursors = Array.from(newList.querySelectorAll('.level-cursor'));
-        if(newListCursors.length > 0){
-            const lastListCursor = newListCursors[newListCursors.length - 1]
+        const newListElementCursors = Array.from(this.newListElement.querySelectorAll('.level-cursor'));
+        if(newListElementCursors.length > 0){
+            const lastListCursor = newListElementCursors[newListElementCursors.length - 1]
             lastListCursor.parentElement.removeChild(lastListCursor)
         }
 
-        addNewListButton.before(newList)
+        addNewListElementButton.before(this.newListElement);
         
-        if(newList.className.includes('one')){
-            newList.className = newList.className.replace("one", "two");
+        if(this.newListElement.className.includes('one')){
 
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
+            this.dynamiseFieldsName("one", "two");
+
+        }else if(this.newListElement.className.includes('two')){
+            this.dynamiseFieldsName("two", "three");
+        }else if(this.newListElement.className.includes('three')){
+            this.dynamiseFieldsName("three", "four");
+        }else if(this.newListElement.className.includes('four')){
+            this.dynamiseFieldsName("four", "five");
+        }else if(this.newListElement.className.includes('five')){
+            this.dynamiseFieldsName("five", "six");
             
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace('one', "two");
-                });
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("one")) + "two" 
+            const insideSkillsListLeft = this.newListElement.parentElement.classList.contains('skills-list-left');
+            if(insideSkillsListLeft){
+                const skillsListRight = this.newListElement.parentElement.nextElementSibling;
+                skillsListRight.appendChild(this.newListElement);
+                skillsListRight.appendChild(addNewListElementButton);
             }
-        }else if(newList.className.includes('two')){
-            newList.className = newList.className.replace("two", "three");
-            
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-            
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("two", "three");
-                });
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("two")) + "three" 
-            }
-        }else if(newList.className.includes('three')){
-            newList.className = newList.className.replace("three", "four");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("three", "four");
-                });
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("three")) + "four" 
-            }
-        }else if(newList.className.includes('four')){
-            newList.className = newList.className.replace("four", "five");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("four", "five");
-                })
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("four")) + "five" 
-            }
-        }else if(newList.className.includes('five')){
-            newList.className = newList.className.replace("five", "six");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("five", "six");
-                })
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("five")) + "six" 
-            }
-            
-            if(newList.parentElement.classList.contains('skills-list-left')){
-                const skillsListRight = newList.parentElement.nextElementSibling;
-                skillsListRight.appendChild(newList);
-                skillsListRight.appendChild(addNewListButton);
-            }
-        }else if(newList.className.includes('six')){
-            newList.className = newList.className.replace("six", "seven");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("six", "seven");
-                })
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("six")) + "seven" 
-            }
-        }else if(newList.className.includes('seven')){
-            newList.className = newList.className.replace("seven", "eight");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("seven", "eight");
-                })
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("seven")) + "eight" 
-            }
-        }else if(newList.className.includes('eight')){
-            newList.className = newList.className.replace("eight", "nine");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("eight", "nine");
-                })
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("eight")) + "nine" 
-            }
-        }else if(newList.className.includes('nine')){
-            newList.className = newList.className.replace("nine", "ten");
-
-            const listsInputs = [...Array.from(newList.querySelectorAll('input')), 
-                ...Array.from(newList.querySelectorAll('select')),
-                ...Array.from(newList.querySelectorAll('textarea'))
-            ];
-
-            if(listsInputs.length > 0){
-                listsInputs.forEach(listInput => {
-                    listInput.name = listInput.name.replace("nine", "ten");
-                })
-            }else {
-                newList.name = newList.name.substring(0, newList.name.lastIndexOf("nine")) + "ten" 
-            }
+        }else if(this.newListElement.className.includes('six')){
+            this.dynamiseFieldsName("six", "seven");
+        }else if(this.newListElement.className.includes('seven')){
+            this.dynamiseFieldsName("seven", "eught");
+        }else if(this.newListElement.className.includes('eight')){
+            this.dynamiseFieldsName("eight", "nine");
+        }else if(this.newListElement.className.includes('nine')){
+            this.dynamiseFieldsName("nine", "ten");
         }
         
         if(this.inputWithLevelValue){
@@ -863,6 +754,40 @@ export default class CVModels {
         }
 
         this.addListenersToEveryBarLevels();
+    }
+
+    addClickEventToNewButtonIfExist()
+    {
+        this.throwErrorIfUndefined(this.newListElement, "this.newListElement");
+
+        const addIntoListButton = this.newListElement.querySelector('.add-into-list');
+        if(addIntoListButton){
+            addIntoListButton.addEventListener('click', this.handleAddNewListElement.bind(this));
+        }
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} newListElement nouvelle élément ajoutée dans la liste
+     * @param {string} from 
+     * @param {string} to 
+     */
+    dynamiseFieldsName(from, to)
+    {
+        this.newListElement.className = this.newListElement.className.replace(from, to);
+
+        const listsInputs = [...Array.from(this.newListElement.querySelectorAll('input')), 
+            ...Array.from(this.newListElement.querySelectorAll('select')),
+            ...Array.from(this.newListElement.querySelectorAll('textarea'))
+        ];
+            
+        if(listsInputs.length > 0){
+            listsInputs.forEach(listInput => {
+                listInput.name = listInput.name.replace(from, to);
+            });
+        }else {
+            this.newListElement.name = this.newListElement.name.substring(0, this.newListElement.name.lastIndexOf(from)) + to;
+        }
     }
     
     addListenersToEveryBarLevels()
@@ -972,7 +897,9 @@ export default class CVModels {
                     this.inputWithLevelValue.type = "hidden";
 
                     const previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
+
                     let previousElementOfParentLevelInput;
+
                     if(previousElementOfParent){
                         previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value')
                     }
@@ -1050,7 +977,10 @@ export default class CVModels {
             this.barLevel = e.currentTarget;
         }
         
-        if(this.levelCursorOrigin && this.levelCursor && this.barLevel){
+        if(this.levelCursorOrigin 
+            && this.levelCursor 
+            && this.barLevel
+        ){
             const barLevelRect = this.barLevel.getBoundingClientRect();
             const barLevelRectPosition = {x: barLevelRect.x, y: barLevelRect.y}
             if(!this.barLevelPosition || this.barLevelPosition !== barLevelRectPosition){
@@ -1135,8 +1065,10 @@ export default class CVModels {
         if(this.levelCursorOrigin){
             document.body.addEventListener('mousemove', e => {
                 e.preventDefault();
-                this.moveFromBody = true
-                this.handleLevelCursorMove(e)
+                
+                this.moveFromBody = true;
+
+                this.handleLevelCursorMove(e);
             });
             document.body.addEventListener('click', e => {
                 e.preventDefault();

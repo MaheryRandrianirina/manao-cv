@@ -5206,6 +5206,7 @@ var CVModels = /*#__PURE__*/function () {
     this.mustUpdateWhenSaving = false;
     this.lastInsertedCvId;
     this.saved = false;
+    this.newListElement;
   }
 
   _createClass(CVModels, [{
@@ -5593,7 +5594,7 @@ var CVModels = /*#__PURE__*/function () {
               lastChild.after(addIntoListButton);
             }
 
-            addIntoListButton.addEventListener('click', _this4.handleAddNewList.bind(_this4));
+            addIntoListButton.addEventListener('click', _this4.handleAddNewListElement.bind(_this4));
           }
 
           if (_this4.pathname.includes('/cv/show') && _this4.closeButtonClickNumber === 0) {
@@ -5717,20 +5718,21 @@ var CVModels = /*#__PURE__*/function () {
      */
 
   }, {
-    key: "handleAddNewList",
-    value: function handleAddNewList(e) {
+    key: "handleAddNewListElement",
+    value: function handleAddNewListElement(e) {
       e.preventDefault();
       /**
        * @type {HTMLButtonElement}
        */
 
-      var addNewListButton = e.target;
-      var previousList = addNewListButton.previousElementSibling;
-      var newList = addNewListButton.previousElementSibling.cloneNode();
-      newList.innerHTML = previousList.innerHTML;
+      var addNewListElementButton = e.target;
+      var previousList = addNewListElementButton.previousElementSibling;
+      this.newListElement = addNewListElementButton.previousElementSibling.cloneNode();
+      this.newListElement.innerHTML = previousList.innerHTML;
+      this.addClickEventToNewButtonIfExist();
 
-      if (newList.classList.contains('experience')) {
-        var experienceTextareas = Array.from(newList.querySelectorAll('textarea'));
+      if (this.newListElement.classList.contains('experience')) {
+        var experienceTextareas = Array.from(this.newListElement.querySelectorAll('textarea'));
 
         if (experienceTextareas.length > 1) {
           for (var i = 0; i < experienceTextareas.length; i++) {
@@ -5741,135 +5743,47 @@ var CVModels = /*#__PURE__*/function () {
         }
       }
 
-      var newListLevelIndicators = Array.from(newList.querySelectorAll('.level-indicator'));
+      var newListElementLevelIndicators = Array.from(this.newListElement.querySelectorAll('.level-indicator'));
 
-      if (newListLevelIndicators.length > 0) {
-        var lastListLevelIndicator = newListLevelIndicators[newListLevelIndicators.length - 1];
+      if (newListElementLevelIndicators.length > 0) {
+        var lastListLevelIndicator = newListElementLevelIndicators[newListElementLevelIndicators.length - 1];
         lastListLevelIndicator.parentElement.removeChild(lastListLevelIndicator);
       }
 
-      var newListCursors = Array.from(newList.querySelectorAll('.level-cursor'));
+      var newListElementCursors = Array.from(this.newListElement.querySelectorAll('.level-cursor'));
 
-      if (newListCursors.length > 0) {
-        var lastListCursor = newListCursors[newListCursors.length - 1];
+      if (newListElementCursors.length > 0) {
+        var lastListCursor = newListElementCursors[newListElementCursors.length - 1];
         lastListCursor.parentElement.removeChild(lastListCursor);
       }
 
-      addNewListButton.before(newList);
+      addNewListElementButton.before(this.newListElement);
 
-      if (newList.className.includes('one')) {
-        newList.className = newList.className.replace("one", "two");
-        var listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
+      if (this.newListElement.className.includes('one')) {
+        this.dynamiseFieldsName("one", "two");
+      } else if (this.newListElement.className.includes('two')) {
+        this.dynamiseFieldsName("two", "three");
+      } else if (this.newListElement.className.includes('three')) {
+        this.dynamiseFieldsName("three", "four");
+      } else if (this.newListElement.className.includes('four')) {
+        this.dynamiseFieldsName("four", "five");
+      } else if (this.newListElement.className.includes('five')) {
+        this.dynamiseFieldsName("five", "six");
+        var insideSkillsListLeft = this.newListElement.parentElement.classList.contains('skills-list-left');
 
-        if (listsInputs.length > 0) {
-          listsInputs.forEach(function (listInput) {
-            listInput.name = listInput.name.replace('one', "two");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("one")) + "two";
+        if (insideSkillsListLeft) {
+          var skillsListRight = this.newListElement.parentElement.nextElementSibling;
+          skillsListRight.appendChild(this.newListElement);
+          skillsListRight.appendChild(addNewListElementButton);
         }
-      } else if (newList.className.includes('two')) {
-        newList.className = newList.className.replace("two", "three");
-
-        var _listsInputs = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs.length > 0) {
-          _listsInputs.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("two", "three");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("two")) + "three";
-        }
-      } else if (newList.className.includes('three')) {
-        newList.className = newList.className.replace("three", "four");
-
-        var _listsInputs2 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs2.length > 0) {
-          _listsInputs2.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("three", "four");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("three")) + "four";
-        }
-      } else if (newList.className.includes('four')) {
-        newList.className = newList.className.replace("four", "five");
-
-        var _listsInputs3 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs3.length > 0) {
-          _listsInputs3.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("four", "five");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("four")) + "five";
-        }
-      } else if (newList.className.includes('five')) {
-        newList.className = newList.className.replace("five", "six");
-
-        var _listsInputs4 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs4.length > 0) {
-          _listsInputs4.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("five", "six");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("five")) + "six";
-        }
-
-        if (newList.parentElement.classList.contains('skills-list-left')) {
-          var skillsListRight = newList.parentElement.nextElementSibling;
-          skillsListRight.appendChild(newList);
-          skillsListRight.appendChild(addNewListButton);
-        }
-      } else if (newList.className.includes('six')) {
-        newList.className = newList.className.replace("six", "seven");
-
-        var _listsInputs5 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs5.length > 0) {
-          _listsInputs5.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("six", "seven");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("six")) + "seven";
-        }
-      } else if (newList.className.includes('seven')) {
-        newList.className = newList.className.replace("seven", "eight");
-
-        var _listsInputs6 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs6.length > 0) {
-          _listsInputs6.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("seven", "eight");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("seven")) + "eight";
-        }
-      } else if (newList.className.includes('eight')) {
-        newList.className = newList.className.replace("eight", "nine");
-
-        var _listsInputs7 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs7.length > 0) {
-          _listsInputs7.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("eight", "nine");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("eight")) + "nine";
-        }
-      } else if (newList.className.includes('nine')) {
-        newList.className = newList.className.replace("nine", "ten");
-
-        var _listsInputs8 = [].concat(_toConsumableArray(Array.from(newList.querySelectorAll('input'))), _toConsumableArray(Array.from(newList.querySelectorAll('select'))), _toConsumableArray(Array.from(newList.querySelectorAll('textarea'))));
-
-        if (_listsInputs8.length > 0) {
-          _listsInputs8.forEach(function (listInput) {
-            listInput.name = listInput.name.replace("nine", "ten");
-          });
-        } else {
-          newList.name = newList.name.substring(0, newList.name.lastIndexOf("nine")) + "ten";
-        }
+      } else if (this.newListElement.className.includes('six')) {
+        this.dynamiseFieldsName("six", "seven");
+      } else if (this.newListElement.className.includes('seven')) {
+        this.dynamiseFieldsName("seven", "eught");
+      } else if (this.newListElement.className.includes('eight')) {
+        this.dynamiseFieldsName("eight", "nine");
+      } else if (this.newListElement.className.includes('nine')) {
+        this.dynamiseFieldsName("nine", "ten");
       }
 
       if (this.inputWithLevelValue) {
@@ -5877,6 +5791,37 @@ var CVModels = /*#__PURE__*/function () {
       }
 
       this.addListenersToEveryBarLevels();
+    }
+  }, {
+    key: "addClickEventToNewButtonIfExist",
+    value: function addClickEventToNewButtonIfExist() {
+      this.throwErrorIfUndefined(this.newListElement, "this.newListElement");
+      var addIntoListButton = this.newListElement.querySelector('.add-into-list');
+
+      if (addIntoListButton) {
+        addIntoListButton.addEventListener('click', this.handleAddNewListElement.bind(this));
+      }
+    }
+    /**
+     * 
+     * @param {HTMLElement} newListElement nouvelle élément ajoutée dans la liste
+     * @param {string} from 
+     * @param {string} to 
+     */
+
+  }, {
+    key: "dynamiseFieldsName",
+    value: function dynamiseFieldsName(from, to) {
+      this.newListElement.className = this.newListElement.className.replace(from, to);
+      var listsInputs = [].concat(_toConsumableArray(Array.from(this.newListElement.querySelectorAll('input'))), _toConsumableArray(Array.from(this.newListElement.querySelectorAll('select'))), _toConsumableArray(Array.from(this.newListElement.querySelectorAll('textarea'))));
+
+      if (listsInputs.length > 0) {
+        listsInputs.forEach(function (listInput) {
+          listInput.name = listInput.name.replace(from, to);
+        });
+      } else {
+        this.newListElement.name = this.newListElement.name.substring(0, this.newListElement.name.lastIndexOf(from)) + to;
+      }
     }
   }, {
     key: "addListenersToEveryBarLevels",
