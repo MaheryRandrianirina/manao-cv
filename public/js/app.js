@@ -5009,7 +5009,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 function ScrollIfErrors() {
   var errors = document.querySelector('.bg-danger');
-  console.log("errors : ", errors);
 
   if (errors) {
     window.scroll({
@@ -5641,16 +5640,11 @@ var CVModels = /*#__PURE__*/function () {
         var textareaParentInnerHTML = textareaParent.innerHTML;
 
         if (textareaParent.nodeName === "UL") {
-          var divToReplaceTextareaParent = _this5.dom.createElement('div', (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(textareaParent));
-
-          textareaParent.replaceWith(divToReplaceTextareaParent);
-          divToReplaceTextareaParent.innerHTML = textareaParentInnerHTML;
-
-          if (_this5.modelName !== "cv-1") {
-            var label = _this5.dom.createElement('p', 'mb-1');
+          if (_this5.modelName !== "cv-1" && !textareaParent.previousElementSibling.classList.contains("mb-1")) {
+            var label = _this5.dom.createElement('p', 'mb-1 mt-1');
 
             label.innerText = "Tâches réalisées :";
-            divToReplaceTextareaParent.before(label);
+            textareaParent.before(label);
           }
         }
       });
@@ -6411,12 +6405,11 @@ var CVModels = /*#__PURE__*/function () {
     key: "saveInputsValues",
     value: function saveInputsValues(inputName, inputValue) {
       if (this.closeButtonClickNumber > 0 && (inputName === "email" || inputName === "phone_number" || inputName === "profile_photo") && this.inputsValues[inputName] === inputValue && this.saved) {
-        console.log('mustupdate');
         this.mustUpdateWhenSaving = true;
       }
 
       if (inputValue) {
-        this.inputsValues[inputName] = inputName !== "profile_photo" && !inputName.includes('year') ? inputValue.toLowerCase() : inputValue;
+        this.inputsValues[inputName] = inputName !== "profile_photo" && !inputName.includes('year') ? inputName !== "_token" ? inputValue.toLowerCase() : inputValue : inputValue;
         this.inputsValuesLength++;
       }
     }
@@ -6530,6 +6523,12 @@ var CVModels = /*#__PURE__*/function () {
           }
 
           elementOfReplacement.setAttribute('aria-options', ariaOptions);
+        } else if (elementNode === "textarea" && _this10.modelName !== "cv-1") {
+          var realizedTasksLabel = element.parentElement.previousElementSibling;
+
+          if (realizedTasksLabel) {
+            element.parentElement.previousElementSibling.parentElement.removeChild(element.parentElement.previousElementSibling);
+          }
         }
 
         var nextElement = element.nextElementSibling;
@@ -7233,9 +7232,6 @@ var DOMInteractions = /*#__PURE__*/function () {
   }, {
     key: "handleActionsInModalContent",
     value: function handleActionsInModalContent() {
-      console.log(this.isModalAForm(), this.isModalConfirmation());
-      debugger;
-
       if (this.isModalAForm()) {
         this.handleActionsInModalForm();
       } else if (this.isModalConfirmation()) {
@@ -7998,10 +7994,8 @@ function InteractionsWithCVModels() {
             _modelHoverStyle.style.top = 469 + "px";
 
             if (window.innerWidth >= 792 && window.innerWidth < 890) {
-              console.log(window.innerWidth);
               _modelHoverStyle.style.top = 469 + 2 + "px";
             } else if (window.innerWidth >= 890 && window.innerWidth < 995) {
-              console.log(window.innerWidth);
               _modelHoverStyle.style.top = 469 + 4 + "px";
             } else if (window.innerWidth >= 995 && window.innerWidth < 1095) {
               _modelHoverStyle.style.top = 469 + 6 + "px";

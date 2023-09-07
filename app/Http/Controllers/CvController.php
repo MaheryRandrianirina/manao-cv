@@ -80,8 +80,7 @@ class CvController extends Controller
         $model = $request->model;
         
         $this->echo = $echo;
-        var_dump($request->request);
-        die();
+       
         foreach($request->request as $name => $value){
             if(str_contains($name, "degree")){
                 $this->rules[$name] = ["string", "required"];

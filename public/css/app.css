@@ -10896,6 +10896,9 @@ li.nav-item a.text-white:hover {
 .cv-form .cv .right {
   width: 60%;
 }
+.cv-form form ul {
+  padding-left: 0 !important;
+}
 .cv-form .cv.cv-1 .skills .skills-list-left, .cv-form .cv.cv-1 .skills .skills-list-right {
   width: 48%;
 }

@@ -156,8 +156,6 @@ export default class DOMInteractions {
 
     handleActionsInModalContent()
     {
-        console.log(this.isModalAForm(), this.isModalConfirmation())
-        debugger
         if(this.isModalAForm()){
             this.handleActionsInModalForm()
         }else if(this.isModalConfirmation()){

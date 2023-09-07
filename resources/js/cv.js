@@ -604,7 +604,7 @@ export default class CVModels {
             textarea.name = textareaName ? textareaName : "";
             textarea.placeholder = "Ecrire quelque chose";
             textarea.setAttribute('aria-nodename', element.nodeName)
-
+            
             if(this.inputsValuesLength > 0 && this.inputsValues[textarea.name]){
                 textarea.setAttribute('value', this.inputsValues[textarea.name])
                 textarea.innerHTML = this.inputsValues[textarea.name];
@@ -621,16 +621,11 @@ export default class CVModels {
             const textareaParentInnerHTML = textareaParent.innerHTML;
 
             if(textareaParent.nodeName === "UL"){
-                const divToReplaceTextareaParent = this.dom.createElement('div', getClassFrom(textareaParent));
-                
-                textareaParent.replaceWith(divToReplaceTextareaParent);
 
-                divToReplaceTextareaParent.innerHTML = textareaParentInnerHTML;
-
-                if(this.modelName !== "cv-1"){
-                    const label = this.dom.createElement('p', 'mb-1');
+                if(this.modelName !== "cv-1" && !textareaParent.previousElementSibling.classList.contains("mb-1")){
+                    const label = this.dom.createElement('p', 'mb-1 mt-1');
                     label.innerText = "Tâches réalisées :";
-                    divToReplaceTextareaParent.before(label);
+                    textareaParent.before(label);
                 }
             }
         })
@@ -1486,13 +1481,12 @@ export default class CVModels {
             && this.inputsValues[inputName] === inputValue
             && this.saved
         ){
-            console.log('mustupdate')
             this.mustUpdateWhenSaving = true;
         }
 
         if(inputValue){
             this.inputsValues[inputName] = (inputName !== "profile_photo" && !inputName.includes('year')) 
-                ? inputValue.toLowerCase() 
+                ? (inputName !== "_token" ? inputValue.toLowerCase()  : inputValue)
                 : inputValue;
 
             this.inputsValuesLength++;
@@ -1594,8 +1588,9 @@ export default class CVModels {
             let elementInnerText;
                     
             if(element.name === "name"){
-                elementInnerText = this.textStylePerModel[this.modelName].name === "uppercase" ? inputValue.toUpperCase() : 
-                    inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
+                elementInnerText = this.textStylePerModel[this.modelName].name === "uppercase" 
+                    ? inputValue.toUpperCase() 
+                    : inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             }else {
                 elementInnerText = inputValue.substring(0, 1).toUpperCase() + inputValue.slice(1, inputValue.length);
             }
@@ -1615,6 +1610,11 @@ export default class CVModels {
                     }).join(', ');
                 }
                 elementOfReplacement.setAttribute('aria-options', ariaOptions)
+            }else if(elementNode === "textarea" && this.modelName !== "cv-1") {
+                const realizedTasksLabel = element.parentElement.previousElementSibling;
+                if(realizedTasksLabel){
+                    element.parentElement.previousElementSibling.parentElement.removeChild(element.parentElement.previousElementSibling)
+                }
             }
 
             const nextElement = element.nextElementSibling;
@@ -1697,7 +1697,7 @@ export default class CVModels {
         for(const name in this.inputsValues){
             formData.append(name, this.inputsValues[name]);
         }
-
+        
         if(this.pathname.includes('/cv/show')
             || this.mustUpdateWhenSaving
         ){
