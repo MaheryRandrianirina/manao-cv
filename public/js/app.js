@@ -5694,14 +5694,22 @@ var CVModels = /*#__PURE__*/function () {
   }, {
     key: "addLevelCursorWithIndicatorIfThereIsValue",
     value: function addLevelCursorWithIndicatorIfThereIsValue(element) {
-      if (this.inputsValuesLength > 0) {
+      if (this.inputsValuesLength > 0 || this.pathname.includes('/cv/show')) {
         this.barLevel = element.parentElement.querySelector('.bar-level');
         this.levelCursor = this.dom.createElement('span', 'level-cursor position-absolute shadow bg-primary');
-        this.barLevel.appendChild(this.levelCursor);
-        this.levelIndicator = element.parentElement.querySelector('.level-indicator');
 
-        if (this.levelIndicator) {
-          this.levelCursor.style.left = this.levelIndicator.offsetWidth + "px";
+        if (this.barLevel) {
+          this.barLevel.appendChild(this.levelCursor);
+          this.levelIndicator = element.parentElement.querySelector('.level-indicator');
+
+          if (this.levelIndicator) {
+            this.levelCursor.style.left = this.levelIndicator.offsetWidth + "px";
+          }
+
+          if (this.pathname.includes('/cv/show')) {
+            this.createInputWithLevelValue();
+            this.inputWithLevelValue.setAttribute('value', "".concat((this.levelIndicator.offsetWidth * 100 / this.barLevel.offsetWidth).toFixed(2)));
+          }
         }
       }
     }
@@ -6028,41 +6036,7 @@ var CVModels = /*#__PURE__*/function () {
           var barLevelInputWithLevelValue = this.barLevel.querySelector('.level-value');
 
           if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(this.inputWithLevelValue) || (0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(barLevelInputWithLevelValue)) {
-            this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
-            this.inputWithLevelValue.type = "text";
-            this.inputWithLevelValue.hidden = true;
-            var previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
-            var previousElementOfParentLevelInput;
-
-            if (previousElementOfParent) {
-              previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value');
-            }
-
-            if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one";
-            } else if (previousElementOfParentLevelInput.name.includes('one')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
-            } else if (previousElementOfParentLevelInput.name.includes('two')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
-            } else if (previousElementOfParentLevelInput.name.includes('three')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
-            } else if (previousElementOfParentLevelInput.name.includes('four')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
-            } else if (previousElementOfParentLevelInput.name.includes('five')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
-            } else if (previousElementOfParentLevelInput.name.includes('six')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
-            } else if (previousElementOfParentLevelInput.name.includes('seven')) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
-            } else if (previousElementOfParentLevelInput.name.includes("eight")) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
-            } else if (previousElementOfParentLevelInput.name.includes("eight")) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
-            } else if (previousElementOfParentLevelInput.name.includes("nine")) {
-              this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
-            }
-
-            this.barLevel.appendChild(this.inputWithLevelValue);
+            this.createInputWithLevelValue();
           } else if (barLevelInputWithLevelValue) {
             this.inputWithLevelValue = barLevelInputWithLevelValue;
           }
@@ -6070,6 +6044,45 @@ var CVModels = /*#__PURE__*/function () {
           this.inputWithLevelValue.setAttribute('value', "".concat((levelIndicatorWidth * 100 / this.barLevel.offsetWidth).toFixed(2)));
         }
       }
+    }
+  }, {
+    key: "createInputWithLevelValue",
+    value: function createInputWithLevelValue() {
+      this.inputWithLevelValue = this.dom.createElement('input', 'level-value');
+      this.inputWithLevelValue.type = "text";
+      this.inputWithLevelValue.hidden = true;
+      var previousElementOfParent = this.barLevel.parentElement.previousElementSibling;
+      var previousElementOfParentLevelInput;
+
+      if (previousElementOfParent) {
+        previousElementOfParentLevelInput = previousElementOfParent.querySelector('.level-value');
+      }
+
+      if ((0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(previousElementOfParent)) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_one";
+      } else if (previousElementOfParentLevelInput.name.includes('one')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_two";
+      } else if (previousElementOfParentLevelInput.name.includes('two')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_three";
+      } else if (previousElementOfParentLevelInput.name.includes('three')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_four";
+      } else if (previousElementOfParentLevelInput.name.includes('four')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_five";
+      } else if (previousElementOfParentLevelInput.name.includes('five')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_six";
+      } else if (previousElementOfParentLevelInput.name.includes('six')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_seven";
+      } else if (previousElementOfParentLevelInput.name.includes('seven')) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
+      } else if (previousElementOfParentLevelInput.name.includes("eight")) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_eight";
+      } else if (previousElementOfParentLevelInput.name.includes("eight")) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_nine";
+      } else if (previousElementOfParentLevelInput.name.includes("nine")) {
+        this.inputWithLevelValue.name = this.barLevel.getAttribute('id').replace('level', '') + "level_ten";
+      }
+
+      this.barLevel.appendChild(this.inputWithLevelValue);
     }
   }, {
     key: "handleBarLevelMouseleave",
