@@ -150,8 +150,10 @@
                             <p class="date" aria-input-number="2">
                                 <?php $splitted_date = mb_split(" - ",$formation->date); ?>
                                 <span aria-name="year_debut_formation_{{$stringNumber[$i]}}" id="input" aria-type="date">{{ $formation->getDateDebut() }}</span> 
+                                <span data-value="{{ $formation->format("Y-m-d") }}" hidden></span>
                                 <span id="separator">-</span> 
                                 <span aria-name="year_end_formation_{{$stringNumber[$i]}}" id="input" aria-type="date">{{ $formation->getDateEnd() }}</span>
+                                <span data-value="{{ $formation->format("Y-m-d", false) }}" hidden></span>
                             </p>
                         </div>
                     </div>
@@ -193,8 +195,10 @@
                         <p class="date" aria-input-number="2">
                             <?php $splitted_date = mb_split(" - ",$experience->date); ?>
                             <span id="input" aria-type="date" aria-name="year_debut_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateDebut() }}</span> 
+                            <span data-value="{{ $experience->format("Y-m-d") }}" hidden></span>
                             <span id="separator">-</span> 
                             <span id="input" aria-type="date" aria-name="year_end_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateEnd() }}</span>
+                            <span data-value="{{ $experience->format("Y-m-d", false) }}" hidden></span>
                         </p>
                         <h4 id="input" aria-name="company_name_{{ $stringNumber[$i] }}" class="company-name">{{ $experience->entreprise_name }}</h4>
                         <p id="input" aria-name="company_work_{{ $stringNumber[$i] }}" class="work">{{ $experience->work }}</p>

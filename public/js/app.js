@@ -5519,11 +5519,12 @@ var CVModels = /*#__PURE__*/function () {
         }
 
         if (_this4.pathname.includes('/cv/show')) {
-          textarea.setAttribute('value', element.innerText);
-          textarea.innerText = element.innerText;
+          textarea.setAttribute('value', element.innerText.trim());
+          textarea.innerText = element.innerText.trim();
         }
 
         element.replaceWith(textarea);
+        console.log(textarea.parentElement);
         var textareaParent = textarea.parentElement;
         var textareaParentInnerHTML = textareaParent.innerHTML;
 
@@ -5737,6 +5738,7 @@ var CVModels = /*#__PURE__*/function () {
       var previousList = addNewListElementButton.previousElementSibling;
       this.newListElement = addNewListElementButton.previousElementSibling.cloneNode();
       this.newListElement.innerHTML = previousList.innerHTML;
+      this.organizeIfInputsDateWrappersExist();
       this.addClickEventToNewButtonIfExist();
 
       if (this.newListElement.classList.contains('experience')) {
@@ -5799,6 +5801,18 @@ var CVModels = /*#__PURE__*/function () {
       }
 
       this.addListenersToEveryBarLevels();
+    }
+  }, {
+    key: "organizeIfInputsDateWrappersExist",
+    value: function organizeIfInputsDateWrappersExist() {
+      var inputsDateWrappers = this.newListElement.querySelectorAll('.inputs-date-wrapper');
+      var dateContainer = this.newListElement.querySelector('.date.justify-content-between');
+
+      if (inputsDateWrappers && dateContainer) {
+        inputsDateWrappers.forEach(function (dateWrapper) {
+          dateContainer.appendChild(dateWrapper);
+        });
+      }
     }
   }, {
     key: "addClickEventToNewButtonIfExist",

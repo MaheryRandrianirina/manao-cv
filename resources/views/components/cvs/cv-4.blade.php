@@ -139,8 +139,10 @@
                                 <p aria-input-number="2" class="date text-gray">
                                     <?php $splitted_date = mb_split(" - ",$experience->date); ?>
                                     <span id="input" aria-type="date" aria-name="year_debut_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateDebut() }}</span> 
+                                    <span data-value="{{ $experience->format("Y-m-d") }}" hidden></span>
                                     <span id="separator">-</span> 
                                     <span id="input" aria-type="date" aria-name="year_end_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateEnd() }}</span>
+                                    <span data-value="{{ $experience->format("Y-m-d", false) }}" hidden></span>
                                 </p>
                                 <ul class="task list customizable-list">
                                     <?php 
@@ -212,8 +214,10 @@
                                         <span aria-input-number="2">
                                             <?php $splitted_date = mb_split(" - ",$formation->date); ?>
                                             <span id="input" aria-type="date" aria-name="year_debut_formation_{{ $stringNumber[$i] }}">{{ $formation->getDateDebut() }}</span> 
+                                            <span data-value="{{ $formation->format("Y-m-d") }}" hidden></span>
                                             <span id="separator">-</span> 
                                             <span id="input" aria-type="date" aria-name="year_end_formation_{{ $stringNumber[$i] }}">{{ $formation->getDateEnd() }}</span>
+                                            <span data-value="{{ $formation->format("Y-m-d", false) }}" hidden></span>
                                         </span> 
                                         <span id="separator">|</span> 
                                         <span class="etablissement" id="input" aria-name="etablissement_{{ $stringNumber[$i] }}">{{ $formation->etablissement }}</span>

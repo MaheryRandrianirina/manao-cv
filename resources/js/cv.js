@@ -457,7 +457,6 @@ export default class CVModels {
         })
 
         const elementsToBeTextarea = document.querySelectorAll('#textarea');
-        
         elementsToBeTextarea.forEach(element => {
             const textareaName = element.getAttribute('aria-name');
 
@@ -477,16 +476,18 @@ export default class CVModels {
                 textarea.setAttribute('value', this.inputsValues[textarea.name])
                 textarea.innerHTML = this.inputsValues[textarea.name];
             }
-
+            
             if(this.pathname.includes('/cv/show')){
-                textarea.setAttribute('value', element.innerText);
-                textarea.innerText = element.innerText;
+                textarea.setAttribute('value', element.innerText.trim());
+                textarea.innerText = element.innerText.trim();
             }
-
+            
             element.replaceWith(textarea);
             
+            console.log(textarea.parentElement)
             const textareaParent = textarea.parentElement;
             const textareaParentInnerHTML = textareaParent.innerHTML;
+
             if(textareaParent.nodeName === "UL"){
                 const divToRempaceTextareaParent = this.dom.createElement('div', getClassFrom(textareaParent));
                 
@@ -604,7 +605,7 @@ export default class CVModels {
         }else if(label && inputName.includes('year_end')){
             label.innerText = "Date de fin";
         }
-
+        
         if(wrapper){
             element.replaceWith(wrapper)
         }
@@ -710,8 +711,10 @@ export default class CVModels {
         const previousList = addNewListElementButton.previousElementSibling;
         this.newListElement = addNewListElementButton.previousElementSibling.cloneNode();  
         this.newListElement.innerHTML = previousList.innerHTML
+        
+        this.organizeIfInputsDateWrappersExist();
 
-        this.addClickEventToNewButtonIfExist()
+        this.addClickEventToNewButtonIfExist();
 
         if(this.newListElement.classList.contains('experience')){
             const experienceTextareas = Array.from(this.newListElement.querySelectorAll('textarea'));
@@ -772,6 +775,17 @@ export default class CVModels {
         }
 
         this.addListenersToEveryBarLevels();
+    }
+
+    organizeIfInputsDateWrappersExist()
+    {
+        const inputsDateWrappers = this.newListElement.querySelectorAll('.inputs-date-wrapper');
+        const dateContainer = this.newListElement.querySelector('.date.justify-content-between');
+        if(inputsDateWrappers && dateContainer){
+            inputsDateWrappers.forEach(dateWrapper => {
+                dateContainer.appendChild(dateWrapper);
+            })
+        }
     }
 
     addClickEventToNewButtonIfExist()

@@ -157,7 +157,9 @@
                         <?php $i++;?>
                         <div class="experience experience-{{ $stringNumber[$i] }}">
                             <h4 class="company-name" aria-input-number="2">
-                                <span id="input" aria-name="company_name_{{ $stringNumber[$i] }}">{{ $experience->entreprise_name }}</span> <span id="separator">|</span> <span id="input" aria-name="company_work_{{ $stringNumber[$i] }}">{{ $experience->work }}</span>
+                                <span id="input" aria-name="company_name_{{ $stringNumber[$i] }}">{{ $experience->entreprise_name }}</span> 
+                                <span id="separator">|</span> 
+                                <span id="input" aria-name="company_work_{{ $stringNumber[$i] }}">{{ $experience->work }}</span>
                             </h4>
                             <p class="date" aria-input-number="2">
                                 <span id="input" aria-type="date" aria-name="year_debut_experience_{{ $stringNumber[$i] }}">{{ $experience->getDateDebut() }}</span> 
