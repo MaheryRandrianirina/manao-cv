@@ -627,7 +627,7 @@ export default class CVModels {
 
                 divToReplaceTextareaParent.innerHTML = textareaParentInnerHTML;
 
-                if(this.modelName === "cv-2" || this.modelName === "cv-3"){
+                if(this.modelName !== "cv-1"){
                     const label = this.dom.createElement('p', 'mb-1');
                     label.innerText = "Tâches réalisées :";
                     divToReplaceTextareaParent.before(label);
@@ -803,11 +803,28 @@ export default class CVModels {
     organizeIfInputsDateWrappersExist()
     {
         const inputsDateWrappers = this.newListElement.querySelectorAll('.inputs-date-wrapper');
+
+        let span;
+
         const dateContainer = this.newListElement.querySelector('.date.justify-content-between');
+        if(dateContainer){
+            span = dateContainer.querySelector('span.d-flex');
+        }
+
         if(inputsDateWrappers && dateContainer){
-            inputsDateWrappers.forEach(dateWrapper => {
-                dateContainer.appendChild(dateWrapper);
-            })
+            if(this.modelName === "cv-4" 
+                && span 
+                && dateContainer.parentElement.classList.contains('degree')
+            ){
+                inputsDateWrappers.forEach(dateWrapper => {
+                    span.appendChild(dateWrapper);
+                });
+            }else {
+                inputsDateWrappers.forEach(dateWrapper => {
+                    dateContainer.appendChild(dateWrapper);
+                });                
+            }
+            
         }
     }
 
@@ -1306,6 +1323,8 @@ export default class CVModels {
                     && !formInput.classList.contains('woman')
                     && !formInput.classList.contains('')
                 ){
+                    let formInputParent = formInput.parentElement;
+
                     const className = getClassFrom(formInput);
                     
                     const elementToReplaceInput = this.dom.createElement(
@@ -1342,8 +1361,14 @@ export default class CVModels {
                     }else if(formInput.name.includes("year")){
                         const splittedDate = inputValue.split('-');
 
-                        formInput.parentElement.parentElement.appendChild(formInput);
-                        formInput.parentElement.removeChild(formInput.parentElement.querySelector('.inputs-date-wrapper'));
+                        const formInputGrandParent = formInputParent.parentElement;
+                        formInputGrandParent.appendChild(formInput);
+
+                        const inputsDateWrappers = formInputGrandParent.querySelector('.inputs-date-wrapper');
+                        
+                        if(!isNull(inputsDateWrappers)){
+                            formInputParent.parentElement.removeChild(inputsDateWrappers);
+                        }
 
                         if(formInput.name.includes("formation")){
                             elementInnerText = splittedDate[0];
@@ -1367,7 +1392,6 @@ export default class CVModels {
                         elementToReplaceInput.innerHTML = innerUserIcon();
                     }
 
-                    let formInputParent = formInput.parentElement;
                     const formInputParentChildren = Array.from(formInputParent.children);
                     const separator = formInputParent.getAttribute('aria-separator');
                     
@@ -1467,7 +1491,9 @@ export default class CVModels {
         }
 
         if(inputValue){
-            this.inputsValues[inputName] = inputValue;
+            this.inputsValues[inputName] = (inputName !== "profile_photo" && !inputName.includes('year')) 
+                ? inputValue.toLowerCase() 
+                : inputValue;
 
             this.inputsValuesLength++;
         }
@@ -1488,8 +1514,15 @@ export default class CVModels {
         separatorSpan.setAttribute('id', 'separator');
                         
         const previousSeparatorSpan = formInputParent.querySelector('#separator');
-        if(previousSeparatorSpan){
-            formInputParent.removeChild(previousSeparatorSpan)
+        if(previousSeparatorSpan 
+            && previousSeparatorSpan.parentElement === formInputParent 
+        ){
+            formInputParent.removeChild(previousSeparatorSpan);
+            //previousSeparatorSpan.parentElement.removeChild(previousSeparatorSpan);
+        }else if(previousSeparatorSpan 
+            && previousSeparatorSpan.parentElement !== formInputParent
+        ){
+            formInputParent.querySelector('span').removeChild(previousSeparatorSpan);
         }
 
         formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
@@ -1686,6 +1719,8 @@ export default class CVModels {
             return;
         }
 
+        console.log(this.inputsValues, formData)
+        debugger
         axios.post("/cv/save", formData).then(res => {
             this.processCvPostingRes(res, download);
 

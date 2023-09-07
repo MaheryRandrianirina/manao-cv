@@ -278,7 +278,6 @@ class CvController extends Controller
                 $task = "experience_" . $this->stringNumber[$i+1] . "_task_one";
             }
             
-            var_dump($tasks, $company_name, $work, $request->request);
             $arrayValues = [
                 "entreprise_name" => $request->$company_name,
                 "work" => $request->$work,
@@ -287,7 +286,6 @@ class CvController extends Controller
                 "task" => strlen($task) > 0 ? $request->$task : join("\n", $tasks),
                 "cv_id" => $cv_id
             ];
-            var_dump($arrayValues);
 
             if(!$this->update){
                 Experience::create($arrayValues);
@@ -352,7 +350,7 @@ class CvController extends Controller
             }else {
                 $arrayValues["level"] = (float) $request->$level;
             }
-            var_dump($arrayValues);
+            
             if(!$this->update){
                 Language::create($arrayValues);
             }else {

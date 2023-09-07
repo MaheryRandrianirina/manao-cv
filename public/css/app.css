@@ -10816,14 +10816,14 @@ li.nav-item a.text-white:hover {
 .cv.cv-4 .skill.skill-three .level::after {
   width: 70px;
 }
-.cv.cv-4 .date-and-college .inputs-date-wrapper {
+.cv.cv-4 .date .inputs-date-wrapper {
   width: 48%;
 }
-.cv.cv-4 .date-and-college .inputs-date-wrapper label {
+.cv.cv-4 .date .inputs-date-wrapper label {
   text-transform: initial;
   color: #000 !important;
 }
-.cv.cv-4 .date-and-college .inputs-date-wrapper input {
+.cv.cv-4 .date .inputs-date-wrapper input {
   width: 100% !important;
 }
 
@@ -11053,7 +11053,7 @@ li.nav-item a.text-white:hover {
   margin-left: auto;
   margin-right: auto;
 }
-.cv-form form.cv.cv-4 .degree .date-and-college .etablissement {
+.cv-form form.cv.cv-4 .degree .date .etablissement {
   margin-left: 10px;
 }
 .cv-form div.cv-4 .cv-top .name {
@@ -11178,16 +11178,16 @@ li.nav-item a.text-white:hover {
   }
 }
 @media only screen and (max-width: 1000px) {
-  .cv-form.cv-4-form .right .date-and-college.text-gray.d-flex.justify-content-between {
+  .cv-form.cv-4-form .right .formation-list.list .date.text-gray.d-flex.justify-content-between {
     display: block !important;
   }
   .cv-form.cv-4-form .right input.etablissement {
     margin-left: 0 !important;
   }
-  .cv .date.justify-content-between {
+  .cv.cv-1 .date.justify-content-between, .cv.cv-2 .date.justify-content-between, .cv.cv-3 .date.justify-content-between {
     display: block !important;
   }
-  .cv .date.justify-content-between .inputs-date-wrapper {
+  .cv.cv-1 .date.justify-content-between .inputs-date-wrapper, .cv.cv-2 .date.justify-content-between .inputs-date-wrapper, .cv.cv-3 .date.justify-content-between .inputs-date-wrapper {
     width: 100%;
   }
 }

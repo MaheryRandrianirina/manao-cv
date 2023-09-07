@@ -10984,7 +10984,7 @@ li.nav-item a.text-white:hover {
   margin-left: auto;
   margin-right: auto;
 }
-.cv-form form.cv.cv-4 .degree .date-and-college .etablissement {
+.cv-form form.cv.cv-4 .degree .date .etablissement {
   margin-left: 10px;
 }
 .cv-form div.cv-4 .cv-top .name {

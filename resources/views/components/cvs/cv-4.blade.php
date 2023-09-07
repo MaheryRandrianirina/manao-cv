@@ -65,7 +65,9 @@
                             <?php $i++;?>
                             <div class="language-{{ $stringNumber[$i] }} d-flex justify-content-start mb-2">
                                 <p class="language-with-level mb-0 ms-0" aria-input-number="2">
-                                    <span id="input" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> <span id="separator">:</span> <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->string_level }}</span>
+                                    <span id="input" aria-name="language_{{ $stringNumber[$i] }}">{{ $language->name }}</span> 
+                                    <span id="separator">:</span> 
+                                    <span id="select" aria-options="Bilingue, Avancé, Intermédiaire, Débutant" aria-name="language_level_{{ $stringNumber[$i] }}">{{ $language->string_level }}</span>
                                 </p>
                             </div>
                         @endforeach
@@ -210,7 +212,7 @@
                             <div class="formation-{{ $stringNumber[$i] }}">
                                 <div class="degree">
                                     <h4 id="input" aria-name="degree_{{ $stringNumber[$i] }}">{{ $formation->degree }}</h4>
-                                    <p aria-input-number="2" class="date-and-college text-gray">
+                                    <p aria-input-number="2" class="date text-gray">
                                         <span aria-input-number="2">
                                             <?php $splitted_date = mb_split(" - ",$formation->date); ?>
                                             <span id="input" aria-type="date" aria-name="year_debut_formation_{{ $stringNumber[$i] }}">{{ $formation->getDateDebut() }}</span> 
@@ -229,7 +231,7 @@
                     <div class="formation-one">
                         <div class="degree">
                             <h4 id="input" aria-name="degree_one">DIPLOME XXXXXXXXX</h4>
-                            <p aria-input-number="2" class="date-and-college text-gray">
+                            <p aria-input-number="2" class="date text-gray">
                                 <span aria-input-number="2">
                                     <span id="input" aria-type="date" aria-name="year_debut_formation_one">20XX</span> 
                                     <span id="separator">-</span> 
@@ -243,7 +245,7 @@
                     <div class="formation-two">
                         <div class="degree">
                             <h4 id="input" aria-name="degree_two">DIPLOME XXXXXXXXX</h4>
-                            <p class="date-and-college text-gray">
+                            <p class="date text-gray">
                                 <span aria-input-number="2">
                                     <span id="input" aria-name="year_debut_formation_two" aria-type="date">20XX</span> 
                                     <span id="separator">-</span> 

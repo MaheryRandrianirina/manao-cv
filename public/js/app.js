@@ -5646,7 +5646,7 @@ var CVModels = /*#__PURE__*/function () {
           textareaParent.replaceWith(divToReplaceTextareaParent);
           divToReplaceTextareaParent.innerHTML = textareaParentInnerHTML;
 
-          if (_this5.modelName === "cv-2" || _this5.modelName === "cv-3") {
+          if (_this5.modelName !== "cv-1") {
             var label = _this5.dom.createElement('p', 'mb-1');
 
             label.innerText = "Tâches réalisées :";
@@ -5824,12 +5824,23 @@ var CVModels = /*#__PURE__*/function () {
     key: "organizeIfInputsDateWrappersExist",
     value: function organizeIfInputsDateWrappersExist() {
       var inputsDateWrappers = this.newListElement.querySelectorAll('.inputs-date-wrapper');
+      var span;
       var dateContainer = this.newListElement.querySelector('.date.justify-content-between');
 
+      if (dateContainer) {
+        span = dateContainer.querySelector('span.d-flex');
+      }
+
       if (inputsDateWrappers && dateContainer) {
-        inputsDateWrappers.forEach(function (dateWrapper) {
-          dateContainer.appendChild(dateWrapper);
-        });
+        if (this.modelName === "cv-4" && span && dateContainer.parentElement.classList.contains('degree')) {
+          inputsDateWrappers.forEach(function (dateWrapper) {
+            span.appendChild(dateWrapper);
+          });
+        } else {
+          inputsDateWrappers.forEach(function (dateWrapper) {
+            dateContainer.appendChild(dateWrapper);
+          });
+        }
       }
     }
   }, {
@@ -6280,6 +6291,7 @@ var CVModels = /*#__PURE__*/function () {
           var formInputIsHidden = formInput.type === "hidden";
 
           if (!formInputIsHidden && !formInput.classList.contains('profile-photo') && !formInput.classList.contains('level-value') && !formInput.classList.contains('man') && !formInput.classList.contains('woman') && !formInput.classList.contains('')) {
+            var formInputParent = formInput.parentElement;
             var className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInput);
 
             var elementToReplaceInput = _this9.dom.createElement(formInput.getAttribute('aria-nodename').toLowerCase(), className.replace('form-control', '').replace('mb-2', 'mb-0'));
@@ -6304,8 +6316,13 @@ var CVModels = /*#__PURE__*/function () {
               elementInnerText = inputValue;
             } else if (formInput.name.includes("year")) {
               var splittedDate = inputValue.split('-');
-              formInput.parentElement.parentElement.appendChild(formInput);
-              formInput.parentElement.removeChild(formInput.parentElement.querySelector('.inputs-date-wrapper'));
+              var formInputGrandParent = formInputParent.parentElement;
+              formInputGrandParent.appendChild(formInput);
+              var inputsDateWrappers = formInputGrandParent.querySelector('.inputs-date-wrapper');
+
+              if (!(0,lodash__WEBPACK_IMPORTED_MODULE_0__.isNull)(inputsDateWrappers)) {
+                formInputParent.parentElement.removeChild(inputsDateWrappers);
+              }
 
               if (formInput.name.includes("formation")) {
                 elementInnerText = splittedDate[0];
@@ -6327,7 +6344,6 @@ var CVModels = /*#__PURE__*/function () {
               elementToReplaceInput.innerHTML = (0,_icons_inner_user_icon__WEBPACK_IMPORTED_MODULE_5__["default"])();
             }
 
-            var formInputParent = formInput.parentElement;
             var formInputParentChildren = Array.from(formInputParent.children);
             var separator = formInputParent.getAttribute('aria-separator');
             var secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start') && formInput.name.includes('year');
@@ -6383,8 +6399,9 @@ var CVModels = /*#__PURE__*/function () {
             }
 
             if (_this9.form.querySelector('.sex')) {
-              var formInputGrandParent = formInput.parentElement.parentElement;
-              formInputGrandParent.parentElement.removeChild(formInputGrandParent);
+              var _formInputGrandParent = formInput.parentElement.parentElement;
+
+              _formInputGrandParent.parentElement.removeChild(_formInputGrandParent);
             }
           }
         });
@@ -6399,7 +6416,7 @@ var CVModels = /*#__PURE__*/function () {
       }
 
       if (inputValue) {
-        this.inputsValues[inputName] = inputValue;
+        this.inputsValues[inputName] = inputName !== "profile_photo" && !inputName.includes('year') ? inputValue.toLowerCase() : inputValue;
         this.inputsValuesLength++;
       }
     }
@@ -6420,8 +6437,10 @@ var CVModels = /*#__PURE__*/function () {
       separatorSpan.setAttribute('id', 'separator');
       var previousSeparatorSpan = formInputParent.querySelector('#separator');
 
-      if (previousSeparatorSpan) {
-        formInputParent.removeChild(previousSeparatorSpan);
+      if (previousSeparatorSpan && previousSeparatorSpan.parentElement === formInputParent) {
+        formInputParent.removeChild(previousSeparatorSpan); //previousSeparatorSpan.parentElement.removeChild(previousSeparatorSpan);
+      } else if (previousSeparatorSpan && previousSeparatorSpan.parentElement !== formInputParent) {
+        formInputParent.querySelector('span').removeChild(previousSeparatorSpan);
       }
 
       formInputParentChildren[formInputParentChildren.length - 1].before(separatorSpan);
@@ -6609,6 +6628,8 @@ var CVModels = /*#__PURE__*/function () {
         return;
       }
 
+      console.log(this.inputsValues, formData);
+      debugger;
       axios__WEBPACK_IMPORTED_MODULE_10___default().post("/cv/save", formData).then(function (res) {
         _this12.processCvPostingRes(res, download);
 
