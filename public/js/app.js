@@ -6349,6 +6349,7 @@ var CVModels = /*#__PURE__*/function () {
     key: "saveInputsValues",
     value: function saveInputsValues(inputName, inputValue) {
       if (this.closeButtonClickNumber > 0 && (inputName === "email" || inputName === "phone_number" || inputName === "profile_photo") && this.inputsValues[inputName] === inputValue && this.saved) {
+        console.log('mustupdate');
         this.mustUpdateWhenSaving = true;
       }
 

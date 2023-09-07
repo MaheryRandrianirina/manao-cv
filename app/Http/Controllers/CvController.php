@@ -80,39 +80,38 @@ class CvController extends Controller
         $model = $request->model;
         
         $this->echo = $echo;
-        var_dump($request->request);
-        die();
+
         foreach($request->request as $name => $value){
-            if(strchr($name, "degree")){
+            if(str_contains($name, "degree")){
                 $this->rules[$name] = ["string", "required"];
 
                 $this->formations++;
-            }else if(strchr($name, "etablissement")){
+            }else if(str_contains($name, "etablissement")){
                 $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "year_debut")){
+            }else if(str_contains($name, "year_debut")){
                 $this->rules[$name] = ["date", "required"];
-            }else if(strchr($name, "year_end")){
+            }else if(str_contains($name, "year_end")){
                 $this->rules[$name] = ["date", "required"];
-            }else if(strchr($name, "language") && !strchr($name, "language_level")){
+            }else if(str_contains($name, "language") && !str_contains($name, "language_level")){
                 $this->rules[$name] = ["string", "required"];
                 $this->languages++;
-            }else if(strchr($name, "language_level")){
+            }else if(str_contains($name, "language_level")){
                 $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "company_name")){
-                $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "company_work")){
-                $this->rules[$name] = ["string", "required"];
-            }else if(strchr($name, "skill") && !strchr($name, "skill_level")){
-                $this->rules[$name] = ["string", "required"];
-
-                $this->skills++;
-            }else if(strchr($name, "experience")){
+            }else if(str_contains($name, "company_name")){
                 $this->rules[$name] = ["string", "required"];
 
                 $this->experiences++;
-            }else if(strchr($name, "skill_level")){
+            }else if(str_contains($name, "company_work")){
+                $this->rules[$name] = ["string", "required"];
+            }else if(str_contains($name, "skill") && !str_contains($name, "skill_level")){
+                $this->rules[$name] = ["string", "required"];
+
+                $this->skills++;
+            }else if(str_contains($name, "experience")){
+                $this->rules[$name] = ["string", "required"];
+            }else if(str_contains($name, "skill_level")){
                 $this->rules[$name] = ['string', "required"];
-            }else if(strchr($name, "hobby")){
+            }else if(str_contains($name, "hobby")){
                 $this->rules[$name] = ['string', "required"];
 
                 $this->hobbies++;
@@ -256,6 +255,7 @@ class CvController extends Controller
     }
 
     private function saveExperiences(Request $request, int $cv_id, bool $multitask = false) {
+        
         for($i = 0; $i < $this->experiences; $i++){
             $company_name = "company_name_" . $this->stringNumber[$i+1];
             $work = "company_work_" . $this->stringNumber[$i+1];
@@ -268,24 +268,26 @@ class CvController extends Controller
                 $countTasks = 0;
 
                 foreach($request->request as $name => $value){
-                    if(strchr($name, "experience_" . $this->stringNumber[$i+1])){
+                    if(str_contains($name, "experience_" . $this->stringNumber[$i+1] . "_task")){
                         $countTasks++;
                         $taskVar = "experience_" . $this->stringNumber[$i+1] . "_task_" . $this->stringNumber[$countTasks];
-                        array_push($tasks, $request->$taskVar) ;
+                        $tasks[] = $request->$taskVar;
                     }
                 }
             }else {
                 $task = "experience_" . $this->stringNumber[$i+1] . "_task_one";
             }
             
+            var_dump($tasks, $company_name, $work, $request->request);
             $arrayValues = [
                 "entreprise_name" => $request->$company_name,
                 "work" => $request->$work,
                 "date_debut" => new DateTime($request->$year_debut),
                 "date_end" => new DateTime($request->$year_end),
-                "task" => $task ? $request->$task : join("\n", $tasks),
+                "task" => strlen($task) > 0 ? $request->$task : join("\n", $tasks),
                 "cv_id" => $cv_id
             ];
+            var_dump($arrayValues);
 
             if(!$this->update){
                 Experience::create($arrayValues);

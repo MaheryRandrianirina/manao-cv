@@ -1400,6 +1400,7 @@ export default class CVModels {
             && this.inputsValues[inputName] === inputValue
             && this.saved
         ){
+            console.log('mustupdate')
             this.mustUpdateWhenSaving = true;
         }
 
