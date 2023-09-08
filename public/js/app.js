@@ -8297,6 +8297,7 @@ function InteractionsWithSavings() {
           var cvs = res.data;
           cvs.forEach(function (cv) {
             var cvLink = document.querySelector(".cvs a.cv".concat(cv.id));
+            console.log(cvLink);
 
             if (cvLink) {
               showLink(cvLink);

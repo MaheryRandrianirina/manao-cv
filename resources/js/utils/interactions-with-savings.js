@@ -169,9 +169,10 @@ export default function InteractionsWithSavings(){
             if(foundLinks === 0){
                 axios.post("/cv/search", {"degree": inputValue}).then(res => {
                     const cvs = res.data;
-
+                    
                     cvs.forEach(cv => {
                         const cvLink = document.querySelector(`.cvs a.cv${cv.id}`);
+                        console.log(cvLink)
                         if(cvLink){
                             showLink(cvLink);
 

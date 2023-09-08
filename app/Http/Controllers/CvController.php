@@ -639,10 +639,11 @@ class CvController extends Controller
         $cvs = [];
         
         $formations = Formation::where('degree', "like", "%" .$request->degree . "%")->get();
+        
         foreach($formations as $formation){
             $cvs[] = Cv::find($formation->cv_id);
         }
-
+        
         echo json_encode($cvs);
     }
 }
