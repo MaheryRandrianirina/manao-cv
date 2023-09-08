@@ -10640,6 +10640,9 @@ li.nav-item a.text-white:hover {
   font-size: 16px;
 }
 
+.cv.cv-1 .languages-list .btn.btn-secondary.add-into-list {
+  margin-left: 32px !important;
+}
 .cv.cv-1 .experiences .company-name span:nth-child(1) {
   text-transform: uppercase;
 }
@@ -10961,6 +10964,10 @@ li.nav-item a.text-white:hover {
 }
 .cv-form .cv.cv-3 .left .btn.btn-secondary.add-into-list {
   background: #ced4da !important;
+  margin-left: 0;
+}
+.cv-form .cv.cv-3 .left .hobbies-list input {
+  margin-left: 0 !important;
 }
 .cv-form .cv.cv-3 .left .btn.btn-secondary.add-into-list:hover {
   background-color: #adb5bd !important;

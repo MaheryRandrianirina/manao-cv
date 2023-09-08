@@ -193,6 +193,10 @@ li.nav-item a.text-white:hover {
     }
 
     .cv.cv-1 {
+
+        .languages-list .btn.btn-secondary.add-into-list {
+            margin-left: 32px !important;
+        }
         .experiences {
             .company-name span:nth-child(1) {
                 text-transform: uppercase;
@@ -586,6 +590,11 @@ li.nav-item a.text-white:hover {
 
             .btn.btn-secondary.add-into-list {
                 background: $gray-400 !important;
+                margin-left: 0;;
+            }
+
+            .hobbies-list input {
+                margin-left: 0 !important;
             }
 
             .btn.btn-secondary.add-into-list:hover {
