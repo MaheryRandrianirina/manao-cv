@@ -17,6 +17,8 @@ return [
 
     'login' => "Connexion",
 
+    "auth" => "Auth",
+
     'register' => "Inscription",
 
     "home" => "Modèles de CV",

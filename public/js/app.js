@@ -6338,6 +6338,18 @@ var CVModels = /*#__PURE__*/function () {
 
               if (formInput.name === "phone_number") {
                 elementInnerText = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.formatString)(elementInnerText, "phone_number");
+              } else if (formInput.name.includes('lang')) {
+                var _formInputParentChildren = Array.from(formInputParent.children);
+
+                var _separator = formInputParent.getAttribute('aria-separator');
+
+                var _secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start');
+
+                if ((formInputParent.classList.contains('justify-content-between') || _secondLoopForInputTypeDate) && _separator && _formInputParentChildren.length > 1) {
+                  formInputParent.className = (0,_utils_simplifiers__WEBPACK_IMPORTED_MODULE_6__.getClassFrom)(formInputParent).replace('between', 'start');
+
+                  _this9.insertSeparatorSpanBeforeLastFormInput(formInputParent, _formInputParentChildren, _separator);
+                }
               }
             }
 

@@ -1199,7 +1199,7 @@ export default class CVModels {
         let formInputs;
         let formTextareas;
         let formSelects;
-
+        
         if(this.form){
             formInputs = this.form.querySelectorAll('input')
             formTextareas = this.form.querySelectorAll('textarea');
@@ -1372,7 +1372,7 @@ export default class CVModels {
                         }
 
                         const formInputParentChildren = Array.from(formInputGrandParent.children);
-
+                        
                         let separator = formInputGrandParent.getAttribute('aria-separator');
 
                         const secondLoopForInputTypeDate = formInputGrandParent.classList.contains('justify-content-start')
@@ -1382,7 +1382,6 @@ export default class CVModels {
                             )
                             && separator && formInputParentChildren.length > 1
                         ){
-                            
                             formInputGrandParent.className = getClassFrom(formInputGrandParent).replace('between', 'start');
 
                             this.insertSeparatorSpanBeforeLastFormInput(
@@ -1397,6 +1396,26 @@ export default class CVModels {
                         
                         if(formInput.name === "phone_number"){
                             elementInnerText = formatString(elementInnerText, "phone_number");
+                        }else if(formInput.name.includes('lang')){
+                            const formInputParentChildren = Array.from(formInputParent.children);
+                        
+                            let separator = formInputParent.getAttribute('aria-separator');
+
+                            const secondLoopForInputTypeDate = formInputParent.classList.contains('justify-content-start')
+                            
+                            if((formInputParent.classList.contains('justify-content-between')
+                                || secondLoopForInputTypeDate
+                                )
+                                && separator && formInputParentChildren.length > 1
+                            ){
+                                formInputParent.className = getClassFrom(formInputParent).replace('between', 'start');
+
+                                this.insertSeparatorSpanBeforeLastFormInput(
+                                    formInputParent, 
+                                    formInputParentChildren, 
+                                    separator
+                                )
+                            }
                         }
                     }
                     
